@@ -31,6 +31,7 @@ Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscad
 ### Referencias Artísticas
 
 - Paperboy Atari games, 1984
+
 ![Atari games, 1984](./img/paperboy_atari.jpg)
 
 ## Mercado Objetivo
@@ -92,15 +93,6 @@ Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscad
 - Tres fases de xogo distintivas que se complementan
 - Forte identidade cultural galega con potencial de conexión universal
 - Sistema de negociación único baseado en diálogos enxeñosos
-
-## Material Visual
-
-Concept art, prototipos, diagramas
-Deseños preliminares do protagonista e o seu patinete
-Mockups das diferentes vistas de xogo (isométrica, negociación e 3D)
-Esquemas de interface de usuario
-Concept art dos escenarios principais
-Storyboards das secuencias de xogo clave
 
 ## Conclusión
 
