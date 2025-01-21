@@ -5,7 +5,9 @@
 **Título Provisional:** A Cabalo da Navalla
 
 **Elevator Pitch:**
-Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscador furtivo que, montado nun patinete eléctrico, se adica a vender ameixas e outros froitos do mar polas casas e restaurantes mentres esquiva diferentes obstáculos. O xogo combina acción, negociación e exploración.
+Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscador furtivo que, montado nun patinete eléctrico, se adica a vender ameixas e outros \*froitos do mar polas casas e restaurantes mentres esquiva diferentes obstáculos. O xogo combina acción, negociación e exploración.
+
+\**<small>Ameixas, Berberechos, Nécoras, Camaróns, Centolos, Bois, Navallas, Mexillóns, Ostras, Zamburiñas, Vieiras, Percebes...*</small>
 
 **Xénero:** Arcade, Acción, Estratexia
 
@@ -36,7 +38,7 @@ Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscad
 
 ## Mercado Objetivo
 
-**Público al que Está Dirigido:**
+**Público ao que está Dirixido:**
 
 - Xogadores adultos de 18-45 anos
 - Aficionados aos xogos arcade retro e á súa reinterpretación moderna
@@ -44,19 +46,19 @@ Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscad
 - Público que busca experiencias de xogo únicas e con identidade local galega
 - Xogadores casuais que gozan de sesións curtas pero intensas
 
-**Tendencias del Mercado:**
+**Tendencias do Mercado:**
 
 - Crecente interese polos xogos indie que mesturan mecánicas clásicas con temas contemporáneos
 - Valoración das experiencias de xogo con forte identidade cultural e local
 - Demanda de xogos que combinen humor e crítica social
 - Éxito dos xogos con múltiples capas de xogabilidade (acción, negociación, sigilo)
 
-## Equipo y Capacidades
+## Equipo e Capacidades
 
-**Presentación del Equipo:**
+**Presentación do Equipo:**
 
 - **Director Creativo e Deseñador do Xogo:** Diego Santiago Lijó
-- **Programador/a Principal:** Diego Vieiros Pérez
+- **Programador Principal:** Diego Vieiros Pérez
 
 **Capacidades:**
 
@@ -64,9 +66,9 @@ Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscad
 - Coñecemento profundo da cultura e contexto galego
 - Habilidades en deseño de interfaces e experiencia de usuario
 
-## Plan de Desarrollo
+## Plan de Desenvolvemento 
 
-**Cronograma Estimado de Desarrollo:**
+**Cronograma Estimado de Desenvolvemento:**
 
 - Semana 1: Prototipado das mecánicas principais do patinete e obstáculos
 - Semana 2-3: Desenvolvemento básico das tres fases de xogo
@@ -75,7 +77,7 @@ Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscad
 - Semana 7: Integración de sistemas e testing
 - Semana 8: Pulido final e preparación para lanzamento
 
-**Presupuesto Inicial Requerido:**
+**Orzamento Inicial Requerido:**
 
 - Arte básica e assets: 30€
 - Sons e música libre de dereitos: 20€
@@ -86,7 +88,7 @@ Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscad
 
 ## Hook Único
 
-**Diferenciador del Juego:**
+**Diferenciador do Xogo:**
 
 - Mestura innovadora de mecánicas clásicas con temática contemporánea local
 - Narrativa que aborda temas sociais con humor negro

@@ -13,7 +13,7 @@
 body {
     font-family: "Urbanist", serif;
     line-height: 1.5;
-    color: #333;
+    color: #303030;
     margin: 0;
     padding: 0;
     background-color: #ffffff;
@@ -33,13 +33,13 @@ h1 {
 }
 
 h2 {
-    font-size: 1.2em;
+    font-size: 1.3em;
     border-bottom: 1px solid #bdc3c7;
     padding-bottom: 0.2em;
 }
 
 h3 {
-    font-size: 1em;
+    font-size: 1.2em;
 }
 
 h4 {
@@ -141,3 +141,4 @@ hr {
     background: #bdc3c7;
     margin: 2em 0;
 }
+```
