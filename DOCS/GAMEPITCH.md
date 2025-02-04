@@ -5,7 +5,7 @@
 **Título Provisional:** A Cabalo da Navalla
 
 **Elevator Pitch:**
-Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscador furtivo que, montado nun patinete eléctrico, se adica a vender ameixas e outros \*froitos do mar polas casas e restaurantes mentres esquiva diferentes obstáculos. O xogo combina acción, negociación e exploración.
+Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscador furtivo que, montado nun patinete eléctrico, se adica a vender ameixas e outros froitos do mar\* polas casas e restaurantes mentres esquiva diferentes obstáculos. O xogo combina acción, negociación e exploración.
 
 \**<small>Ameixas, Berberechos, Nécoras, Camaróns, Centolos, Bois, Navallas, Mexillóns, Ostras, Zamburiñas, Vieiras, Percebes...*</small>
 
@@ -32,9 +32,9 @@ Unha adaptación moderna do clásico Paperboy. O xogador é un yonqui e mariscad
 
 ### Referencias Artísticas
 
-- Paperboy Atari games, 1984
+- Paperboy
 
-![Atari games, 1984](./img/paperboy_atari.jpg)
+![Atari games, 1984](https://i.pinimg.com/736x/17/17/3a/17173abf3db1ff9b35b0043b8a8d3dba.jpg)
 
 ## Mercado Objetivo
 
