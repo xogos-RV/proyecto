@@ -102,9 +102,9 @@ O patrón narrativo que mellor encaixa coa historia é o da “Viaxe do antiHero
 ### **Conclusión**  
 Estribo é o protagonista complexo e relatable, a Señora engade humor e contraste narrativo, e o Policía serve como antagonista e crítica social.
 
-**Por:**
+---
+---
 
-- Diego Vieiros Pérez
-- Diego Santiago Lijó
+ Diegos ( Vieiros Pérez - Santiago Lijó )
 
 #### repositorio: [J:\programacion\FP_a__Distancia\_JUEGOS\PROYECTO\proyecto\DOCS\GDD](https://github.com/xogos-RV/proyecto/blob/master/DOCS/GDD.md)
