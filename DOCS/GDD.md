@@ -1,3 +1,5 @@
+# **A Cabalo da Navalla**
+
 ### **Exercicio 1: Mecánicas**
 
 A continuación, preséntase unha táboa de mecánicas para **A Cabalo da Navalla**, clasificadas en **primarias**, **secundarias** e **terciarias** que afectan ao sistema ou a NPCs.
