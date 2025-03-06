@@ -1,18 +1,33 @@
 ## USO
 
 ```
-cd E:\VAYAPEDAL\XOGOS\proyecto\TOOLS\pdf-builder
+cd TOOLS\pdf-builder
 ```
 
 ```
-node index.js --input "E:\VAYAPEDAL\XOGOS\proyecto\DOCS\GDD.md" --css "E:\VAYAPEDAL\XOGOS\proyecto\TOOLS\pdf-builder\css\project-stype.css"
-``` 
-- El archivo generado se guardara en la ruta donde se encuentra el .MD de entrada
+ node index.js --input "..\..\DOCS\[MD File]"
+```
 
-- **fantasy-rpg:** node index.js --input "E:\VAYAPEDAL\XOGOS\proyecto\DOCS\GDD.md" --css "E:\VAYAPEDAL\XOGOS\proyecto\TOOLS\pdf-builder\css\fantasy-rpg.css"
+- **fantasy-rpg:**
 
-- **post-apocalyptic:** node index.js --input "E:\VAYAPEDAL\XOGOS\proyecto\DOCS\GDD.md" --css "E:\VAYAPEDAL\XOGOS\proyecto\TOOLS\pdf-builder\css\post-apocalyptic.css"
+```
+ node index.js --input "..\..\DOCS\GDD.md" --css "css\fantasy-rpg.css"
+```
 
-- **retro-arcade:** node index.js --input "E:\VAYAPEDAL\XOGOS\proyecto\DOCS\GDD.md" --css "E:\VAYAPEDAL\XOGOS\proyecto\TOOLS\pdf-builder\css\retro-arcade.css"
+- **post-apocalyptic:**
 
-- **sci-fi-future:** node index.js --input "E:\VAYAPEDAL\XOGOS\proyecto\DOCS\GDD.md" --css "E:\VAYAPEDAL\XOGOS\proyecto\TOOLS\pdf-builder\css\sci-fi-future.css"
+```
+node index.js --input "..\..\DOCS\GDD.md" --css "css\post-apocalyptic.css"
+```
+
+- **retro-arcade:**
+
+```
+node index.js --input "..\..\DOCS\GDD.md" --css "css\retro-arcade.css"
+```
+
+- **sci-fi-future:**
+
+```
+node index.js --input "..\..\DOCS\GDD.md" --css "css\sci-fi-future.css"
+```
