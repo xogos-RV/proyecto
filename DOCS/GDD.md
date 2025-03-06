@@ -10,7 +10,7 @@ A continuación, preséntase unha táboa de mecánicas para **A Cabalo da Navall
 
 | **Tipo**         | **Mecánica**                               | **Descripción** |
 | ---------------- | ------------------------------------------ | ----------------|
-| **Primaria**     | **Reparto en Patinete**                    | O xogador percorre as rúas nun patinete eléctrico, vendendo ameixas e outros froitos do mar polas casas. <br>Debe esquiva-los obstáculos como coches de policía, cortacepedes, carros da compra... |
+| **Primaria**     | **Reparto en Patinete**                    | O xogador percorre as rúas nun patinete eléctrico, vendendo ameixas e outros froitos do mar polas casas. <br>Debe esquiva-los obstáculos como coches de policía, cortacespedes, carros da compra... |
 | **Primaria**     | **Negociación**                            | Ao acertar na entrega dun aviso, actívase unha fase de negociación. O xogador debe convencer a señoras ou hostaleiros para que merquen marisco, utilizando diálogos e decisións estratéxicas. (pizzle contrareloxo) |
 | **Primaria**     | **Recollida de Ameixas**                   | O xogador percorre unha praia para recoller ameixas, evitando aos vixiantes da cofradía. (estilo Whac-A-Mole)|
 | **Secundaria**   | **Camiños Secretos (Reparto en Patinete)** | Durante o reparto, o xogador pode descubrir camiños secretos que levan a encontros inesperados, como cammellos que ofrecen recompensas ou intentan cobralas.|
@@ -87,7 +87,7 @@ O patrón narrativo que mellor encaixa coa historia é o da “Viaxe do antiHero
 #### **3. Personaxe Secundario: O Policía (Antagonista)**  
 
 **Nome**: O Policía, "Pepe el hijo puta (Látigo)".  
-**Importancia no xogo**: É o antagonista principal, un policía corrupto e sen escrúpulos que só busca sacar proveito económico das situacións. Reflicte a a clase política e a corrupción, servindo como un obstáculo constante para Estribo.  
+**Importancia no xogo**: É o antagonista principal, un policía corrupto e sen escrúpulos que só busca sacar proveito económico das situacións. Reflicte a clase política e a corrupción, servindo como un obstáculo constante para Estribo.  
 
 **Rasgos que o caracterizan**:  
 - **Físicos**: Uniforme impecable, gordo, fofo, paleto rural, con unha actitude arrogante e un bigote que lle dá un aire de autoritario.  
