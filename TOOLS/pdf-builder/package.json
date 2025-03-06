@@ -1,0 +1,21 @@
+{
+  "name": "pdf-builder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "md-to-pdf": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "fs-extra": "^11.3.0",
+    "marked": "^15.0.7",
+    "puppeteer": "^24.3.1"
+  }
+}

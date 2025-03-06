@@ -1,0 +1,131 @@
+body {
+    font-family: "Urbanist", serif;
+    line-height: 1.5;
+    color: #303030;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #32003f;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 1.5em;
+    border-bottom: 2px solid #bdc3c7;
+    padding-bottom: 0.3em;
+}
+
+h2 {
+    font-size: 1.3em;
+    border-bottom: 1px solid #bdc3c7;
+    padding-bottom: 0.2em;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+h4 {
+    font-size: 0.9em;
+}
+
+h5 {
+    font-size: 0.7em;
+}
+
+h6 {
+    font-size: 0.5em;
+    color: #7f8c8d;
+}
+
+/* Párrafos */
+p {
+    margin: 0 0 1em;
+}
+
+/* Enlaces */
+a {
+    color: #2980b9;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Listas */
+ul, ol {
+    margin: 0 0 1em 2em;
+}
+
+li {
+    margin-bottom: 0.5em;
+}
+
+/* Código */
+pre {
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    padding: 1em;
+    overflow-x: auto;
+    border-radius: 5px;
+}
+
+code {
+    background-color: #ecf0f1;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 0.5em;
+    text-align: left;
+}
+
+th {
+    background-color: #f7f7f7;
+    font-weight: bold;
+}
+
+/* Bloques de citas */
+blockquote {
+    margin: 0 0 1em;
+    padding: 0.5em 1em;
+    background-color: #f7f7f7;
+    border-left: 5px solid #bdc3c7;
+    color: #555;
+}
+
+/* Imágenes */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Notas al pie */
+sup {
+    font-size: 0.8em;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #bdc3c7;
+    margin: 2em 0;
+}
