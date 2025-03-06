@@ -1,0 +1,210 @@
+body {
+    font-family: "Fallout", "Special Elite", "Courier New", monospace;
+    line-height: 1.6;
+    color: #9c8f72;
+    background-color: #1a1a14;
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none" stroke="%23333" stroke-width="1" stroke-opacity="0.1"/></svg>');
+    margin: 0;
+    padding: 30px;
+    position: relative;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.3;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Fallout", "Special Elite", monospace;
+    color: #a3894d;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: normal;
+}
+
+h1 {
+    font-size: 2.2em;
+    text-align: center;
+    color: #d4aa4e;
+    border: 2px solid #a3894d;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 0px #000;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #c19a49;
+    border-bottom: 1px solid #a3894d;
+    padding-bottom: 5px;
+    text-shadow: 1px 1px 0px #000;
+}
+
+h2::before {
+    content: "// ";
+    color: #7d6b3a;
+}
+
+h3 {
+    font-size: 1.5em;
+    color: #b38d3e;
+    text-shadow: 1px 1px 0px #000;
+}
+
+h3::before {
+    content: ">>> ";
+    color: #7d6b3a;
+}
+
+p {
+    margin: 1em 0;
+    text-align: justify;
+}
+
+a {
+    color: #d4aa4e;
+    text-decoration: none;
+    border-bottom: 1px dotted #a3894d;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #e6c66f;
+    border-bottom: 1px solid #e6c66f;
+}
+
+code {
+    font-family: "VT323", "Courier New", monospace;
+    background-color: #262620;
+    color: #a3894d;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    border: 1px solid #3a3a30;
+}
+
+pre {
+    background-color: #262620;
+    border: 1px solid #3a3a30;
+    border-radius: 5px;
+    padding: 16px;
+    overflow: auto;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+blockquote {
+    margin: 1.5em 0;
+    padding: 1em 1.5em;
+    color: #9c8f72;
+    background-color: #262620;
+    border-left: 4px solid #a3894d;
+    font-style: italic;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+blockquote::before {
+    content: "!";
+    font-size: 2em;
+    font-family: "Fallout", monospace;
+    color: rgba(163, 137, 77, 0.3);
+    position: absolute;
+    left: 10px;
+    top: 5px;
+}
+
+ul, ol {
+    padding-left: 2em;
+}
+
+li {
+    margin-bottom: 0.7em;
+}
+
+li::marker {
+    color: #a3894d;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border: 5px solid #3a3a30;
+    border-radius: 2px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    filter: sepia(20%) brightness(90%) contrast(110%);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5em 0;
+    background-color: #262620;
+}
+
+table, th, td {
+    border: 1px solid #3a3a30;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #1a1a14;
+    color: #d4aa4e;
+    font-family: "Fallout", "Special Elite", monospace;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+tr:nth-child(even) {
+    background-color: #1e1e18;
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #a3894d, transparent);
+    margin: 2em 0;
+}
+
+/* Efecto de papel desgastado */
+@media print {
+    body {
+        background-color: #e8e3d7;
+        color: #3a3a30;
+    }
+    
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml;utf8,<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0"/></filter><rect width="200" height="200" filter="url(%23noise)" opacity="0.1"/></svg>');
+        pointer-events: none;
+        z-index: -1;
+    }
+}

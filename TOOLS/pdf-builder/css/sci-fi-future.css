@@ -1,0 +1,177 @@
+body {
+    font-family: "Orbitron", "Rajdhani", sans-serif;
+    line-height: 1.6;
+    color: #c8e6ff;
+    background-color: #0a1929;
+    background-image: radial-gradient(circle at 50% 50%, #142c44 0%, #0a1929 100%);
+    margin: 0;
+    padding: 30px;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Orbitron", "Rajdhani", sans-serif;
+    color: #00d4ff;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+h1 {
+    font-size: 2.5em;
+    text-align: center;
+    color: #ffffff;
+    background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+    background-size: 80% 1px;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    padding-bottom: 15px;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #7df9ff;
+    border-bottom: 1px solid #00d4ff;
+    padding-bottom: 5px;
+}
+
+h3 {
+    font-size: 1.5em;
+    color: #64ffda;
+}
+
+p {
+    margin: 1em 0;
+}
+
+a {
+    color: #00d4ff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #64ffda;
+    border-bottom: 1px solid #64ffda;
+    text-shadow: 0 0 8px rgba(100, 255, 218, 0.5);
+}
+
+code {
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    background-color: rgba(0, 30, 60, 0.5);
+    color: #64ffda;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+pre {
+    background-color: rgba(0, 30, 60, 0.5);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 5px;
+    padding: 16px;
+    overflow: auto;
+}
+
+blockquote {
+    margin: 1.5em 0;
+    padding: 1em 1.5em;
+    color: #c8e6ff;
+    background-color: rgba(0, 30, 60, 0.5);
+    border-left: 4px solid #00d4ff;
+    font-style: italic;
+    position: relative;
+}
+
+ul, ol {
+    padding-left: 2em;
+}
+
+li {
+    margin-bottom: 0.7em;
+}
+
+li::marker {
+    color: #00d4ff;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #00d4ff;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5em 0;
+    background-color: rgba(0, 30, 60, 0.3);
+}
+
+table, th, td {
+    border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: rgba(0, 30, 60, 0.5);
+    color: #00d4ff;
+    font-family: "Orbitron", sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+tr:nth-child(even) {
+    background-color: rgba(0, 30, 60, 0.2);
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #00d4ff, transparent);
+    margin: 2em 0;
+}
+
+/* Efecto de terminal para bloques de código */
+pre code {
+    border: none;
+    display: block;
+    position: relative;
+    padding-top: 25px;
+}
+
+pre code::before {
+    content: "> SYSTEM DATA";
+    position: absolute;
+    top: -20px;
+    left: 0;
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.8em;
+    color: #00d4ff;
+    text-transform: uppercase;
+}
