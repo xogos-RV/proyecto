@@ -10,7 +10,7 @@ A continuación, preséntase unha táboa de mecánicas para **A Cabalo da Navall
 
 | **Tipo**         | **Mecánica**                               | **Descripción** |
 | ---------------- | ------------------------------------------ | ----------------|
-| **Primaria**     | **Reparto en Patinete**                    | O xogador percorre as rúas nun patinete eléctrico, vendendo ameixas e outros froitos do mar polas casas. <br>Debe esquiva-los obstáculos como coches de policía, cortacespedes, carros da compra... |
+| **Primaria**     | **Reparto en Patinete**                    | O xogador percorre as rúas nun patinete eléctrico, vendendo ameixas e outros froitos do mar polas casas. <br>Debe evitar os obstáculos como coches de policía, cortacespedes, carros da compra... |
 | **Primaria**     | **Negociación**                            | Ao acertar na entrega dun aviso, actívase unha fase de negociación. O xogador debe convencer a señoras ou hostaleiros para que merquen marisco, utilizando diálogos e decisións estratéxicas. (pizzle contrareloxo) |
 | **Primaria**     | **Recollida de Ameixas**                   | O xogador percorre unha praia para recoller ameixas (estilo Whac-A-Mole), evitando aos vixiantes da cofradía.|
 | **Secundaria**   | **Camiños Secretos (Reparto en Patinete)** | Durante o reparto, o xogador pode descubrir camiños secretos que levan a encontros inesperados, como camellos que ofrecen recompensas ou intentan cobralas.|
