@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,9 +10,13 @@ public class ControladorBola : MonoBehaviour
     private Vector2 joystick;
     private float breakInput;
     private float accelerateInput;
+    private bool isGrounded = false;
 
     [Header("Configuración de Velocidad")]
-    public float maxVelocity = 100f;
+    [Range(0f, 100f)]
+    public float maxVelocity = 60f;
+
+    [Range(0f, 1f)]
     public float velocityControlMultiplier = 0.5f;
 
     [Header("Configuración de Gatillos")]
@@ -19,39 +24,67 @@ public class ControladorBola : MonoBehaviour
     [Range(-1f, 1f)]
     public float triggerResponseCurve = 0f;
 
+    [Range(1f, 5f)]
+    public float breakFactor = 2f;
 
     [Header("Configuración de Rotación")]
+    [Range(0f, 200f)]
     public float rotationSpeed = 100f;
+
+    [Range(0f, 90f)]
     public float maxRotationAngleX = 15f;
+
+    [Range(0f, 90f)]
     public float maxRotationAngleY = 10f;
+
+    [Range(0f, 90f)]
     public float maxRotationAngleZ = 60f;
 
     [Header("Configuración de Fuerzas")]
+    [Range(0f, 1f)]
     public float lateralForceMultiplier = 0.2f;
 
     [Header("Threshold-y Reset")]
+    [Range(-10f, 0f)]
     public float ejeY = -5f;
+
+    [Range(0f, 20f)]
     public float initAt = 10f;
 
     [Header("Configuración de Frenado")]
+    [Range(0f, 10f)]
     public float zAxisDampingForce = 2.5f;
 
     [Header("Configuración de Colisión")]
     public string collisionTab = "DynamicPrefab";
+    public string floorTag = "FloorPrefab";
+
+    [Header("Detección de Suelo")]
+    [Range(1, 10)]
+    public int frameThreshold = 3;
+
+    private int framesWithoutGroundContact = 0;
+    private bool isInContactWithGround = false;
 
     void Start()
     {
         InitializeComponents();
-        LogInitialState();
     }
 
     void Update()
     {
         ReadInput();
         ApplyRotation();
-        ControlVelocidad();
+
+        UpdateGroundedState();
+
+        if (isGrounded)
+        {
+            ControlVelocidad();
+            StopZMovementWhenJoystickCentered();
+        }
+
         doResetPositionY();
-        StopZMovementWhenJoystickCentered();
     }
 
     private void InitializeComponents()
@@ -61,32 +94,21 @@ public class ControladorBola : MonoBehaviour
         rb.linearVelocity = transform.right * maxVelocity;
     }
 
-    private void LogInitialState()
-    {
-        Vector3 localScale = transform.localScale;
-        Vector3 globalScale = transform.lossyScale;
-        // - Debug.Log($"[ControladorBola] Escala local bola: {localScale.x}, {localScale.y}, {localScale.z}");
-        // - Debug.Log($"[ControladorBola] Escala global bola: {globalScale.x}, {globalScale.y}, {globalScale.z}");
-        // - Debug.Log($"[ControladorBola] Velocidad inicial: {rb.linearVelocity.magnitude}");
-    }
-
     private void ReadInput()
     {
         joystick = playerInput.actions["Move"].ReadValue<Vector2>();
         breakInput = playerInput.actions["break"].ReadValue<float>();
         accelerateInput = playerInput.actions["caballito"].ReadValue<float>();
-
-        // - Debug.Log($"[ControladorBola] Input joystick: X={joystick.x:F2}, Y={joystick.y:F2}");
-        // - Debug.Log($"[ControladorBola] Freno: {breakInput:F2}, Acelerador: {accelerateInput:F2}");
     }
 
     private void ControlVelocidad()
     {
-        // Procesar entradas de gatillos con la curva de respuesta
-        float processedAccelerate = ApplyResponseCurve(accelerateInput);
-        float processedBreak = ApplyResponseCurve(breakInput);
+        if (!isGrounded)
+            return;
 
-        // Calcular el input neto (aceleración - freno)
+        float processedAccelerate = ApplyResponseCurve(accelerateInput);
+        float processedBreak = ApplyResponseCurve(breakInput) * breakFactor;
+
         float netInput = processedAccelerate - processedBreak;
 
         Vector3 direccionActual = transform.right;
@@ -94,12 +116,16 @@ public class ControladorBola : MonoBehaviour
 
         float velocidadObjetivo = CalcularVelocidadObjetivo(netInput);
 
+        if (breakInput > 0.1f)
+        {
+            velocidadObjetivo = 0;
+        }
+
         ApplyVelocityForce(direccionActual, velocidadActualEnDireccion, velocidadObjetivo);
     }
 
     private float ApplyResponseCurve(float input)
     {
-
         // Normalizar el input al rango efectivo después del deadzone
         float normalizedInput = Mathf.Clamp01(Mathf.Abs(input));
 
@@ -129,8 +155,6 @@ public class ControladorBola : MonoBehaviour
         // Aplicar el efecto de los gatillos a la velocidad objetivo
         velocidadObjetivo += input * maxVelocity * velocityControlMultiplier;
 
-        // - Debug.Log($"[ControladorBola] Input procesado: {input:F2}, Velocidad objetivo: {velocidadObjetivo:F2}");
-
         return velocidadObjetivo;
     }
 
@@ -140,7 +164,6 @@ public class ControladorBola : MonoBehaviour
         Vector3 fuerza = direccion * diferenciaVelocidad * rb.mass;
 
         rb.AddForce(fuerza, ForceMode.Force);
-        // - Debug.Log($"[ControladorBola] Velocidad actual: {velocidadActual:F2}, Objetivo: {velocidadObjetivo:F2}, Fuerza aplicada: {fuerza.magnitude:F2}");
     }
 
     private void ApplyRotation()
@@ -150,7 +173,10 @@ public class ControladorBola : MonoBehaviour
         // Usar los gatillos para la rotación vertical independientemente del joystick
         float verticalInput = CalculateVerticalRotationInput();
 
-        Quaternion targetRotation = CalculateTargetRotation(horizontalInput, verticalInput);
+        // Calcular el factor de velocidad para la rotación en Z (0 cuando está parado, 1 cuando está a velocidad máxima)
+        float velocityFactor = isGrounded ? Mathf.Clamp01(rb.linearVelocity.magnitude / maxVelocity) : 0f;
+
+        Quaternion targetRotation = CalculateTargetRotation(horizontalInput, verticalInput, velocityFactor);
         ApplyRotationToRigidbody(targetRotation);
 
         // Solo resetear la rotación horizontal cuando el joystick está centrado
@@ -165,7 +191,10 @@ public class ControladorBola : MonoBehaviour
             ResetHorizontalRotation();
         }
 
-        ApplyLateralForce(horizontalInput);
+        if (isGrounded)
+        {
+            ApplyLateralForce(horizontalInput);
+        }
     }
 
     private float CalculateVerticalRotationInput()
@@ -175,13 +204,14 @@ public class ControladorBola : MonoBehaviour
         return ApplyResponseCurve(netTriggerInput) * -1;
     }
 
-    private Quaternion CalculateTargetRotation(float horizontalInput, float verticalInput)
+    private Quaternion CalculateTargetRotation(float horizontalInput, float verticalInput, float velocityFactor)
     {
         float targetRotationX = horizontalInput * maxRotationAngleX;
         float targetRotationY = horizontalInput * maxRotationAngleY * -1f;
-        float targetRotationZ = verticalInput * maxRotationAngleZ * -1f;
-
         // - Debug.Log($"[ControladorBola] Rotación objetivo: X={targetRotationX:F2}, Y={targetRotationY:F2}, Z={targetRotationZ:F2}");
+
+        // Aplicar el factor de velocidad a la rotación en Z
+        float targetRotationZ = verticalInput * maxRotationAngleZ * -1f * velocityFactor;
 
         return Quaternion.Euler(targetRotationX, targetRotationY, targetRotationZ);
     }
@@ -190,8 +220,6 @@ public class ControladorBola : MonoBehaviour
     {
         Quaternion currentRotation = rb.rotation;
         rb.rotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-        // - Debug.Log($"[ControladorBola] Rotación actual: {rb.rotation.eulerAngles}");
     }
 
     private void ResetRotation()
@@ -199,8 +227,6 @@ public class ControladorBola : MonoBehaviour
         Quaternion currentRotation = rb.rotation;
         Quaternion originalRotation = Quaternion.Euler(0, 0, 0);
         rb.rotation = Quaternion.RotateTowards(currentRotation, originalRotation, rotationSpeed * Time.deltaTime);
-
-        // - Debug.Log("[ControladorBola] Reseteando rotación");
     }
 
     private void ResetHorizontalRotation()
@@ -209,8 +235,6 @@ public class ControladorBola : MonoBehaviour
         Vector3 currentEuler = rb.rotation.eulerAngles;
         Quaternion targetRotation = Quaternion.Euler(0, 0, currentEuler.z);
         rb.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-        // - Debug.Log("[ControladorBola] Reseteando rotación horizontal");
     }
 
     private void ApplyLateralForce(float horizontalInput)
@@ -221,7 +245,6 @@ public class ControladorBola : MonoBehaviour
             float lateralForce = horizontalInput * maxVelocity * rb.mass * lateralForceMultiplier;
 
             rb.AddForce(lateralDirection * lateralForce, ForceMode.Force);
-            // - Debug.Log($"[ControladorBola] Fuerza lateral aplicada: {lateralForce:F2} en dirección {lateralDirection}");
         }
     }
 
@@ -229,6 +252,7 @@ public class ControladorBola : MonoBehaviour
     {
         if (transform.position.y < ejeY)
         {
+            rb.linearVelocity = rb.linearVelocity.x * Vector3.right;
             transform.position = new Vector3(transform.position.x, initAt, 0);
         }
     }
@@ -260,15 +284,16 @@ public class ControladorBola : MonoBehaviour
         }
     }
 
-
-
     void OnCollisionEnter(Collision collision)
     {
+        // Verificar si está en contacto con el suelo
+        if (collision.gameObject.CompareTag(floorTag))
+        {
+            isInContactWithGround = true;
+        }
+
         if (collision.gameObject.CompareTag(collisionTab))
         {
-
-            Debug.LogError("OnCollisionEnter.......................................");
-
             // Calcular la dirección de la fuerza basada en el ángulo de la colisión
             Vector3 forceDirection = collision.contacts[0].normal;
             float forceMagnitude = 10f; // Ajusta la magnitud de la fuerza según sea necesario
@@ -285,18 +310,22 @@ public class ControladorBola : MonoBehaviour
 
             // Iniciar una corrutina para restaurar la rotación después de 1 segundo
             StartCoroutine(RestoreRotationAfterDelay(otherRb, 1f));
-
         }
     }
 
-    /* void OnCollisionExit(Collision collision)
+    void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag(collisionTab))
-        {
-            Debug.LogError(".......................................OnCollisionExit");
-        }
-    } */
 
+    }
+
+    // Método para verificar si hay algún contacto con el suelo
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag(floorTag))
+        {
+            isInContactWithGround = true;
+        }
+    }
 
     private void SetFreezeRotation(bool freeze)
     {
@@ -306,15 +335,37 @@ public class ControladorBola : MonoBehaviour
         }
         else
         {
-            rb.constraints =  RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.None;
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.None;
         }
     }
 
-
-    private System.Collections.IEnumerator RestoreRotationAfterDelay(Rigidbody rb, float delay)
+    private IEnumerator RestoreRotationAfterDelay(Rigidbody rb, float delay)
     {
         yield return new WaitForSeconds(delay);
         SetFreezeRotation(true);
     }
 
+    private void UpdateGroundedState()
+    {
+        if (isInContactWithGround)
+        {
+            // Si hay contacto con el suelo, resetear el contador y establecer isGrounded a true
+            framesWithoutGroundContact = 0;
+            isGrounded = true;
+        }
+        else
+        {
+            // Si no hay contacto, incrementar el contador
+            framesWithoutGroundContact++;
+
+            // Solo establecer isGrounded a false si han pasado suficientes frames sin contacto
+            if (framesWithoutGroundContact >= frameThreshold)
+            {
+                isGrounded = false;
+            }
+        }
+
+        // Resetear la bandera de contacto para el próximo frame
+        isInContactWithGround = false;
+    }
 }

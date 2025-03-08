@@ -422,18 +422,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25f97a02115fa942858e9d04b14d9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 90
+  maxVelocity: 60
   velocityControlMultiplier: 0.5
   triggerResponseCurve: 0
+  breakFactor: 2
   rotationSpeed: 100
   maxRotationAngleX: 20
   maxRotationAngleY: 15
   maxRotationAngleZ: 60
-  lateralForceMultiplier: 2.15
+  lateralForceMultiplier: 1
   ejeY: -5
-  initAt: 10
+  initAt: 20
   zAxisDampingForce: 2.5
   collisionTab: DynamicPrefab
+  floorTag: FloorPrefab
+  frameThreshold: 3
 --- !u!4 &332092112 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 21871792523556c4fb59960cf443defe, type: 3}
@@ -461,7 +464,7 @@ CapsuleCollider:
   m_Radius: 0.4
   m_Height: 0.8
   m_Direction: 1
-  m_Center: {x: 0.46, y: 1.38, z: 0}
+  m_Center: {x: 0.47, y: 1.35, z: 0}
 --- !u!136 &332092114
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -484,7 +487,7 @@ CapsuleCollider:
   m_Radius: 0.4
   m_Height: 0.8
   m_Direction: 1
-  m_Center: {x: -2.2, y: 1.38, z: 0}
+  m_Center: {x: -2.2, y: 1.35, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,11 +648,11 @@ MonoBehaviour:
   jugador: {fileID: 332092112}
   longitudPlano: 100
   minObjetosPorPlano: 1
-  maxObjetosPorPlano: 0
-  alturaMinima: 2
+  maxObjetosPorPlano: 5
+  alturaMinima: 1
   alturaMaxima: 2
-  distribuirUniformemente: 0
-  anchoPlano: 10
+  distribuirUniformemente: 1
+  anchoPlano: 20
   fuerzaMinima: 1
   fuerzaMaxima: 50
   aplicarFuerzaVertical: 0
