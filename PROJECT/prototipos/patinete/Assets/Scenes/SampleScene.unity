@@ -270,11 +270,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 332092112}
-  xOffset: -8
+  xOffset: -12
   cameraHeight: 12
-  zDistance: 6
-  lookAtXOffset: 15
-  lookAtHeightMultiplier: 0.33
+  zDistance: 2
+  lookAtXOffset: 20
+  lookAtHeightMultiplier: 0.2
   smoothSpeed: 1
 --- !u!1001 &332092107
 PrefabInstance:
@@ -608,7 +608,7 @@ MonoBehaviour:
   m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 1
+  m_SoftShadowQuality: 3
 --- !u!1 &751497195
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,7 +644,6 @@ MonoBehaviour:
   - {fileID: 7420525515836206606, guid: ecfd1e8f5b53d744eaf429c54cf7dfe8, type: 3}
   objetosPrefabs:
   - {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
-  - {fileID: 6405249753058543813, guid: 6899dea24efb0324e95bf41b9c6cc441, type: 3}
   jugador: {fileID: 332092112}
   longitudPlano: 100
   minObjetosPorPlano: 1
