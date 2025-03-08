@@ -422,17 +422,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25f97a02115fa942858e9d04b14d9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 50
+  maxVelocity: 90
   velocityControlMultiplier: 0.5
   triggerResponseCurve: 0
   rotationSpeed: 100
   maxRotationAngleX: 20
   maxRotationAngleY: 15
   maxRotationAngleZ: 60
-  lateralForceMultiplier: 1.5
+  lateralForceMultiplier: 2.15
   ejeY: -5
   initAt: 10
   zAxisDampingForce: 2.5
+  collisionTab: DynamicPrefab
 --- !u!4 &332092112 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 21871792523556c4fb59960cf443defe, type: 3}
@@ -640,11 +641,11 @@ MonoBehaviour:
   - {fileID: 7420525515836206606, guid: ecfd1e8f5b53d744eaf429c54cf7dfe8, type: 3}
   objetosPrefabs:
   - {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
-  - {fileID: 1472344612284047486, guid: 6899dea24efb0324e95bf41b9c6cc441, type: 3}
+  - {fileID: 6405249753058543813, guid: 6899dea24efb0324e95bf41b9c6cc441, type: 3}
   jugador: {fileID: 332092112}
   longitudPlano: 100
   minObjetosPorPlano: 1
-  maxObjetosPorPlano: 15
+  maxObjetosPorPlano: 0
   alturaMinima: 2
   alturaMaxima: 2
   distribuirUniformemente: 0
@@ -671,37 +672,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1527709199
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1527709200}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1527709200
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1527709199}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.388311, y: -17.012178, z: 24.431313}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -710,4 +680,3 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 751497197}
   - {fileID: 332092107}
-  - {fileID: 1527709200}

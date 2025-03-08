@@ -36,6 +36,9 @@ public class ControladorBola : MonoBehaviour
     [Header("Configuración de Frenado")]
     public float zAxisDampingForce = 2.5f;
 
+    [Header("Configuración de Colisión")]
+    public string collisionTab = "DynamicPrefab";
+
     void Start()
     {
         InitializeComponents();
@@ -256,4 +259,62 @@ public class ControladorBola : MonoBehaviour
             }
         }
     }
+
+
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag(collisionTab))
+        {
+
+            Debug.LogError("OnCollisionEnter.......................................");
+
+            // Calcular la dirección de la fuerza basada en el ángulo de la colisión
+            Vector3 forceDirection = collision.contacts[0].normal;
+            float forceMagnitude = 10f; // Ajusta la magnitud de la fuerza según sea necesario
+
+            // Aplicar la fuerza al objeto con el que colisionas
+            Rigidbody otherRb = collision.gameObject.GetComponent<Rigidbody>();
+            if (otherRb != null)
+            {
+                otherRb.AddForce(-forceDirection * forceMagnitude, ForceMode.Impulse);
+            }
+
+            // Descongelar la rotación del objeto con el que colisionas
+            SetFreezeRotation(false);
+
+            // Iniciar una corrutina para restaurar la rotación después de 1 segundo
+            StartCoroutine(RestoreRotationAfterDelay(otherRb, 1f));
+
+        }
+    }
+
+    /* void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag(collisionTab))
+        {
+            Debug.LogError(".......................................OnCollisionExit");
+        }
+    } */
+
+
+    private void SetFreezeRotation(bool freeze)
+    {
+        if (freeze)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+        }
+        else
+        {
+            rb.constraints =  RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.None;
+        }
+    }
+
+
+    private System.Collections.IEnumerator RestoreRotationAfterDelay(Rigidbody rb, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SetFreezeRotation(true);
+    }
+
 }
