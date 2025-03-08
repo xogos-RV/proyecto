@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "propotipo-patinete.sln"
+    "dotnet.defaultSolution": "patinete.sln"
 }
