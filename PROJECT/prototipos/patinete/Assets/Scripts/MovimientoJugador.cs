@@ -4,84 +4,164 @@ using UnityEngine.InputSystem;
 public class ControladorBola : MonoBehaviour
 {
     private Rigidbody rb;
-    PlayerInput playerInput;
-    Vector2 joystick;
+    private PlayerInput playerInput;
+    private Vector2 joystick;
 
+    [Header("Configuración de Velocidad")]
     public float maxVelocity = 100f;
+    public float velocityControlMultiplier = 0.5f;
+    public float verticalInputThreshold = 2f;
+
+    [Header("Configuración de Rotación")]
     public float rotationSpeed = 100f;
-    public float maxRotationAngleY = 0f;
-    public float maxRotationAngleX = 10f;
+    public float maxRotationAngleX = 15f;
+    public float maxRotationAngleY = 10f;
+    public float maxRotationAngleZ = 60f;
+
+    [Header("Configuración de Fuerzas")]
+    public float lateralForceMultiplier = 0.2f;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.linearVelocity = transform.right * maxVelocity;
-        playerInput = GetComponent<PlayerInput>();
-
-        Vector3 localScale = transform.localScale;
-        Debug.Log("Escala local bola: " + localScale.x);
-        Vector3 globalScale = transform.lossyScale;
-        Debug.Log("Escala global bola: " + globalScale.x);
+        InitializeComponents();
+        LogInitialState();
     }
 
     void Update()
     {
+        ReadInput();
         ApplyRotation();
-        MantenerVelocidadConstante();
+        ControlVelocidad();
     }
 
-    void MantenerVelocidadConstante()
+    private void InitializeComponents()
     {
-        // Aplicamos la fuerza en la dirección actual del objeto
+        rb = GetComponent<Rigidbody>();
+        playerInput = GetComponent<PlayerInput>();
+        rb.linearVelocity = transform.right * maxVelocity;
+    }
+
+    private void LogInitialState()
+    {
+        Vector3 localScale = transform.localScale;
+        Vector3 globalScale = transform.lossyScale;
+       //   Debug.Log($"[ControladorBola] Escala local bola: {localScale.x}, {localScale.y}, {localScale.z}");
+       //   Debug.Log($"[ControladorBola] Escala global bola: {globalScale.x}, {globalScale.y}, {globalScale.z}");
+       //   Debug.Log($"[ControladorBola] Velocidad inicial: {rb.linearVelocity.magnitude}");
+    }
+
+    private void ReadInput()
+    {
+        joystick = playerInput.actions["Move"].ReadValue<Vector2>();
+       //   Debug.Log($"[ControladorBola] Input joystick: X={joystick.x:F2}, Y={joystick.y:F2}");
+    }
+
+    private void ControlVelocidad()
+    {
+        float verticalInput = joystick.y;
         Vector3 direccionActual = transform.right;
         float velocidadActualEnDireccion = Vector3.Dot(rb.linearVelocity, direccionActual);
-        float diferenciaVelocidad = maxVelocity - velocidadActualEnDireccion;
 
-        if (diferenciaVelocidad > 0)
+        float velocidadObjetivo = CalcularVelocidadObjetivo(verticalInput);
+
+        ApplyVelocityForce(direccionActual, velocidadActualEnDireccion, velocidadObjetivo);
+    }
+
+    private float CalcularVelocidadObjetivo(float verticalInput)
+    {
+        float velocidadObjetivo = maxVelocity;
+
+        if (Mathf.Abs(verticalInput) > verticalInputThreshold)
         {
-            Vector3 fuerza = direccionActual * diferenciaVelocidad * rb.mass;
-            rb.AddForce(fuerza, ForceMode.Force);
+            float normalizedInput = NormalizeInput(verticalInput);
+            velocidadObjetivo += normalizedInput * maxVelocity * velocityControlMultiplier;
+
+           //   Debug.Log($"[ControladorBola] Input vertical normalizado: {normalizedInput:F2}, Velocidad objetivo: {velocidadObjetivo:F2}");
         }
+
+        return velocidadObjetivo;
+    }
+
+    private float NormalizeInput(float input)
+    {
+        return Mathf.Sign(input) * (Mathf.Abs(input) - verticalInputThreshold) / (1 - verticalInputThreshold);
+    }
+
+    private void ApplyVelocityForce(Vector3 direccion, float velocidadActual, float velocidadObjetivo)
+    {
+        float diferenciaVelocidad = velocidadObjetivo - velocidadActual;
+        Vector3 fuerza = direccion * diferenciaVelocidad * rb.mass;
+
+        rb.AddForce(fuerza, ForceMode.Force);
+       //   Debug.Log($"[ControladorBola] Velocidad actual: {velocidadActual:F2}, Objetivo: {velocidadObjetivo:F2}, Fuerza aplicada: {fuerza.magnitude:F2}");
     }
 
     private void ApplyRotation()
     {
-        joystick = playerInput.actions["Move"].ReadValue<Vector2>();
+        float horizontalInput = joystick.x * -1;
+        float verticalInput = CalculateVerticalRotationInput();
 
-        // Rotación en Y (izquierda/derecha)
-        float horizontalInput = joystick.x;
-        float targetRotationX = horizontalInput * maxRotationAngleX;
-        float targetRotationY = horizontalInput * maxRotationAngleY * -1f;
+        Quaternion targetRotation = CalculateTargetRotation(horizontalInput, verticalInput);
+        ApplyRotationToRigidbody(targetRotation);
 
-        // Obtenemos la rotación actual
-        Quaternion currentRotation = rb.rotation;
-
-        // Creamos la rotación objetivo manteniendo Z
-        Quaternion targetRotation = Quaternion.Euler(
-            targetRotationX,
-            targetRotationY,
-            currentRotation.eulerAngles.z
-        );
-
-        // Aplicamos la rotación gradualmente
-        rb.rotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-        // Si no hay input, volvemos a la rotación original
-        if (joystick.magnitude < 0.1f)
+        if (Mathf.Abs(horizontalInput) < 0.1f)
         {
-            Quaternion originalRotation = Quaternion.Euler(0, 0, currentRotation.eulerAngles.z);
-            rb.rotation = Quaternion.RotateTowards(currentRotation, originalRotation, rotationSpeed * Time.deltaTime);
+            ResetRotation();
         }
 
-        // Aplicamos impulso lateral basado en la rotación Y
+        ApplyLateralForce(horizontalInput);
+    }
+
+    private float CalculateVerticalRotationInput()
+    {
+        float verticalInput = 0;
+
+        if (Mathf.Abs(joystick.y) > verticalInputThreshold)
+        {
+            verticalInput = NormalizeInput(joystick.y) * -1;
+           //   Debug.Log($"[ControladorBola] Input vertical para rotación: {verticalInput:F2}");
+        }
+
+        return verticalInput;
+    }
+
+    private Quaternion CalculateTargetRotation(float horizontalInput, float verticalInput)
+    {
+        float targetRotationX = horizontalInput * maxRotationAngleX;
+        float targetRotationY = horizontalInput * maxRotationAngleY * -1f;
+        float targetRotationZ = verticalInput * maxRotationAngleZ * -1f;
+
+       //   Debug.Log($"[ControladorBola] Rotación objetivo: X={targetRotationX:F2}, Y={targetRotationY:F2}, Z={targetRotationZ:F2}");
+
+        return Quaternion.Euler(targetRotationX, targetRotationY, targetRotationZ);
+    }
+
+    private void ApplyRotationToRigidbody(Quaternion targetRotation)
+    {
+        Quaternion currentRotation = rb.rotation;
+        rb.rotation = Quaternion.RotateTowards(currentRotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+       //   Debug.Log($"[ControladorBola] Rotación actual: {rb.rotation.eulerAngles}");
+    }
+
+    private void ResetRotation()
+    {
+        Quaternion currentRotation = rb.rotation;
+        Quaternion originalRotation = Quaternion.Euler(0, 0, 0);
+        rb.rotation = Quaternion.RotateTowards(currentRotation, originalRotation, rotationSpeed * Time.deltaTime);
+
+       //   Debug.Log("[ControladorBola] Reseteando rotación");
+    }
+
+    private void ApplyLateralForce(float horizontalInput)
+    {
         if (Mathf.Abs(horizontalInput) > 0.1f)
         {
-            // Calculamos la dirección lateral basada en la rotación
             Vector3 lateralDirection = transform.forward.normalized;
-            float lateralForce = horizontalInput * maxVelocity * rb.mass * 0.2f; // Ajusta el 0.2f según necesites
+            float lateralForce = horizontalInput * maxVelocity * rb.mass * lateralForceMultiplier;
 
-            // Aplicamos la fuerza lateral
             rb.AddForce(lateralDirection * lateralForce, ForceMode.Force);
+           //   Debug.Log($"[ControladorBola] Fuerza lateral aplicada: {lateralForce:F2} en dirección {lateralDirection}");
         }
     }
 }
