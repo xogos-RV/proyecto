@@ -424,11 +424,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 50
   velocityControlMultiplier: 0.5
-  verticalInputThreshold: 2
+  triggerResponseCurve: 0
   rotationSpeed: 100
-  maxRotationAngleX: 10
-  maxRotationAngleY: 5
-  maxRotationAngleZ: 45
+  maxRotationAngleX: 20
+  maxRotationAngleY: 15
+  maxRotationAngleZ: 60
   lateralForceMultiplier: 1.5
   ejeY: -5
   initAt: 10
