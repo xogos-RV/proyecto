@@ -7,14 +7,17 @@ public class ControladorBola : MonoBehaviour
     private Rigidbody rb;
     private PlayerInput playerInput;
     private Vector2 joystick;
+    private float breakInput;
+    private float accelerateInput;
 
     [Header("Configuración de Velocidad")]
     public float maxVelocity = 100f;
     public float velocityControlMultiplier = 0.5f;
 
-    [Tooltip("Suavizado del movimiento (0 = sin suavizado)")]
-    [Range(0f, 1f)]
-    public float verticalInputThreshold = 0.5f;
+    [Header("Configuración de Gatillos")]
+    [Tooltip("Linealidad de los gatillos: -1 = más respuesta al inicio, 0 = lineal, 1 = más respuesta al final")]
+    [Range(-1f, 1f)]
+    public float triggerResponseCurve = 0f;
 
 
     [Header("Configuración de Rotación")]
@@ -48,7 +51,6 @@ public class ControladorBola : MonoBehaviour
         StopZMovementWhenJoystickCentered();
     }
 
-
     private void InitializeComponents()
     {
         rb = GetComponent<Rigidbody>();
@@ -68,38 +70,65 @@ public class ControladorBola : MonoBehaviour
     private void ReadInput()
     {
         joystick = playerInput.actions["Move"].ReadValue<Vector2>();
+        breakInput = playerInput.actions["break"].ReadValue<float>();
+        accelerateInput = playerInput.actions["caballito"].ReadValue<float>();
+
         // - Debug.Log($"[ControladorBola] Input joystick: X={joystick.x:F2}, Y={joystick.y:F2}");
+        // - Debug.Log($"[ControladorBola] Freno: {breakInput:F2}, Acelerador: {accelerateInput:F2}");
     }
 
     private void ControlVelocidad()
     {
-        float verticalInput = joystick.y;
+        // Procesar entradas de gatillos con la curva de respuesta
+        float processedAccelerate = ApplyResponseCurve(accelerateInput);
+        float processedBreak = ApplyResponseCurve(breakInput);
+
+        // Calcular el input neto (aceleración - freno)
+        float netInput = processedAccelerate - processedBreak;
+
         Vector3 direccionActual = transform.right;
         float velocidadActualEnDireccion = Vector3.Dot(rb.linearVelocity, direccionActual);
 
-        float velocidadObjetivo = CalcularVelocidadObjetivo(verticalInput);
+        float velocidadObjetivo = CalcularVelocidadObjetivo(netInput);
 
         ApplyVelocityForce(direccionActual, velocidadActualEnDireccion, velocidadObjetivo);
     }
 
-    private float CalcularVelocidadObjetivo(float verticalInput)
+    private float ApplyResponseCurve(float input)
+    {
+
+        // Normalizar el input al rango efectivo después del deadzone
+        float normalizedInput = Mathf.Clamp01(Mathf.Abs(input));
+
+        // Aplicar la curva de respuesta
+        float processedInput;
+        if (triggerResponseCurve > 0) // Más respuesta al final
+        {
+            processedInput = Mathf.Pow(normalizedInput, 1f + triggerResponseCurve);
+        }
+        else if (triggerResponseCurve < 0) // Más respuesta al inicio
+        {
+            processedInput = Mathf.Pow(normalizedInput, 1f / (1f + Mathf.Abs(triggerResponseCurve)));
+        }
+        else // Respuesta lineal
+        {
+            processedInput = normalizedInput;
+        }
+
+        // Mantener el signo original
+        return Mathf.Sign(input) * processedInput;
+    }
+
+    private float CalcularVelocidadObjetivo(float input)
     {
         float velocidadObjetivo = maxVelocity;
 
-        if (Mathf.Abs(verticalInput) > verticalInputThreshold)
-        {
-            float normalizedInput = NormalizeInput(verticalInput);
-            velocidadObjetivo += normalizedInput * maxVelocity * velocityControlMultiplier;
+        // Aplicar el efecto de los gatillos a la velocidad objetivo
+        velocidadObjetivo += input * maxVelocity * velocityControlMultiplier;
 
-            // - Debug.Log($"[ControladorBola] Input vertical normalizado: {normalizedInput:F2}, Velocidad objetivo: {velocidadObjetivo:F2}");
-        }
+        // - Debug.Log($"[ControladorBola] Input procesado: {input:F2}, Velocidad objetivo: {velocidadObjetivo:F2}");
 
         return velocidadObjetivo;
-    }
-
-    private float NormalizeInput(float input)
-    {
-        return Mathf.Sign(input) * (Mathf.Abs(input) - verticalInputThreshold) / (1 - verticalInputThreshold);
     }
 
     private void ApplyVelocityForce(Vector3 direccion, float velocidadActual, float velocidadObjetivo)
@@ -114,14 +143,23 @@ public class ControladorBola : MonoBehaviour
     private void ApplyRotation()
     {
         float horizontalInput = joystick.x * -1;
+
+        // Usar los gatillos para la rotación vertical independientemente del joystick
         float verticalInput = CalculateVerticalRotationInput();
 
         Quaternion targetRotation = CalculateTargetRotation(horizontalInput, verticalInput);
         ApplyRotationToRigidbody(targetRotation);
 
-        if (Mathf.Abs(horizontalInput) < 0.1f)
+        // Solo resetear la rotación horizontal cuando el joystick está centrado
+        // pero mantener la rotación vertical si los gatillos están activos
+        if (Mathf.Abs(horizontalInput) < 0.1f && Mathf.Abs(verticalInput) < 0.1f)
         {
             ResetRotation();
+        }
+        else if (Mathf.Abs(horizontalInput) < 0.1f)
+        {
+            // Resetear solo la rotación horizontal
+            ResetHorizontalRotation();
         }
 
         ApplyLateralForce(horizontalInput);
@@ -129,15 +167,9 @@ public class ControladorBola : MonoBehaviour
 
     private float CalculateVerticalRotationInput()
     {
-        float verticalInput = 0;
-
-        if (Mathf.Abs(joystick.y) > verticalInputThreshold)
-        {
-            verticalInput = NormalizeInput(joystick.y) * -1;
-            // - Debug.Log($"[ControladorBola] Input vertical para rotación: {verticalInput:F2}");
-        }
-
-        return verticalInput;
+        // Usar la diferencia entre aceleración y freno para la rotación vertical
+        float netTriggerInput = accelerateInput - breakInput;
+        return ApplyResponseCurve(netTriggerInput) * -1;
     }
 
     private Quaternion CalculateTargetRotation(float horizontalInput, float verticalInput)
@@ -168,6 +200,16 @@ public class ControladorBola : MonoBehaviour
         // - Debug.Log("[ControladorBola] Reseteando rotación");
     }
 
+    private void ResetHorizontalRotation()
+    {
+        // Mantener solo la rotación en Z (vertical) y resetear X e Y
+        Vector3 currentEuler = rb.rotation.eulerAngles;
+        Quaternion targetRotation = Quaternion.Euler(0, 0, currentEuler.z);
+        rb.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+        // - Debug.Log("[ControladorBola] Reseteando rotación horizontal");
+    }
+
     private void ApplyLateralForce(float horizontalInput)
     {
         if (Mathf.Abs(horizontalInput) > 0.1f)
@@ -180,10 +222,8 @@ public class ControladorBola : MonoBehaviour
         }
     }
 
-
     private void doResetPositionY()
     {
-
         if (transform.position.y < ejeY)
         {
             transform.position = new Vector3(transform.position.x, initAt, 0);
@@ -216,5 +256,4 @@ public class ControladorBola : MonoBehaviour
             }
         }
     }
-
 }
