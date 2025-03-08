@@ -107,6 +107,6 @@ Estribo é o protagonista complexo e relatable, a Señora engade humor e contras
 ---
 ---
 
- Diegos ( Vieiros Pérez - Santiago Lijó )
+Diego Vieiros Pérez - Diego Santiago Lijó
 
 #### repositorio: [J:\programacion\FP_a__Distancia\_JUEGOS\PROYECTO\proyecto\DOCS\GDD](https://github.com/xogos-RV/proyecto/blob/master/DOCS/GDD.md)
