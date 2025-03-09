@@ -627,9 +627,10 @@ GameObject:
   m_Component:
   - component: {fileID: 751497197}
   - component: {fileID: 751497196}
+  - component: {fileID: 751497198}
   m_Layer: 0
   m_Name: GeneradorDePlanos
-  m_TagString: Untagged
+  m_TagString: FloorPrefab
   m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -641,7 +642,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 751497195}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ef16c0d2c454c04b93188e56e0c3d79, type: 3}
   m_Name: 
@@ -654,19 +655,6 @@ MonoBehaviour:
   - {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
   jugador: {fileID: 2023103205}
   longitudPlano: 100
-  minObjetosPorPlano: 1
-  maxObjetosPorPlano: 5
-  alturaMinima: 1
-  alturaMaxima: 2
-  distribuirUniformemente: 1
-  anchoPlano: 20
-  fuerzaMinima: 1
-  fuerzaMaxima: 50
-  aplicarFuerzaVertical: 0
-  aplicarFuerzaHorizontal: 1
-  escalaMinima: 2
-  escalaMaxima: 10
-  escalaUniforme: 0
 --- !u!4 &751497197
 Transform:
   m_ObjectHideFlags: 0
@@ -682,6 +670,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &751497198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751497195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca0bc657bdfd1b4a80587322bbc53c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planoPrefabs:
+  - {fileID: 7420525515836206606, guid: ecfd1e8f5b53d744eaf429c54cf7dfe8, type: 3}
+  - {fileID: 7420525515836206606, guid: 0209d79a33110b14c8160119635ec1f6, type: 3}
+  - {fileID: 7420525515836206606, guid: 7e1915ec90eb0314197d8e3d07686248, type: 3}
+  jugador: {fileID: 2023103205}
+  longitudPlano: 100
+  numeroPlanosEnEscena: 3
+  umbralGeneracion: 0.255
+  combinarMeshes: 0
+  usarUnSoloCollider: 0
+  floorTag: FloorPrefab
 --- !u!1 &1635156667
 GameObject:
   m_ObjectHideFlags: 0
@@ -901,6 +912,68 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2023103206}
   m_SourcePrefab: {fileID: 100100000, guid: e48796f9fc49f2a4084fc2414c92a7bb, type: 3}
+--- !u!1 &2132217709
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2132217710}
+  - component: {fileID: 2132217711}
+  m_Layer: 0
+  m_Name: GenerateStreetBuildings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2132217710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132217709}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 503.08047, y: -11328.926, z: -309.681}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2132217711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132217709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 699a8a21cfe3c0d49a9019144611fd7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  liegreCam: {fileID: 1635156668}
+  objetosPrefabs:
+  - {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
+  minObjetosPorPlano: 1
+  maxObjetosPorPlano: 2
+  alturaMinima: 2
+  alturaMaxima: 2
+  distribuirUniformemente: 1
+  anchoPasillo: 30
+  fuerzaMinima: 1
+  fuerzaMaxima: 5
+  aplicarFuerzaVertical: 1
+  aplicarFuerzaHorizontal: 0
+  escalaMinima: 2
+  escalaMaxima: 10
+  escalaUniforme: 1
+  distanciaGeneracion: 20
+  distanciaDestruccion: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -908,6 +981,7 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 330585546}
   - {fileID: 1635156668}
+  - {fileID: 2132217710}
   - {fileID: 751497197}
   - {fileID: 332092107}
   - {fileID: 2071158995}
