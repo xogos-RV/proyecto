@@ -447,6 +447,9 @@ MonoBehaviour:
   collisionTab: DynamicPrefab
   floorTag: FloorPrefab
   frameThreshold: 3
+  collisionForceMagnitude: 10
+  collisionTorqueMagnitude: 5
+  crashThreshold: 0.2
 --- !u!136 &332092113
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -740,13 +743,16 @@ MonoBehaviour:
   maxRotationAngleX: 15
   maxRotationAngleY: 10
   maxRotationAngleZ: 60
-  lateralForceMultiplier: 0.2
+  lateralForceMultiplier: 0.5
   ejeY: -5
   initAt: 10
   zAxisDampingForce: 2.5
   collisionTab: DynamicPrefab
   floorTag: FloorPrefab
   frameThreshold: 3
+  collisionForceMagnitude: 30
+  collisionTorqueMagnitude: 50
+  crashThreshold: 0.3
 --- !u!64 &2023103207
 MeshCollider:
   m_ObjectHideFlags: 0
