@@ -62,9 +62,19 @@ public class ControladorBola : MonoBehaviour
     [Header("Detección de Suelo")]
     [Range(1, 10)]
     public int frameThreshold = 3;
-
     private int framesWithoutGroundContact = 0;
     private bool isInContactWithGround = false;
+
+    [Header("Fuerza de Colisión")]
+    [Range(0f, 100f)]
+    public float collisionForceMagnitude = 10f;
+
+    [Range(0f, 100f)]
+    public float collisionTorqueMagnitude = 25f;
+
+    [Range(0f, 1f)]
+    public float crashThreshold = 0.25f;
+    private bool isCollisionEffectActive = false;
 
     void Start()
     {
@@ -74,16 +84,18 @@ public class ControladorBola : MonoBehaviour
     void Update()
     {
         ReadInput();
-        ApplyRotation();
-
-        UpdateGroundedState();
-
-        if (isGrounded)
+        if (!isCollisionEffectActive)
         {
-            ControlVelocidad();
-            StopZMovementWhenJoystickCentered();
-        }
+            ApplyRotation();
 
+            UpdateGroundedState();
+
+            if (isGrounded)
+            {
+                ControlVelocidad();
+                StopZMovementWhenJoystickCentered();
+            }
+        }
         doResetPositionY();
     }
 
@@ -252,8 +264,9 @@ public class ControladorBola : MonoBehaviour
     {
         if (transform.position.y < ejeY)
         {
-            rb.linearVelocity = rb.linearVelocity.x * Vector3.right;
+            rb.linearVelocity = Mathf.Abs(rb.linearVelocity.x) * Vector3.right;
             transform.position = new Vector3(transform.position.x, initAt, 0);
+            rb.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
@@ -283,33 +296,53 @@ public class ControladorBola : MonoBehaviour
             }
         }
     }
-
     void OnCollisionEnter(Collision collision)
     {
-        // Verificar si está en contacto con el suelo
+        // TODO SIMPLIFICAR LAS CASUISTICAS
         if (collision.gameObject.CompareTag(floorTag))
         {
+            Debug.Log("FLOOR COLLISION ");
             isInContactWithGround = true;
+            // Restaurar el comportamiento normal al tocar el suelo
+            if (isCollisionEffectActive)
+            {
+                isCollisionEffectActive = false;
+                SetFreezeRotation(true);
+            }
+        }
+        float relativeVelocityMagnitude = collision.relativeVelocity.magnitude;
+
+        // Verificar si la velocidad relativa supera el umbral
+        if (relativeVelocityMagnitude < maxVelocity * crashThreshold)
+        {   
+            // TODO A VECES EL PATIN QUEDA TIRADO EN EL SUELO
+            Debug.Log("CUBE COLLISION SKIP relativeVelocityMagnitude: " + relativeVelocityMagnitude + " --------- threshold: " + maxVelocity * crashThreshold);
+            return;
         }
 
         if (collision.gameObject.CompareTag(collisionTab))
         {
+            Debug.Log("------>  CUBE COLLISION ENTER relativeVelocityMagnitude: " + relativeVelocityMagnitude);
             // Calcular la dirección de la fuerza basada en el ángulo de la colisión
             Vector3 forceDirection = collision.contacts[0].normal;
-            float forceMagnitude = 10f; // Ajusta la magnitud de la fuerza según sea necesario
+            // mantener la fuerza hacia delante en el eje x
+            forceDirection.x = -forceDirection.x;
+            // Aplicar la fuerza al jugador
+            rb.AddForce(forceDirection * collisionForceMagnitude, ForceMode.Impulse);
+            // Aplicar un torque aleatorio para simular rotación
+            Vector3 randomTorque = new Vector3(
+                UnityEngine.Random.Range(-1f, 1f),
+                UnityEngine.Random.Range(-1f, 1f),
+                UnityEngine.Random.Range(-1f, 1f)
+            ) * collisionTorqueMagnitude;
+            rb.AddTorque(randomTorque, ForceMode.Impulse);
 
-            // Aplicar la fuerza al objeto con el que colisionas
-            Rigidbody otherRb = collision.gameObject.GetComponent<Rigidbody>();
-            if (otherRb != null)
-            {
-                otherRb.AddForce(-forceDirection * forceMagnitude, ForceMode.Impulse);
-            }
-
-            // Descongelar la rotación del objeto con el que colisionas
+            // Activar el efecto de colisión
+            isCollisionEffectActive = true;
             SetFreezeRotation(false);
 
-            // Iniciar una corrutina para restaurar la rotación después de 1 segundo
-            StartCoroutine(RestoreRotationAfterDelay(otherRb, 1f));
+            // Iniciar una corrutina para restaurar la rotación después de 2 segundo
+            StartCoroutine(RestoreRotationAfterDelay(2f));
         }
     }
 
@@ -318,7 +351,6 @@ public class ControladorBola : MonoBehaviour
 
     }
 
-    // Método para verificar si hay algún contacto con el suelo
     void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag(floorTag))
@@ -335,11 +367,11 @@ public class ControladorBola : MonoBehaviour
         }
         else
         {
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.None;
+            rb.constraints = RigidbodyConstraints.None;
         }
     }
 
-    private IEnumerator RestoreRotationAfterDelay(Rigidbody rb, float delay)
+    private IEnumerator RestoreRotationAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         SetFreezeRotation(true);
