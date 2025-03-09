@@ -314,7 +314,7 @@ public class ControladorBola : MonoBehaviour
 
         // Verificar si la velocidad relativa supera el umbral
         if (relativeVelocityMagnitude < maxVelocity * crashThreshold)
-        {   
+        {
             // TODO A VECES EL PATIN QUEDA TIRADO EN EL SUELO
             Debug.Log("CUBE COLLISION SKIP relativeVelocityMagnitude: " + relativeVelocityMagnitude + " --------- threshold: " + maxVelocity * crashThreshold);
             return;
