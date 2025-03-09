@@ -647,9 +647,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planoPrefabs:
+  - {fileID: 7420525515836206606, guid: ecfd1e8f5b53d744eaf429c54cf7dfe8, type: 3}
   - {fileID: 7420525515836206606, guid: 0209d79a33110b14c8160119635ec1f6, type: 3}
   - {fileID: 7420525515836206606, guid: 7e1915ec90eb0314197d8e3d07686248, type: 3}
-  - {fileID: 7420525515836206606, guid: ecfd1e8f5b53d744eaf429c54cf7dfe8, type: 3}
   objetosPrefabs:
   - {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
   jugador: {fileID: 2023103205}
