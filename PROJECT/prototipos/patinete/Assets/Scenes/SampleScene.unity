@@ -957,23 +957,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   liegreCam: {fileID: 1635156668}
-  objetosPrefabs:
-  - {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
-  minObjetosPorPlano: 1
-  maxObjetosPorPlano: 2
-  alturaMinima: 2
-  alturaMaxima: 2
-  distribuirUniformemente: 1
-  anchoPasillo: 30
-  fuerzaMinima: 1
-  fuerzaMaxima: 5
-  aplicarFuerzaVertical: 1
-  aplicarFuerzaHorizontal: 0
-  escalaMinima: 2
+  objetosPrefab: {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
+  umbralGeneracion: 100
+  posicionFijaZ: 25
+  escalaMinima: 10
   escalaMaxima: 10
   escalaUniforme: 1
-  distanciaGeneracion: 20
-  distanciaDestruccion: 10
+  offsetY: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
