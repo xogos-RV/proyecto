@@ -40,8 +40,16 @@ public class GeneradorDePlanos : MonoBehaviour
     public float escalaMaxima = 10f;
     public bool escalaUniforme = true; // Si es true, la escala será igual en X, Y, Z
 
+    private MeshCollider colliderGlobal; 
+
     void Start()
     {
+
+        // Crear un objeto vacío para el collider global
+        /*TODO GameObject colliderGlobalObj = new GameObject("ColliderGlobal");
+        colliderGlobal = colliderGlobalObj.AddComponent<MeshCollider>();
+        colliderGlobalObj.transform.SetParent(this.transform);
+        colliderGlobalObj.tag = "FloorMesh"; */
         initPlane();
     }
 
@@ -52,8 +60,56 @@ public class GeneradorDePlanos : MonoBehaviour
             Debug.Log($"-------------------------------------------------------------");
             GenerarNuevoPlano();
             DestruirPlanoAntiguo();
+            // TODO ActualizarColliderGlobal();
         }
     }
+
+    void ActualizarColliderGlobal()
+    {
+        if (planosActivos.Count == 0) return;
+        Debug.Log($"planosActivos.Count: {planosActivos.Count}");
+
+        // Desactivar el collider global temporalmente
+        colliderGlobal.enabled = false;
+
+        // Combinar las mallas de todos los planos
+        CombineInstance[] combine = new CombineInstance[planosActivos.Count];
+        for (int i = 0; i < planosActivos.Count; i++)
+        {
+            MeshFilter meshFilter = planosActivos[i].GetComponent<MeshFilter>();
+            if (meshFilter != null)
+            {
+                combine[i].mesh = meshFilter.sharedMesh;
+                combine[i].transform = planosActivos[i].transform.localToWorldMatrix;
+            }
+        }
+
+        // Crear una nueva malla combinada
+        Mesh combinedMesh = new Mesh();
+        combinedMesh.CombineMeshes(combine);
+
+        // Asignar la malla combinada al MeshCollider
+        colliderGlobal.sharedMesh = combinedMesh;
+
+        // Reactivar el collider global
+        colliderGlobal.enabled = true;
+
+        // Logear los límites del collider generado
+        if (colliderGlobal.sharedMesh != null)
+        {
+            Bounds bounds = colliderGlobal.sharedMesh.bounds;
+            Debug.Log($"Límites del collider generado:");
+            Debug.Log($"- Centro: {bounds.center}");
+            Debug.Log($"- Tamaño: {bounds.size}");
+            Debug.Log($"- Mínimo: {bounds.min}");
+            Debug.Log($"- Máximo: {bounds.max}");
+        }
+        else
+        {
+            Debug.LogWarning("No se pudo calcular los límites del collider: sharedMesh es null.");
+        }
+    }
+
 
     void initPlane()
     {
@@ -199,4 +255,5 @@ public class GeneradorDePlanos : MonoBehaviour
             Debug.Log($"[DestruirPlanoAntiguo] lastEndPosition: {nextPosition}");
         }
     }
+
 }

@@ -58,6 +58,7 @@ public class ControladorBola : MonoBehaviour
     [Header("Configuración de Colisión")]
     public string collisionTab = "DynamicPrefab";
     public string floorTag = "FloorPrefab";
+    public string floorMeshTag = "FloorMesh";
 
     [Header("Detección de Suelo")]
     [Range(1, 10)]
@@ -296,10 +297,13 @@ public class ControladorBola : MonoBehaviour
             }
         }
     }
+
     void OnCollisionEnter(Collision collision)
     {
+
+         Debug.Log($"Colisión con: {collision.gameObject.name} (Tag: {collision.gameObject.tag})");
         // TODO SIMPLIFICAR LAS CASUISTICAS
-        if (collision.gameObject.CompareTag(floorTag))
+        if (collision.gameObject.CompareTag(floorTag) || collision.gameObject.CompareTag(floorMeshTag))
         {
             Debug.Log("FLOOR COLLISION ");
             isInContactWithGround = true;
@@ -310,9 +314,8 @@ public class ControladorBola : MonoBehaviour
                 SetFreezeRotation(true);
             }
         }
-        float relativeVelocityMagnitude = collision.relativeVelocity.magnitude;
 
-        // Verificar si la velocidad relativa supera el umbral
+        float relativeVelocityMagnitude = collision.relativeVelocity.magnitude;
         if (relativeVelocityMagnitude < maxVelocity * crashThreshold)
         {   
             // TODO A VECES EL PATIN QUEDA TIRADO EN EL SUELO
