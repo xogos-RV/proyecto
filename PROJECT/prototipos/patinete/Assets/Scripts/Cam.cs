@@ -4,6 +4,7 @@ public class CameraFollowX : MonoBehaviour
 {
     [Header("Referencias")]
     public Transform player;
+    public Transform liebre;
 
     [Header("Configuración de Posición")]
     [Tooltip("Offset en X respecto al jugador")]
@@ -21,7 +22,11 @@ public class CameraFollowX : MonoBehaviour
     public float lookAtHeightMultiplier = 0.33f;
     [Tooltip("Suavizado del movimiento (0 = sin suavizado)")]
     [Range(0f, 1f)]
-    public float smoothSpeed =1f;
+    public float smoothSpeed = 1f;
+
+    [Header("Configuración de Seguimiento")]
+    [Tooltip("bloquear seguir al jugador en el eje Z")]
+    public bool followLiebre = false;
 
     private Vector3 initialLookAtOffset; // Offset inicial para el LookAt
 
@@ -35,8 +40,9 @@ public class CameraFollowX : MonoBehaviour
         }
 
         // Posicionamos la cámara según los parámetros configurados
-        UpdateCameraPosition(true);
-        
+        Transform target = followLiebre ? liebre : player;
+        UpdateCameraPosition(true, target);
+
         // Calculamos el offset inicial para el LookAt
         initialLookAtOffset = CalculateLookAtOffset();
     }
@@ -44,17 +50,26 @@ public class CameraFollowX : MonoBehaviour
     void LateUpdate()
     {
         if (player == null) return;
-        
-        UpdateCameraPosition(false);
+
+        if (liebre != null)
+        {
+            Vector3 nuevaPosicion = liebre.position;
+            nuevaPosicion.x = player.position.x;
+            liebre.position = nuevaPosicion;
+        }
+
+        Transform target = followLiebre ? liebre : player;
+
+        UpdateCameraPosition(false, target);
     }
-    
-    private void UpdateCameraPosition(bool immediate)
+
+    private void UpdateCameraPosition(bool immediate, Transform target)
     {
         // Calculamos la nueva posición de la cámara (solo en el eje X)
         Vector3 targetPosition = new Vector3(
-            player.position.x + xOffset, // Seguimos al jugador en el eje X con offset
+            target.position.x + xOffset, // Seguimos al objetivo en el eje X con offset
             cameraHeight,                // Altura configurable
-            player.position.z - zDistance // Distancia configurable en Z
+            target.position.z - zDistance // Distancia configurable en Z
         );
 
         // Aplicamos la nueva posición a la cámara (con o sin suavizado)
@@ -69,23 +84,23 @@ public class CameraFollowX : MonoBehaviour
 
         // Calculamos el punto de LookAt
         Vector3 lookAtPosition = new Vector3(
-            player.position.x + lookAtXOffset,
-            player.position.y + (initialLookAtOffset.y * lookAtHeightMultiplier),
-            player.position.z
+            target.position.x + lookAtXOffset,
+            target.position.y + (initialLookAtOffset.y * lookAtHeightMultiplier),
+            target.position.z
         );
 
         // Hacemos que la cámara mire hacia el punto calculado
         transform.LookAt(lookAtPosition);
     }
-    
+
     private Vector3 CalculateLookAtOffset()
     {
         // Calculamos el offset inicial para el LookAt
         return player.position - transform.position;
     }
-    
+
     // Método para actualizar la configuración en tiempo de ejecución
-    public void UpdateCameraSettings(float newXOffset, float newHeight, float newZDistance, 
+    public void UpdateCameraSettings(float newXOffset, float newHeight, float newZDistance,
                                     float newLookAtXOffset, float newHeightMultiplier)
     {
         xOffset = newXOffset;
@@ -93,7 +108,7 @@ public class CameraFollowX : MonoBehaviour
         zDistance = newZDistance;
         lookAtXOffset = newLookAtXOffset;
         lookAtHeightMultiplier = newHeightMultiplier;
-        
+
         // Recalculamos el offset del LookAt
         initialLookAtOffset = CalculateLookAtOffset();
     }
