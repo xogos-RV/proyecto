@@ -698,7 +698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1147eaae417a72142b7d55ce1b8ae021, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1171,9 +1171,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   liegreCam: {fileID: 1635156668}
-  buildingPrefab: {fileID: 919132149155446097, guid: 9f83b7f7a14044e4594754d90d50f2b1, type: 3}
+  buildingPrefab: {fileID: 919132149155446097, guid: f60261bfd80f8ae42923f5b6ac17884e, type: 3}
   umbralGeneracion: 150
-  posicionFijaZ: 25
+  posicionFijaZ: 18
   escala: 2.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
