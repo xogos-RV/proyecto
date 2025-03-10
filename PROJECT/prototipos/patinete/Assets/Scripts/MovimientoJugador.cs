@@ -10,14 +10,23 @@ public class ControladorBola : MonoBehaviour
     private Vector2 joystick;
     private float breakInput;
     private float accelerateInput;
+    private float jumpInput;
     private bool isGrounded = false;
 
     [Header("Configuración de Velocidad")]
     [Range(0f, 100f)]
     public float maxVelocity = 60f;
 
+    [Range(0f, 10f)]
+    public float accelerationForce = 5f;
+
     [Range(0f, 1f)]
     public float velocityControlMultiplier = 0.5f;
+
+    [Header("Configuración de Rozamiento")]
+    [Tooltip("Coeficiente de rozamiento: 0 = sin rozamiento (desliza indefinidamente), 1 = rozamiento máximo (se detiene rápido)")]
+    [Range(0f, 1f)]
+    public float frictionCoefficient = 0.1f;
 
     [Header("Configuración de Gatillos")]
     [Tooltip("Linealidad de los gatillos: -1 = más respuesta al inicio, 0 = lineal, 1 = más respuesta al final")]
@@ -103,14 +112,14 @@ public class ControladorBola : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
-        rb.linearVelocity = transform.right * maxVelocity;
     }
 
     private void ReadInput()
     {
         joystick = playerInput.actions["Move"].ReadValue<Vector2>();
         breakInput = playerInput.actions["break"].ReadValue<float>();
-        accelerateInput = playerInput.actions["caballito"].ReadValue<float>();
+        accelerateInput = playerInput.actions["accelerate"].ReadValue<float>();
+        jumpInput = playerInput.actions["jump"].ReadValue<float>();
     }
 
     private void ControlVelocidad()
@@ -119,21 +128,51 @@ public class ControladorBola : MonoBehaviour
             return;
 
         float processedAccelerate = ApplyResponseCurve(accelerateInput);
-        float processedBreak = ApplyResponseCurve(breakInput) * breakFactor;
+        float processedJump = ApplyResponseCurve(jumpInput);
 
-        float netInput = processedAccelerate - processedBreak;
-
+        // Calcular la velocidad actual en la dirección de avance
         Vector3 direccionActual = transform.right;
         float velocidadActualEnDireccion = Vector3.Dot(rb.linearVelocity, direccionActual);
 
-        float velocidadObjetivo = CalcularVelocidadObjetivo(netInput);
+        // Calcular la velocidad objetivo basada en el input de aceleración
+        float velocidadObjetivo = velocidadActualEnDireccion;
+        
+        // Solo aplicar aceleración si se presiona el botón de aceleración
+        if (processedAccelerate > 0.1f)
+        {
+            velocidadObjetivo = processedAccelerate * maxVelocity;
+        }
+        else
+        {
+            // Aplicar rozamiento cuando no se está acelerando
+            ApplyFriction(direccionActual);
+        }
+        
+        // Aplicar el efecto de jump a la velocidad objetivo
+        velocidadObjetivo += processedJump * maxVelocity * velocityControlMultiplier;
 
+        // Si se está frenando, reducir la velocidad objetivo
         if (breakInput > 0.1f)
         {
             velocidadObjetivo = 0;
         }
 
+        // Aplicar la fuerza necesaria para alcanzar la velocidad objetivo
         ApplyVelocityForce(direccionActual, velocidadActualEnDireccion, velocidadObjetivo);
+    }
+
+    private void ApplyFriction(Vector3 direccionMovimiento)
+    {
+        // Solo aplicar rozamiento si hay velocidad
+        if (rb.linearVelocity.magnitude > 0.01f)
+        {
+            // Calcular la fuerza de rozamiento proporcional a la velocidad actual
+            float frictionForce = rb.linearVelocity.magnitude * frictionCoefficient * rb.mass;
+            
+            // Aplicar la fuerza en dirección opuesta al movimiento
+            Vector3 frictionDirection = -rb.linearVelocity.normalized;
+            rb.AddForce(frictionDirection * frictionForce, ForceMode.Force);
+        }
     }
 
     private float ApplyResponseCurve(float input)
@@ -160,20 +199,10 @@ public class ControladorBola : MonoBehaviour
         return Mathf.Sign(input) * processedInput;
     }
 
-    private float CalcularVelocidadObjetivo(float input)
-    {
-        float velocidadObjetivo = maxVelocity;
-
-        // Aplicar el efecto de los gatillos a la velocidad objetivo
-        velocidadObjetivo += input * maxVelocity * velocityControlMultiplier;
-
-        return velocidadObjetivo;
-    }
-
     private void ApplyVelocityForce(Vector3 direccion, float velocidadActual, float velocidadObjetivo)
     {
         float diferenciaVelocidad = velocidadObjetivo - velocidadActual;
-        Vector3 fuerza = direccion * diferenciaVelocidad * rb.mass;
+        Vector3 fuerza = direccion * diferenciaVelocidad * rb.mass * accelerationForce;
 
         rb.AddForce(fuerza, ForceMode.Force);
     }
@@ -211,8 +240,8 @@ public class ControladorBola : MonoBehaviour
 
     private float CalculateVerticalRotationInput()
     {
-        // Usar la diferencia entre aceleración y freno para la rotación vertical
-        float netTriggerInput = accelerateInput - breakInput;
+        // Usar la diferencia entre jump y freno para la rotación vertical
+        float netTriggerInput = jumpInput - breakInput;
         return ApplyResponseCurve(netTriggerInput) * -1;
     }
 
@@ -220,7 +249,6 @@ public class ControladorBola : MonoBehaviour
     {
         float targetRotationX = horizontalInput * maxRotationAngleX;
         float targetRotationY = horizontalInput * maxRotationAngleY * -1f;
-        // - Debug.Log($"[ControladorBola] Rotación objetivo: X={targetRotationX:F2}, Y={targetRotationY:F2}, Z={targetRotationZ:F2}");
 
         // Aplicar el factor de velocidad a la rotación en Z
         float targetRotationZ = verticalInput * maxRotationAngleZ * -1f * velocityFactor;
@@ -296,6 +324,7 @@ public class ControladorBola : MonoBehaviour
             }
         }
     }
+    
     void OnCollisionEnter(Collision collision)
     {
         // TODO SIMPLIFICAR LAS CASUISTICAS

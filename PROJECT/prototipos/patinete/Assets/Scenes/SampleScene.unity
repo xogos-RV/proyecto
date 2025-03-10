@@ -433,7 +433,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVelocity: 60
+  accelerationForce: 5
   velocityControlMultiplier: 0.5
+  frictionCoefficient: 0.1
   triggerResponseCurve: 0
   breakFactor: 2
   rotationSpeed: 100
@@ -631,7 +633,7 @@ GameObject:
   m_Layer: 0
   m_Name: GeneradorDePlanos
   m_TagString: FloorPrefab
-  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -655,6 +657,10 @@ MonoBehaviour:
   - {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
   jugador: {fileID: 2023103205}
   longitudPlano: 100
+  planosActivos: []
+  lastPrefab: {fileID: 0}
+  lastPosition: {x: 0, y: 0, z: 0}
+  nextPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &751497197
 Transform:
   m_ObjectHideFlags: 0
@@ -746,8 +752,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25f97a02115fa942858e9d04b14d9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 60
+  maxVelocity: 50
+  accelerationForce: 5
   velocityControlMultiplier: 0.5
+  frictionCoefficient: 0.1
   triggerResponseCurve: 0
   breakFactor: 2
   rotationSpeed: 100
@@ -925,7 +933,7 @@ GameObject:
   m_Layer: 0
   m_Name: GenerateStreetBuildings
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -957,12 +965,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   liegreCam: {fileID: 1635156668}
-  objetosPrefab: {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
-  umbralGeneracion: 100
+  objetosPrefab: {fileID: 932158581547072481, guid: dde241a195572c24d98b2949c3c92b3b, type: 3}
+  umbralGeneracion: 0
   posicionFijaZ: 25
-  anchoMinimo: 10
-  anchoMaximo: 30
-  alturaMinima: 5
+  anchoMinimo: 20
+  anchoMaximo: 20
+  alturaMinima: 20
   alturaMaxima: 20
   escalaUniforme: 1
 --- !u!1660057539 &9223372036854775807

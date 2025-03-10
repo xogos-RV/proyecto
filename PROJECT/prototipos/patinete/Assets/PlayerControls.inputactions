@@ -24,9 +24,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "caballito",
+                    "name": "accelerate",
                     "type": "Button",
                     "id": "a1bfb7c7-9c5b-4bf9-a180-cd8db5090d83",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "jump",
+                    "type": "Button",
+                    "id": "47ac270e-a78d-4e85-bccf-23861c2f85d9",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -147,7 +156,7 @@
                 {
                     "name": "",
                     "id": "7fa267c3-df15-4315-9fe7-ba7298f25fb7",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -173,7 +182,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "caballito",
+                    "action": "accelerate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -184,7 +193,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "caballito",
+                    "action": "accelerate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4ea49b5a-d4ba-43a4-a6c0-a76bc3955898",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64db7384-043f-4ba0-b7e3-0b83d54603eb",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
