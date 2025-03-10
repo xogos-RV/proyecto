@@ -957,7 +957,7 @@ MonoBehaviour:
   maxVelocity: 25
   accelerationForce: 5
   velocityControlMultiplier: 0.5
-  frictionCoefficient: 0.1
+  frictionCoefficient: 0.407
   triggerResponseCurve: 0
   breakFactor: 2
   rotationSpeed: 100
@@ -970,10 +970,10 @@ MonoBehaviour:
   zAxisDampingForce: 2.5
   collisionTab: DynamicPrefab
   floorTag: FloorPrefab
-  frameThreshold: 3
-  collisionForceMagnitude: 30
+  frameThreshold: 1
+  collisionForceMagnitude: 2
   collisionTorqueMagnitude: 50
-  crashThreshold: 0.3
+  crashThreshold: 0.1
 --- !u!64 &2023103207
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1174,9 +1174,12 @@ MonoBehaviour:
   buildingPrefabs:
   - {fileID: 3101915410533818860, guid: 5292f6dc1d688e8408bf287d0df75362, type: 3}
   - {fileID: 6049807481469080333, guid: 32705368d4bcb6548baff029cc58739c, type: 3}
-  umbralGeneracion: 60
-  posicionFijaZ: 20
-  escala: 2.5
+  umbralGeneracion: 100
+  posicionFijaZ: 12
+  escala: 2
+  espacioMinimoEntrePrefabs: 2
+  espacioMaximoEntrePrefabs: 2
+  probabilidadGeneracion: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
