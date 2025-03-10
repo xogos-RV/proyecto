@@ -51,6 +51,8 @@ public class GenerateStreetBuildings : MonoBehaviour
     {
         if (buildingPrefab == null) return;
 
+        Debug.Log("SIZE: " + size.ToString());
+
         float posX = ultimaPosicionX + escala * size.x;
         float posY = 0;
         Vector3 posicionObjeto = new Vector3(posX, posY, posicionZ);
@@ -93,6 +95,7 @@ public class GenerateStreetBuildings : MonoBehaviour
         if (renderer != null)
         {
             Vector3 tamaño = renderer.bounds.size;
+            Debug.Log("Nombre del objeto: " + obj.name + ", Tamaño: " + tamaño);
             if (tamaño.magnitude > tamañoMasGrande.magnitude)
             {
                 tamañoMasGrande = tamaño;

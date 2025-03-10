@@ -654,11 +654,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1147eaae417a72142b7d55ce1b8ae021, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1147eaae417a72142b7d55ce1b8ae021, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1147eaae417a72142b7d55ce1b8ae021, type: 3}
       propertyPath: m_LocalPosition.z
@@ -698,7 +698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1147eaae417a72142b7d55ce1b8ae021, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1171,7 +1171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   liegreCam: {fileID: 1635156668}
-  buildingPrefab: {fileID: 3101915410533818860, guid: 5292f6dc1d688e8408bf287d0df75362, type: 3}
+  buildingPrefab: {fileID: 919132149155446097, guid: 9f83b7f7a14044e4594754d90d50f2b1, type: 3}
   umbralGeneracion: 150
   posicionFijaZ: 25
   escala: 2.5
@@ -1185,5 +1185,5 @@ SceneRoots:
   - {fileID: 2132217710}
   - {fileID: 751497197}
   - {fileID: 332092107}
-  - {fileID: 2071158995}
   - {fileID: 736365709}
+  - {fileID: 2071158995}
