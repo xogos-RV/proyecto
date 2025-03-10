@@ -85,14 +85,21 @@ public class ControladorBola : MonoBehaviour
     public float crashThreshold = 0.25f;
     private bool isCollisionEffectActive = false;
 
+    [Header("Configuración de Freno Kinematic")]
+    [Range(0f, 1f)]
+    public float velocityThresholdForKinematic = 0.1f;
+
     void Start()
     {
         InitializeComponents();
     }
-
     void Update()
     {
         ReadInput();
+
+        // Manejar el estado isKinematic basado en el freno
+        HandleKinematicState();
+
         if (!isCollisionEffectActive)
         {
             ApplyRotation();
@@ -122,6 +129,22 @@ public class ControladorBola : MonoBehaviour
         jumpInput = playerInput.actions["jump"].ReadValue<float>();
     }
 
+    // Nuevo método para manejar el estado kinematic
+    private void HandleKinematicState()
+    {
+        // Si está en el suelo y frenando con velocidad baja, activar isKinematic
+        if (isGrounded && breakInput > 0.1f && rb.linearVelocity.magnitude < velocityThresholdForKinematic)
+        {
+            rb.isKinematic = true;
+        }
+        // Si suelta el freno o no está en el suelo, desactivar isKinematic
+        else if (breakInput <= 0.1f || !isGrounded)
+        {
+            rb.isKinematic = false;
+        }
+    }
+
+    // Modificar ControlVelocidad para que no maneje isKinematic
     private void ControlVelocidad()
     {
         if (!isGrounded)
@@ -136,7 +159,7 @@ public class ControladorBola : MonoBehaviour
 
         // Calcular la velocidad objetivo basada en el input de aceleración
         float velocidadObjetivo = velocidadActualEnDireccion;
-        
+
         // Solo aplicar aceleración si se presiona el botón de aceleración
         if (processedAccelerate > 0.1f)
         {
@@ -147,7 +170,7 @@ public class ControladorBola : MonoBehaviour
             // Aplicar rozamiento cuando no se está acelerando
             ApplyFriction(direccionActual);
         }
-        
+
         // Aplicar el efecto de jump a la velocidad objetivo
         velocidadObjetivo += processedJump * maxVelocity * velocityControlMultiplier;
 
@@ -157,10 +180,13 @@ public class ControladorBola : MonoBehaviour
             velocidadObjetivo = 0;
         }
 
-        // Aplicar la fuerza necesaria para alcanzar la velocidad objetivo
-        ApplyVelocityForce(direccionActual, velocidadActualEnDireccion, velocidadObjetivo);
+        // Solo aplicar fuerzas si no está en modo kinematic
+        if (!rb.isKinematic)
+        {
+            // Aplicar la fuerza necesaria para alcanzar la velocidad objetivo
+            ApplyVelocityForce(direccionActual, velocidadActualEnDireccion, velocidadObjetivo);
+        }
     }
-
     private void ApplyFriction(Vector3 direccionMovimiento)
     {
         // Solo aplicar rozamiento si hay velocidad
@@ -168,7 +194,7 @@ public class ControladorBola : MonoBehaviour
         {
             // Calcular la fuerza de rozamiento proporcional a la velocidad actual
             float frictionForce = rb.linearVelocity.magnitude * frictionCoefficient * rb.mass;
-            
+
             // Aplicar la fuerza en dirección opuesta al movimiento
             Vector3 frictionDirection = -rb.linearVelocity.normalized;
             rb.AddForce(frictionDirection * frictionForce, ForceMode.Force);
@@ -292,6 +318,7 @@ public class ControladorBola : MonoBehaviour
     {
         if (transform.position.y < ejeY)
         {
+            rb.isKinematic = false;
             rb.linearVelocity = Mathf.Abs(rb.linearVelocity.x) * Vector3.right;
             transform.position = new Vector3(transform.position.x, initAt, 0);
             rb.rotation = Quaternion.Euler(0, 0, 0);
@@ -324,14 +351,18 @@ public class ControladorBola : MonoBehaviour
             }
         }
     }
-    
+
     void OnCollisionEnter(Collision collision)
     {
+
+        rb.isKinematic = false;
+
         // TODO SIMPLIFICAR LAS CASUISTICAS
         if (collision.gameObject.CompareTag(floorTag))
         {
             Debug.Log("FLOOR COLLISION ");
             isInContactWithGround = true;
+
             // Restaurar el comportamiento normal al tocar el suelo
             if (isCollisionEffectActive)
             {
@@ -343,7 +374,7 @@ public class ControladorBola : MonoBehaviour
 
         // Verificar si la velocidad relativa supera el umbral
         if (relativeVelocityMagnitude < maxVelocity * crashThreshold)
-        {   
+        {
             // TODO A VECES EL PATIN QUEDA TIRADO EN EL SUELO
             Debug.Log("CUBE COLLISION SKIP relativeVelocityMagnitude: " + relativeVelocityMagnitude + " --------- threshold: " + maxVelocity * crashThreshold);
             return;
