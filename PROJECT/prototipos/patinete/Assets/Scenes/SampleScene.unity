@@ -954,7 +954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e25f97a02115fa942858e9d04b14d9e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 50
+  maxVelocity: 25
   accelerationForce: 5
   velocityControlMultiplier: 0.5
   frictionCoefficient: 0.1
@@ -1171,9 +1171,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   liegreCam: {fileID: 1635156668}
-  buildingPrefab: {fileID: 919132149155446097, guid: f60261bfd80f8ae42923f5b6ac17884e, type: 3}
-  umbralGeneracion: 150
-  posicionFijaZ: 18
+  buildingPrefabs:
+  - {fileID: 3101915410533818860, guid: 5292f6dc1d688e8408bf287d0df75362, type: 3}
+  - {fileID: 6049807481469080333, guid: 32705368d4bcb6548baff029cc58739c, type: 3}
+  umbralGeneracion: 60
+  posicionFijaZ: 20
   escala: 2.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
