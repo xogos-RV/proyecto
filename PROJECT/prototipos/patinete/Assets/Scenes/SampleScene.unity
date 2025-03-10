@@ -938,7 +938,7 @@ Transform:
   m_GameObject: {fileID: 2132217709}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 503.08047, y: -11328.926, z: -309.681}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -960,10 +960,11 @@ MonoBehaviour:
   objetosPrefab: {fileID: 2376936226443575326, guid: 2677cf3fa1c5978499b4be690c44de14, type: 3}
   umbralGeneracion: 100
   posicionFijaZ: 25
-  escalaMinima: 10
-  escalaMaxima: 10
+  anchoMinimo: 10
+  anchoMaximo: 30
+  alturaMinima: 5
+  alturaMaxima: 20
   escalaUniforme: 1
-  offsetY: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
