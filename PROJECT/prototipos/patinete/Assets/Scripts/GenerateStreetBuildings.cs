@@ -7,124 +7,105 @@ public class GenerateStreetBuildings : MonoBehaviour
 
     // Configuración para la generación de objetos
     [Header("Configuración de Objetos")]
-    public GameObject objetosPrefab; // Prefab único que se repetirá
-    public float umbralGeneracion = 20f; // Umbral en X para generar nuevos objetos
+    public GameObject buildingPrefab;
+    public float umbralGeneracion = 20f;
 
-    // Configuración para la posición Z
     [Header("Configuración de Posición Z")]
-    public float posicionFijaZ = 20f; // Posición fija en Z (tanto -z como +z)
+    public float posicionFijaZ = 20f;
 
-    // Configuración para la escala de los objetos
     [Header("Configuración de Escala")]
-    [Range(10f, 30f)]
-    public float anchoMinimo = 10f; // Ancho mínimo en X
-    [Range(10f, 30f)]
-    public float anchoMaximo = 30f; // Ancho máximo en X
-    [Range(5f, 20f)]
-    public float alturaMinima = 5f; // Altura mínima en Y
-    [Range(5f, 20f)]
-    public float alturaMaxima = 20f; // Altura máxima en Y
-    public bool escalaUniforme = true; // Si es true, la escala será igual en X, Y, Z
+    [Range(1, 3)]
+    public float escala = 2f;
+
 
     private float ultimaPosicionGeneracionXNegativaZ = 0f; // Última posición X en la calle -z
     private float ultimaPosicionGeneracionXPositivaZ = 0f; // Última posición X en la calle +z
     private List<GameObject> calleNegativaZ = new List<GameObject>(); // Lista de objetos en -z
     private List<GameObject> callePositivaZ = new List<GameObject>(); // Lista de objetos en +z
+    Vector3 size;
 
     void Start()
     {
-        // Generar los primeros objetos al inicio
-        GenerarObjetoEnCalle(ref ultimaPosicionGeneracionXNegativaZ, -posicionFijaZ, calleNegativaZ);
-        GenerarObjetoEnCalle(ref ultimaPosicionGeneracionXPositivaZ, posicionFijaZ, callePositivaZ);
+        size = getSize(buildingPrefab);
+        GenerarObjetoEnCalle(ref ultimaPosicionGeneracionXPositivaZ, posicionFijaZ + escala * size.z, callePositivaZ, 1);
+        GenerarObjetoEnCalle(ref ultimaPosicionGeneracionXNegativaZ, -posicionFijaZ - escala * size.z, calleNegativaZ, -1);
     }
 
     void Update()
     {
-        // Verificar si el jugador ha alcanzado el umbral para generar nuevos objetos en -z
-        if (liegreCam.position.x > ultimaPosicionGeneracionXNegativaZ - umbralGeneracion)
-        {
-            GenerarObjetoEnCalle(ref ultimaPosicionGeneracionXNegativaZ, -posicionFijaZ, calleNegativaZ);
-        }
-
-        // Verificar si el jugador ha alcanzado el umbral para generar nuevos objetos en +z
+        // Calle +Z
         if (liegreCam.position.x > ultimaPosicionGeneracionXPositivaZ - umbralGeneracion)
         {
-            GenerarObjetoEnCalle(ref ultimaPosicionGeneracionXPositivaZ, posicionFijaZ, callePositivaZ);
+            GenerarObjetoEnCalle(ref ultimaPosicionGeneracionXPositivaZ, posicionFijaZ + escala * size.z, callePositivaZ, 1);
+        }
+        // Calle -Z
+        if (liegreCam.position.x > ultimaPosicionGeneracionXNegativaZ - umbralGeneracion)
+        {
+            GenerarObjetoEnCalle(ref ultimaPosicionGeneracionXNegativaZ, -posicionFijaZ - escala * size.z, calleNegativaZ, -1);
         }
 
-        // Destruir objetos que ya no son necesarios (opcional)
         DestruirObjetosAntiguos();
     }
 
-    void GenerarObjetoEnCalle(ref float ultimaPosicionX, float posicionZ, List<GameObject> calle)
+    void GenerarObjetoEnCalle(ref float ultimaPosicionX, float posicionZ, List<GameObject> calle, int mirror)
     {
-        if (objetosPrefab == null) return;
+        if (buildingPrefab == null) return;
 
-        // Calcular la escala X del nuevo objeto
-        float escalaX = Random.Range(anchoMinimo, anchoMaximo);
-
-        // Calcular la escala Y del nuevo objeto
-        float escalaY = Random.Range(alturaMinima, alturaMaxima);
-
-        // Calcular la posición X del nuevo objeto
-        float posX = ultimaPosicionX + escalaX / 2f; // Centrar el objeto
-
-        // Calcular la posición Y (escalaY / 2 para que esté sobre el plano Y = 0)
-        float posY = escalaY / 2f;
-
+        float posX = ultimaPosicionX + escala * size.x;
+        float posY = 0;
         Vector3 posicionObjeto = new Vector3(posX, posY, posicionZ);
-
-        // Instanciar el objeto
-        GameObject nuevoObjeto = Instantiate(objetosPrefab, posicionObjeto, Quaternion.identity);
-
-        // Añadir Rigidbody y configurarlo como kinematic
+        GameObject nuevoObjeto = Instantiate(buildingPrefab, posicionObjeto, Quaternion.identity);
         Rigidbody rb = nuevoObjeto.GetComponent<Rigidbody>();
         if (rb == null)
         {
             rb = nuevoObjeto.AddComponent<Rigidbody>();
         }
-        rb.isKinematic = true; // Hacer el objeto kinematic
-
-        // Aplicar escala aleatoria
-        if (escalaUniforme)
-        {
-            // Escala uniforme (igual en todos los ejes)
-            nuevoObjeto.transform.localScale = new Vector3(escalaX, escalaY, escalaX);
-        }
-        else
-        {
-            // Escala no uniforme (diferente en cada eje)
-            float escalaZ = Random.Range(anchoMinimo, anchoMaximo); // Escala Z aleatoria
-            nuevoObjeto.transform.localScale = new Vector3(escalaX, escalaY, escalaZ);
-        }
-
-        // Actualizar la última posición de generación
-        ultimaPosicionX = posX + escalaX / 2f; // Sumar la mitad de la escala X para el siguiente objeto
-
-        // Almacenar el objeto generado en la lista
+        rb.isKinematic = true;
+        ultimaPosicionX = posX;
+        nuevoObjeto.transform.localScale = new Vector3(escala, escala, escala * mirror);
         calle.Add(nuevoObjeto);
     }
 
     void DestruirObjetosAntiguos()
     {
-        // Destruir objetos en -z que están muy atrás del jugador
         for (int i = calleNegativaZ.Count - 1; i >= 0; i--)
         {
-            if (calleNegativaZ[i].transform.position.x < liegreCam.position.x - umbralGeneracion * 2)
+            if (calleNegativaZ[i].transform.position.x < liegreCam.position.x - escala * size.z * 2)
             {
                 Destroy(calleNegativaZ[i]);
                 calleNegativaZ.RemoveAt(i);
             }
         }
-
-        // Destruir objetos en +z que están muy atrás del jugador
         for (int i = callePositivaZ.Count - 1; i >= 0; i--)
         {
-            if (callePositivaZ[i].transform.position.x < liegreCam.position.x - umbralGeneracion * 2)
+            if (callePositivaZ[i].transform.position.x < liegreCam.position.x - escala * size.z * 2)
             {
                 Destroy(callePositivaZ[i]);
                 callePositivaZ.RemoveAt(i);
             }
         }
+    }
+
+    Vector3 getSize(GameObject obj)
+    {
+        Vector3 tamañoMasGrande = Vector3.zero;
+        Renderer renderer = obj.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            Vector3 tamaño = renderer.bounds.size;
+            if (tamaño.magnitude > tamañoMasGrande.magnitude)
+            {
+                tamañoMasGrande = tamaño;
+            }
+        }
+        foreach (Transform hijo in obj.transform)
+        {
+            Vector3 tamañoHijo = getSize(hijo.gameObject);
+            if (tamañoHijo.magnitude > tamañoMasGrande.magnitude)
+            {
+                tamañoMasGrande = tamañoHijo;
+            }
+        }
+        return tamañoMasGrande;
     }
 }
