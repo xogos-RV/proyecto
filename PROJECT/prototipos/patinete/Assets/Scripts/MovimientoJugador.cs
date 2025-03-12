@@ -62,7 +62,7 @@ public class ControladorBola : MonoBehaviour
 
     [Header("Configuración de Frenado")]
     [Range(0f, 10f)]
-    public float zAxisDampingForce = 2.5f;
+    public float xAxisDampingForce = 2.5f; // Cambiado de zAxisDampingForce a xAxisDampingForce
 
     [Header("Configuración de Colisión")]
     public string collisionTab = "DynamicPrefab";
@@ -109,7 +109,7 @@ public class ControladorBola : MonoBehaviour
             if (isGrounded)
             {
                 ControlVelocidad();
-                StopZMovementWhenJoystickCentered();
+                StopXMovementWhenJoystickCentered(); // Cambiado de Z a X
             }
         }
         doResetPositionY();
@@ -129,22 +129,18 @@ public class ControladorBola : MonoBehaviour
         jumpInput = playerInput.actions["jump"].ReadValue<float>();
     }
 
-    // Nuevo método para manejar el estado kinematic
     private void HandleKinematicState()
     {
-        // Si está en el suelo y frenando con velocidad baja, activar isKinematic
         if (isGrounded && breakInput > 0.1f && rb.linearVelocity.magnitude < velocityThresholdForKinematic)
         {
             rb.isKinematic = true;
         }
-        // Si suelta el freno o no está en el suelo, desactivar isKinematic
         else if (breakInput <= 0.1f || !isGrounded)
         {
             rb.isKinematic = false;
         }
     }
 
-    // Modificar ControlVelocidad para que no maneje isKinematic
     private void ControlVelocidad()
     {
         if (!isGrounded)
@@ -153,8 +149,8 @@ public class ControladorBola : MonoBehaviour
         float processedAccelerate = ApplyResponseCurve(accelerateInput);
         float processedJump = ApplyResponseCurve(jumpInput);
 
-        // Calcular la velocidad actual en la dirección de avance
-        Vector3 direccionActual = transform.right;
+        // Calcular la velocidad actual en la dirección de avance (ahora en Z)
+        Vector3 direccionActual = transform.forward; // Cambiado de right a forward
         float velocidadActualEnDireccion = Vector3.Dot(rb.linearVelocity, direccionActual);
 
         // Calcular la velocidad objetivo basada en el input de aceleración
@@ -187,6 +183,7 @@ public class ControladorBola : MonoBehaviour
             ApplyVelocityForce(direccionActual, velocidadActualEnDireccion, velocidadObjetivo);
         }
     }
+    
     private void ApplyFriction(Vector3 direccionMovimiento)
     {
         // Solo aplicar rozamiento si hay velocidad
@@ -235,7 +232,7 @@ public class ControladorBola : MonoBehaviour
 
     private void ApplyRotation()
     {
-        float horizontalInput = joystick.x * -1;
+        float horizontalInput = joystick.x;
 
         // Usar los gatillos para la rotación vertical independientemente del joystick
         float verticalInput = CalculateVerticalRotationInput();
@@ -273,11 +270,12 @@ public class ControladorBola : MonoBehaviour
 
     private Quaternion CalculateTargetRotation(float horizontalInput, float verticalInput, float velocityFactor)
     {
-        float targetRotationX = horizontalInput * maxRotationAngleX;
+        // Intercambiamos X y Z para la rotación
+        float targetRotationZ = horizontalInput * maxRotationAngleX * -1f;
         float targetRotationY = horizontalInput * maxRotationAngleY * -1f;
-
-        // Aplicar el factor de velocidad a la rotación en Z
-        float targetRotationZ = verticalInput * maxRotationAngleZ * -1f * velocityFactor;
+        
+        // Aplicar el factor de velocidad a la rotación en X (antes era Z)
+        float targetRotationX = verticalInput * maxRotationAngleZ * velocityFactor; // Antes era Z, ahora es X
 
         return Quaternion.Euler(targetRotationX, targetRotationY, targetRotationZ);
     }
@@ -297,9 +295,9 @@ public class ControladorBola : MonoBehaviour
 
     private void ResetHorizontalRotation()
     {
-        // Mantener solo la rotación en Z (vertical) y resetear X e Y
+        // Mantener solo la rotación en X (antes era Z) y resetear Z e Y
         Vector3 currentEuler = rb.rotation.eulerAngles;
-        Quaternion targetRotation = Quaternion.Euler(0, 0, currentEuler.z);
+        Quaternion targetRotation = Quaternion.Euler(currentEuler.x, 0, 0); // Cambiado de Z a X
         rb.rotation = Quaternion.RotateTowards(rb.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
@@ -307,7 +305,7 @@ public class ControladorBola : MonoBehaviour
     {
         if (Mathf.Abs(horizontalInput) > 0.1f)
         {
-            Vector3 lateralDirection = transform.forward.normalized;
+            Vector3 lateralDirection = transform.right.normalized; // Cambiado de forward a right
             float lateralForce = horizontalInput * maxVelocity * rb.mass * lateralForceMultiplier;
 
             rb.AddForce(lateralDirection * lateralForce, ForceMode.Force);
@@ -319,33 +317,33 @@ public class ControladorBola : MonoBehaviour
         if (transform.position.y < ejeY)
         {
             rb.isKinematic = false;
-            rb.linearVelocity = Mathf.Abs(rb.linearVelocity.x) * Vector3.right;
-            transform.position = new Vector3(transform.position.x, initAt, 0);
+            rb.linearVelocity = Mathf.Abs(rb.linearVelocity.z) * Vector3.forward; // Cambiado de X a Z
+            transform.position = new Vector3(0, initAt, transform.position.z); // Cambiado para mantener Z en lugar de X
             rb.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
-    private void StopZMovementWhenJoystickCentered()
+    private void StopXMovementWhenJoystickCentered() // Cambiado de Z a X
     {
         if (Mathf.Abs(joystick.x) < 0.1f)
         {
-            // Obtén la velocidad actual en Z
-            float currentZVelocity = rb.linearVelocity.z;
+            // Obtén la velocidad actual en X (antes era Z)
+            float currentXVelocity = rb.linearVelocity.x;
 
-            // Si hay alguna velocidad en Z, aplica una fuerza de frenado
-            if (Mathf.Abs(currentZVelocity) > 0.01f)
+            // Si hay alguna velocidad en X, aplica una fuerza de frenado
+            if (Mathf.Abs(currentXVelocity) > 0.01f)
             {
-                // Calcula la fuerza necesaria para detener el movimiento en Z
-                float dampingForce = -currentZVelocity * zAxisDampingForce * rb.mass;
+                // Calcula la fuerza necesaria para detener el movimiento en X
+                float dampingForce = -currentXVelocity * xAxisDampingForce * rb.mass;
 
-                // Aplica la fuerza solo en el eje Z
-                rb.AddForce(0, 0, dampingForce, ForceMode.Force);
+                // Aplica la fuerza solo en el eje X
+                rb.AddForce(dampingForce, 0, 0, ForceMode.Force); // Cambiado de Z a X
 
                 // Opcional: Si la velocidad es muy pequeña, detenla completamente para evitar deslizamientos
-                if (Mathf.Abs(currentZVelocity) < 0.1f)
+                if (Mathf.Abs(currentXVelocity) < 0.1f)
                 {
                     Vector3 newVelocity = rb.linearVelocity;
-                    newVelocity.z = 0;
+                    newVelocity.x = 0; // Cambiado de Z a X
                     rb.linearVelocity = newVelocity;
                 }
             }
@@ -354,10 +352,8 @@ public class ControladorBola : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-
         rb.isKinematic = false;
 
-        // TODO SIMPLIFICAR LAS CASUISTICAS
         if (collision.gameObject.CompareTag(floorTag))
         {
             Debug.Log("FLOOR COLLISION ");
@@ -375,7 +371,6 @@ public class ControladorBola : MonoBehaviour
         // Verificar si la velocidad relativa supera el umbral
         if (relativeVelocityMagnitude < maxVelocity * crashThreshold)
         {
-            // TODO A VECES EL PATIN QUEDA TIRADO EN EL SUELO
             Debug.Log("CUBE COLLISION SKIP relativeVelocityMagnitude: " + relativeVelocityMagnitude + " --------- threshold: " + maxVelocity * crashThreshold);
             return;
         }
@@ -385,8 +380,8 @@ public class ControladorBola : MonoBehaviour
             Debug.Log("------>  CUBE COLLISION ENTER relativeVelocityMagnitude: " + relativeVelocityMagnitude);
             // Calcular la dirección de la fuerza basada en el ángulo de la colisión
             Vector3 forceDirection = collision.contacts[0].normal;
-            // mantener la fuerza hacia delante en el eje x
-            forceDirection.x = -forceDirection.x;
+            // mantener la fuerza hacia delante en el eje Z (antes era X)
+            forceDirection.z = -forceDirection.z; // Cambiado de X a Z
             // Aplicar la fuerza al jugador
             rb.AddForce(forceDirection * collisionForceMagnitude, ForceMode.Impulse);
             // Aplicar un torque aleatorio para simular rotación

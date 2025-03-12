@@ -88,7 +88,7 @@ public class GestorPlanosCompuestos : MonoBehaviour
             planosActivos.Add(nuevoPlano);
 
             // Actualizar la posición para el siguiente plano
-            posicionActual += Vector3.right * longitudPlano;
+            posicionActual += Vector3.forward * longitudPlano;
         }
 
         planoActualIndex = 0;
@@ -152,13 +152,13 @@ public class GestorPlanosCompuestos : MonoBehaviour
         if (planosActivos.Count == 0)
             return;
 
-        // Determinar en qué plano está el jugador basado en su posición X
+        // Determinar en qué plano está el jugador basado en su posición Z
         for (int i = 0; i < planosActivos.Count; i++)
         {
-            float inicioPlanoX = planosActivos[i].transform.position.x;
-            float finPlanoX = inicioPlanoX + longitudPlano;
+            float inicioPlanoZ = planosActivos[i].transform.position.z;
+            float finPlanoZ = inicioPlanoZ + longitudPlano;
 
-            if (jugador.position.x >= inicioPlanoX && jugador.position.x < finPlanoX)
+            if (jugador.position.z >= inicioPlanoZ && jugador.position.z < finPlanoZ)
             {
                 planoActualIndex = i;
                 break;
@@ -172,9 +172,9 @@ public class GestorPlanosCompuestos : MonoBehaviour
             return;
 
         // Calcular la posición relativa del jugador en el plano actual
-        float inicioPlanoX = planosActivos[planoActualIndex].transform.position.x;
-        float finPlanoX = inicioPlanoX + longitudPlano;
-        float posicionRelativa = (jugador.position.x - inicioPlanoX) / longitudPlano;
+        float inicioPlanoZ = planosActivos[planoActualIndex].transform.position.z;
+        float finPlanoZ = inicioPlanoZ + longitudPlano;
+        float posicionRelativa = (jugador.position.z - inicioPlanoZ) / longitudPlano;
 
         // Si el jugador ha avanzado lo suficiente en el plano actual
         if (posicionRelativa > umbralGeneracion)
@@ -201,7 +201,7 @@ public class GestorPlanosCompuestos : MonoBehaviour
 
         // Calcular la posición del nuevo plano
         Vector3 posicionUltimoPlano = planosActivos[planosActivos.Count - 1].transform.position;
-        Vector3 posicionNuevoPlano = posicionUltimoPlano + Vector3.right * longitudPlano;
+        Vector3 posicionNuevoPlano = posicionUltimoPlano + Vector3.forward * longitudPlano;
 
         // Instanciar el nuevo plano
         GameObject nuevoPrefab = SeleccionarPrefabAleatorio();
@@ -222,7 +222,7 @@ public class GestorPlanosCompuestos : MonoBehaviour
         // Añadir a la lista de planos activos
         planosActivos.Add(nuevoPlano);
 
-        Debug.Log($"Nuevo plano generado en X: {posicionNuevoPlano.x}");
+        Debug.Log($"Nuevo plano generado en Z: {posicionNuevoPlano.z}");
     }
 
     void EliminarPlanoAntiguo()
@@ -233,7 +233,7 @@ public class GestorPlanosCompuestos : MonoBehaviour
             GameObject planoAntiguo = planosActivos[0];
             planosActivos.RemoveAt(0);
 
-            Debug.Log($"Plano eliminado en X: {planoAntiguo.transform.position.x}");
+            Debug.Log($"Plano eliminado en Z: {planoAntiguo.transform.position.z}");
             Destroy(planoAntiguo);
 
             // Actualizar el índice del plano actual
@@ -315,14 +315,14 @@ public class GestorPlanosCompuestos : MonoBehaviour
                 continue;
 
             Vector3 inicio = planosActivos[i].transform.position;
-            Vector3 fin = inicio + Vector3.right * longitudPlano;
+            Vector3 fin = inicio + Vector3.forward * longitudPlano;
 
             // Dibujar línea para cada plano
             Gizmos.color = (i == planoActualIndex) ? Color.green : Color.yellow;
             Gizmos.DrawLine(inicio + Vector3.up * 0.1f, fin + Vector3.up * 0.1f);
 
             // Marcar el umbral de generación
-            Vector3 umbral = inicio + Vector3.right * (longitudPlano * umbralGeneracion);
+            Vector3 umbral = inicio + Vector3.forward * (longitudPlano * umbralGeneracion);
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(umbral + Vector3.up * 0.1f, 0.2f);
         }
