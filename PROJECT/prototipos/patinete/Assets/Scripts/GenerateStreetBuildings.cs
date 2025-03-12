@@ -29,7 +29,7 @@ public class GenerateStreetBuildings : MonoBehaviour
     [Header("Configuración de Espacios")]
     [Range(2, 5)]
     public float espacioMinimoEntrePrefabs = 2f;
-    [Range(2, 10)]
+    [Range(10, 20)]
     public float espacioMaximoEntrePrefabs = 5f;
 
     [Header("Probabilidad de Generación")]
@@ -103,12 +103,12 @@ public class GenerateStreetBuildings : MonoBehaviour
             // Pasillo +X (lado positivo)
             if (liegreCam.position.z > ultimaPosicionArbolPapeleraPositivaX - umbralGeneracion)
             {
-                //   GenerarArbolPapelera(ref ultimaPosicionArbolPapeleraPositivaX, posicionPasilloX, arbolesPapelerasPositivaX, 1, ref ultimoArbolPapeleraUsadoPositivaX);
+                GenerarArbolPapelera(ref ultimaPosicionArbolPapeleraPositivaX, posicionPasilloX, arbolesPapelerasPositivaX, 1, ref ultimoArbolPapeleraUsadoPositivaX);
             }
             // Pasillo -X (lado negativo)
             if (liegreCam.position.z > ultimaPosicionArbolPapeleraNegativaX - umbralGeneracion)
             {
-                //   GenerarArbolPapelera(ref ultimaPosicionArbolPapeleraNegativaX, -posicionPasilloX, arbolesPapelerasNegativaX, 1, ref ultimoArbolPapeleraUsadoNegativaX);
+                GenerarArbolPapelera(ref ultimaPosicionArbolPapeleraNegativaX, -posicionPasilloX, arbolesPapelerasNegativaX, 1, ref ultimoArbolPapeleraUsadoNegativaX);
             }
         }
 

@@ -1027,14 +1027,14 @@ MonoBehaviour:
   maxVelocity: 60
   accelerationForce: 5
   velocityControlMultiplier: 0.5
-  frictionCoefficient: 0.1
+  frictionCoefficient: 0.184
   triggerResponseCurve: 0
   breakFactor: 2
   rotationSpeed: 100
   maxRotationAngleX: 15
   maxRotationAngleY: 10
   maxRotationAngleZ: 60
-  lateralForceMultiplier: 0.2
+  lateralForceMultiplier: 1
   ejeY: -5
   initAt: 10
   xAxisDampingForce: 2.5

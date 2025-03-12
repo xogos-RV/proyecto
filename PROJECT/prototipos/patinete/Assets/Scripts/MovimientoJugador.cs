@@ -50,8 +50,8 @@ public class ControladorBola : MonoBehaviour
     public float maxRotationAngleZ = 60f;
 
     [Header("Configuración de Fuerzas")]
-    [Range(0f, 1f)]
-    public float lateralForceMultiplier = 0.2f;
+    [Range(0f, 5f)]
+    public float lateralForceMultiplier = 5f;
 
     [Header("Threshold-y Reset")]
     [Range(-10f, 0f)]
@@ -303,13 +303,10 @@ public class ControladorBola : MonoBehaviour
 
     private void ApplyLateralForce(float horizontalInput)
     {
-        if (Mathf.Abs(horizontalInput) > 0.1f)
-        {
-            Vector3 lateralDirection = transform.right.normalized; // Cambiado de forward a right
+            Vector3 lateralDirection = transform.right.normalized;
             float lateralForce = horizontalInput * maxVelocity * rb.mass * lateralForceMultiplier;
 
             rb.AddForce(lateralDirection * lateralForce, ForceMode.Force);
-        }
     }
 
     private void doResetPositionY()
