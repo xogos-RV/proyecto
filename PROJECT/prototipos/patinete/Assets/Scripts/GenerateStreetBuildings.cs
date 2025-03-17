@@ -15,6 +15,7 @@ public class GenerateStreetBuildings : MonoBehaviour
 
     [Header("Configuración General")]
     public float umbralGeneracion = 20f;
+    public float distanciaDestruccion = 20f;
 
     [Header("Configuración de Posición X")]
     public float posicionFijaX = 20f;
@@ -239,8 +240,6 @@ public class GenerateStreetBuildings : MonoBehaviour
 
     void DestruirObjetosAntiguos()
     {
-        float distanciaDestruccion = umbralGeneracion * 2;
-
         DestruirObjetosAntiguosDeLista(calleNegativaX, distanciaDestruccion);
         DestruirObjetosAntiguosDeLista(callePositivaX, distanciaDestruccion);
         DestruirObjetosAntiguosDeLista(arbolesPapelerasNegativaX, distanciaDestruccion);
