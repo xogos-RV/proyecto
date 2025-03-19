@@ -264,10 +264,10 @@ public class ControladorBola : MonoBehaviour
 
     private void ReadInput()
     {
-        joystick = playerInput.actions["Move"].ReadValue<Vector2>();
-        breakInput = playerInput.actions["break"].ReadValue<float>();
-        accelerateInput = playerInput.actions["accelerate"].ReadValue<float>();
-        jumpInput = playerInput.actions["jump"].ReadValue<float>();
+        joystick = playerInput.movement;
+        breakInput = playerInput.breakButton;
+        accelerateInput = playerInput.accelerate;
+        jumpInput = playerInput.jump;
     }
 
 

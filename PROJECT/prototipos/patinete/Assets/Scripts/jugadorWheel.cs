@@ -96,7 +96,6 @@ public class jugadorWheel : MonoBehaviour
     private bool isGrounded = false;
     private float lastUIUpdateTime = 0f;
     private int framesWithoutGroundContact = 0;
-    private bool isInContactWithGround = false;
     private bool isCollisionEffectActive = false;
     private Quaternion targetRotation = Quaternion.identity;
     private bool shouldBeKinematic = false;
@@ -137,15 +136,11 @@ public class jugadorWheel : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag(floorTag))
+        if (collision.gameObject.CompareTag(floorTag) && isCollisionEffectActive)
         {
-            isInContactWithGround = true;
+            isCollisionEffectActive = false;
+            SetFreezeRotation(true);
 
-            if (isCollisionEffectActive)
-            {
-                isCollisionEffectActive = false;
-                SetFreezeRotation(true);
-            }
         }
 
         float relativeVelocityMagnitude = collision.relativeVelocity.magnitude;
@@ -180,10 +175,7 @@ public class jugadorWheel : MonoBehaviour
 
     void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.CompareTag(floorTag))
-        {
-            isInContactWithGround = true;
-        }
+
     }
 
     private void InitializeComponents()
@@ -197,10 +189,10 @@ public class jugadorWheel : MonoBehaviour
 
     private void ReadInput()
     {
-        joystick = playerInput.actions["Move"].ReadValue<Vector2>();
-        breakInput = playerInput.actions["break"].ReadValue<float>();
-        accelerateInput = playerInput.actions["accelerate"].ReadValue<float>();
-        jumpInput = playerInput.actions["jump"].ReadValue<float>();
+        joystick = playerInput.movement;
+        breakInput = playerInput.breakButton;
+        accelerateInput = playerInput.accelerate;
+        jumpInput = playerInput.jump;
     }
 
     private void CalculateKinematicState()

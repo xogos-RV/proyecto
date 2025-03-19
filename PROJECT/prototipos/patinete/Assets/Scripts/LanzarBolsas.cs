@@ -31,6 +31,7 @@ public class ProjectileLauncher : MonoBehaviour
     public ParticleSystem launchEffect; // Efecto opcional al lanzar
     public AudioClip launchSound; // Sonido opcional al lanzar
     private AudioSource audioSource;
+    private float fire;
 
     void Start()
     {
@@ -52,7 +53,8 @@ public class ProjectileLauncher : MonoBehaviour
 
     void Update()
     {
-        float fire = playerInput.actions["fire"].ReadValue<float>();
+
+        fire = playerInput.fire;
         if (fire > 0 && canFire && projectilePrefab != null)
         {
             LaunchProjectile();
