@@ -271,8 +271,6 @@ public class ControladorBola : MonoBehaviour
     }
 
 
-
-
     private void CalculateKinematicState()
     {
         bool newKinematicState = isGrounded && breakInput > 0.1f && rb.linearVelocity.magnitude < velocityThresholdForKinematic;
@@ -335,17 +333,18 @@ public class ControladorBola : MonoBehaviour
         targetConstraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
     }
 
+
     private float CalculateVerticalRotationInput()
     {
         // Usar la diferencia entre jump y freno para la rotación vertical
         float netTriggerInput = jumpInput - breakInput;
-        return ApplyResponseCurve(netTriggerInput) * -1;
+        return joystickResponseCurve(netTriggerInput) * -1;
     }
 
 
     private void CalculateVelocityForces()
     {
-        float processedAccelerate = ApplyResponseCurve(accelerateInput);
+        float processedAccelerate = joystickResponseCurve(accelerateInput);
         Vector3 direccionActual = transform.forward;
         float velocidadActualEnDireccion = Vector3.Dot(rb.linearVelocity, direccionActual);
         float velocidadObjetivo = velocidadActualEnDireccion;
@@ -359,7 +358,7 @@ public class ControladorBola : MonoBehaviour
         else
         {
             // Calcular fuerza de rozamiento
-            float frictionForce = rb.linearVelocity.magnitude * frictionCoefficient * rb.mass;
+            float frictionForce = rb.linearVelocity.z * frictionCoefficient * rb.mass;
             Vector3 frictionDirection = -rb.linearVelocity.normalized;
             Vector3 frictionVector = frictionDirection * frictionForce;
 
@@ -386,32 +385,6 @@ public class ControladorBola : MonoBehaviour
             debugForces["Acceleration"] = accelForce;
         }
     }
-
-
-    private float ApplyResponseCurve(float input)
-    {
-        // Normalizar el input al rango efectivo después del deadzone
-        float normalizedInput = Mathf.Clamp01(Mathf.Abs(input));
-
-        // Aplicar la curva de respuesta
-        float processedInput;
-        if (triggerResponseCurve > 0) // Más respuesta al final
-        {
-            processedInput = Mathf.Pow(normalizedInput, 1f + triggerResponseCurve);
-        }
-        else if (triggerResponseCurve < 0) // Más respuesta al inicio
-        {
-            processedInput = Mathf.Pow(normalizedInput, 1f / (1f + Mathf.Abs(triggerResponseCurve)));
-        }
-        else // Respuesta lineal
-        {
-            processedInput = normalizedInput;
-        }
-
-        // Mantener el signo original
-        return Mathf.Sign(input) * processedInput;
-    }
-
 
     private void CalculateXAxisDamping()
     {
@@ -442,18 +415,33 @@ public class ControladorBola : MonoBehaviour
 
     private void CalculateLateralForces()
     {
+        // Normaliza la velocidad en Z (0 a 1)
+        float normalizedZVelocity = Mathf.Clamp01(Mathf.Abs(rb.linearVelocity.z) / maxVelocity);
+
+        // Función de campana: f(x) = 4x(1-x) que da 0 en x=0, 1 en x=0.5, y 0 en x=1
+        // float bellCurveResponse = 4f * normalizedZVelocity * (1f - normalizedZVelocity);
+        // Función de campana: comienza en 0, pico en 1, termina en 0.2
+        // función cuadrática ajustada
+        float bellCurveResponse = 0.2f + 0.8f * (1f - Mathf.Pow(2f * normalizedZVelocity - 1f, 2));
+
         if (Mathf.Abs(joystick.x) > 0.1f)
         {
             Vector3 lateralDirection = transform.right.normalized;
-            float lateralForce = joystick.x * maxVelocity * rb.mass * lateralForceMultiplier;
+
+            // Usa la respuesta de campana en lugar del factor lineal
+            float lateralForce = joystick.x * maxVelocity * rb.mass * lateralForceMultiplier * bellCurveResponse;
             Vector3 lateralVector = lateralDirection * lateralForce;
 
             totalForce += lateralVector;
             debugForces["LateralForce"] = lateralVector;
-            debugParameters["LateralForce"] = $"Lateral: input={joystick.x:F2}, force={lateralForce:F2}";
+            debugParameters["LateralForce"] = $"Lateral: input={joystick.x:F2}, force={lateralForce:F2}, " +
+                $"zVelocity={normalizedZVelocity:F2}, bellResponse={bellCurveResponse:F2}";
+        }
+        else
+        {
+            debugParameters["LateralForce"] = "No lateral force (no input)";
         }
     }
-
 
     private void CalculatePositionReset()
     {
@@ -477,22 +465,17 @@ public class ControladorBola : MonoBehaviour
         {
             transform.position = newPosition;
         }
-
         // Aplicar estado kinematic
         rb.isKinematic = shouldBeKinematic;
-
         // Aplicar restricciones
         rb.constraints = targetConstraints;
-
         // Aplicar rotación
         rb.rotation = targetRotation;
-
         // Aplicar velocidad si se ha modificado directamente
         if (newVelocity != rb.linearVelocity)
         {
             rb.linearVelocity = newVelocity;
         }
-
         // Aplicar la fuerza total acumulada
         if (totalForce.magnitude > 0 && !rb.isKinematic)
         {
@@ -523,7 +506,7 @@ public class ControladorBola : MonoBehaviour
                            $"- IsKinematic: {rb.isKinematic}\n" +
                            $"- Constraints: {rb.constraints}\n";
 
-       //Debug.Log($"--- PHYSICS UPDATE ---\n{forceLog}\n{paramLog}\n{finalState}");
+        //Debug.Log($"--- PHYSICS UPDATE ---\n{forceLog}\n{paramLog}\n{finalState}");
     }
 
 
@@ -739,5 +722,30 @@ public class ControladorBola : MonoBehaviour
             debugParameters[param] = "------";
         }
     }
+
+    private float joystickResponseCurve(float input)
+    {
+        // Normalizar el input al rango efectivo después del deadzone
+        float normalizedInput = Mathf.Clamp01(Mathf.Abs(input));
+
+        // Aplicar la curva de respuesta
+        float processedInput;
+        if (triggerResponseCurve > 0) // Más respuesta al final
+        {
+            processedInput = Mathf.Pow(normalizedInput, 1f + triggerResponseCurve);
+        }
+        else if (triggerResponseCurve < 0) // Más respuesta al inicio
+        {
+            processedInput = Mathf.Pow(normalizedInput, 1f / (1f + Mathf.Abs(triggerResponseCurve)));
+        }
+        else // Respuesta lineal
+        {
+            processedInput = normalizedInput;
+        }
+
+        // Mantener el signo original
+        return Mathf.Sign(input) * processedInput;
+    }
+
 
 }
