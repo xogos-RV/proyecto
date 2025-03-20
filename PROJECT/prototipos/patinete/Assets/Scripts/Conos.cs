@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class GenerateWaveObjects : MonoBehaviour
 {
     public Transform playerCamera; // Referencia a la cámara o jugador
+    public ObjectPool objectPool; // Referencia al GenericObjectPool
 
     [Header("Prefabs")]
     public GameObject[] objectPrefabs; // Array de prefabs a generar
@@ -26,12 +27,19 @@ public class GenerateWaveObjects : MonoBehaviour
     private List<GameObject> generatedObjects = new List<GameObject>(); // Lista de objetos generados
     private int lastPrefabIndex = -1; // Índice del último prefab usado
 
+
     void Start()
     {
         if (objectPrefabs == null || objectPrefabs.Length == 0)
         {
             Debug.LogError("No se han asignado prefabs de objetos.");
             return;
+        }
+
+        // Inicializar los pools para cada prefab
+        foreach (GameObject prefab in objectPrefabs)
+        {
+            objectPool.CreatePool(prefab, 10); // Crear un pool de 10 objetos para cada prefab
         }
 
         // Generar objetos iniciales
@@ -52,7 +60,7 @@ public class GenerateWaveObjects : MonoBehaviour
         }
 
         // Destruir objetos antiguos
-       // DestroyOldObjects();
+        DestroyOldObjects();
     }
 
     void GenerateNextObject()
@@ -83,9 +91,13 @@ public class GenerateWaveObjects : MonoBehaviour
         }
         lastPrefabIndex = prefabIndex;
 
-        // Crear el objeto
+        // Obtener el objeto del pool
+        GameObject newObject = objectPool.GetObject(objectPrefabs[prefabIndex]);
+
+        // Configurar la posición y rotación del objeto
         Vector3 position = new Vector3(posX, 0, lastGeneratedZ);
-        GameObject newObject = Instantiate(objectPrefabs[prefabIndex], position, objectPrefabs[prefabIndex].transform.rotation);
+        newObject.transform.position = position;
+        newObject.transform.rotation = objectPrefabs[prefabIndex].transform.rotation;
 
         // Aplicar escala
         Vector3 originalScale = objectPrefabs[prefabIndex].transform.localScale;
@@ -97,6 +109,7 @@ public class GenerateWaveObjects : MonoBehaviour
         {
             rb = newObject.AddComponent<Rigidbody>();
         }
+
         // Añadir a la lista de objetos generados
         generatedObjects.Add(newObject);
     }
@@ -108,7 +121,8 @@ public class GenerateWaveObjects : MonoBehaviour
             if (generatedObjects[i] != null &&
                 generatedObjects[i].transform.position.z < playerCamera.position.z - destructionDistance)
             {
-                Destroy(generatedObjects[i]);
+                // Devolver el objeto al pool en lugar de destruirlo
+                objectPool.ReturnObject(generatedObjects[i]);
                 generatedObjects.RemoveAt(i);
             }
         }

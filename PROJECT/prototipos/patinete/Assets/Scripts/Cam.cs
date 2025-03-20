@@ -21,8 +21,8 @@ public class CameraFollowZ : MonoBehaviour
     [Range(0f, 3f)]
     public float lookAtHeightMultiplier = 0.33f;
     [Tooltip("Suavizado del movimiento (0 = sin suavizado)")]
-    [Range(0f, 1f)]
-    public float smoothSpeed = 1f;
+    [Range(0f, 5f)]
+    public float smoothSpeed = 5f;
 
     [Header("Configuración de Seguimiento")]
     [Tooltip("bloquear seguir al jugador en el eje X")]

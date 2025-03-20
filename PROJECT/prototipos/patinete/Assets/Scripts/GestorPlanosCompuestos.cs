@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class GestorPlanosCompuestos : MonoBehaviour
 {
+    public ObjectPool objectPool; // Referencia al GenericObjectPool
     [Header("Configuración Básica")]
     public GameObject[] planoPrefabs; // Array de prefabs de planos
     public Transform jugador; // Referencia al jugador (la bola)
@@ -43,6 +44,12 @@ public class GestorPlanosCompuestos : MonoBehaviour
             }
         }
 
+        // Inicializar los pools para cada prefab de planos
+        foreach (GameObject prefab in planoPrefabs)
+        {
+            objectPool.CreatePool(prefab, 10); // Crear un pool de 10 objetos para cada prefab
+        }
+
         // Generar los planos iniciales
         GenerarPlanosIniciales();
     }
@@ -62,7 +69,7 @@ public class GestorPlanosCompuestos : MonoBehaviour
         foreach (GameObject plano in planosActivos)
         {
             if (plano != null)
-                Destroy(plano);
+                objectPool.ReturnObject(plano); // Devolver al pool en lugar de destruir
         }
         planosActivos.Clear();
 
@@ -71,7 +78,9 @@ public class GestorPlanosCompuestos : MonoBehaviour
         for (int i = 0; i < numeroPlanosEnEscena; i++)
         {
             GameObject nuevoPrefab = SeleccionarPrefabAleatorio();
-            GameObject nuevoPlano = Instantiate(nuevoPrefab, posicionActual, Quaternion.identity);
+            GameObject nuevoPlano = objectPool.GetObject(nuevoPrefab); // Obtener del pool
+            nuevoPlano.transform.position = posicionActual;
+            nuevoPlano.transform.rotation = Quaternion.identity;
 
             if (combinarMeshes)
             {
@@ -106,7 +115,7 @@ public class GestorPlanosCompuestos : MonoBehaviour
         Rigidbody rb = objeto.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            Destroy(rb);
+            rb.isKinematic = true; // Hacerlo kinematic para que no se mueva
         }
 
         // Desactivar Colliders si vamos a usar uno solo
@@ -115,7 +124,7 @@ public class GestorPlanosCompuestos : MonoBehaviour
             Collider[] colliders = objeto.GetComponents<Collider>();
             foreach (Collider collider in colliders)
             {
-                Destroy(collider);
+                collider.enabled = false; // Desactivar en lugar de destruir
             }
         }
 
@@ -203,9 +212,11 @@ public class GestorPlanosCompuestos : MonoBehaviour
         Vector3 posicionUltimoPlano = planosActivos[planosActivos.Count - 1].transform.position;
         Vector3 posicionNuevoPlano = posicionUltimoPlano + Vector3.forward * longitudPlano;
 
-        // Instanciar el nuevo plano
+        // Obtener el nuevo plano del pool
         GameObject nuevoPrefab = SeleccionarPrefabAleatorio();
-        GameObject nuevoPlano = Instantiate(nuevoPrefab, posicionNuevoPlano, Quaternion.identity);
+        GameObject nuevoPlano = objectPool.GetObject(nuevoPrefab); // Obtener del pool
+        nuevoPlano.transform.position = posicionNuevoPlano;
+        nuevoPlano.transform.rotation = Quaternion.identity;
 
         if (combinarMeshes)
         {
@@ -234,7 +245,7 @@ public class GestorPlanosCompuestos : MonoBehaviour
             planosActivos.RemoveAt(0);
 
             Debug.Log($"Plano eliminado en Z: {planoAntiguo.transform.position.z}");
-            Destroy(planoAntiguo);
+            objectPool.ReturnObject(planoAntiguo); // Devolver al pool en lugar de destruir
 
             // Actualizar el índice del plano actual
             planoActualIndex--;
