@@ -1463,6 +1463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca0bc657bdfd1b4a80587322bbc53c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectPool: {fileID: 1011848737}
   planoPrefabs:
   - {fileID: 7420525515836206606, guid: ecfd1e8f5b53d744eaf429c54cf7dfe8, type: 3}
   jugador: {fileID: 1635156668}
@@ -1754,8 +1755,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1011848738}
-  - {fileID: 2132217710}
   - {fileID: 751497197}
+  - {fileID: 2132217710}
   - {fileID: 1544483972}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1789,6 +1790,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 1635156668}
+  objectPool: {fileID: 1011848737}
   objectPrefabs:
   - {fileID: 4587392727745194993, guid: 95c9c643a840376448cab1de6b51a03f, type: 3}
   waveAmplitude: 6
@@ -1798,7 +1800,6 @@ MonoBehaviour:
   generationThreshold: 100
   destructionDistance: 20
   objectScale: 1.5
-  objectPool: {fileID: 1011848737}
 --- !u!4 &1544483972
 Transform:
   m_ObjectHideFlags: 0
