@@ -13,6 +13,7 @@ public class ProyectilController : MonoBehaviour
     public float heightOffset = 3f; // Altura desde el centro del jugador
 
     [Header("Launch Parameters")]
+    [Range(1f, 100f)]
     public float launchForce = 1f; // Fuerza de lanzamiento
     public float upwardForce = 0.6f; // Fuerza hacia arriba para crear la parábola
     public float forwardTilt = 1f; // Componente hacia adelante (+Z) (0-1)
@@ -61,54 +62,59 @@ public class ProyectilController : MonoBehaviour
         }
     }
 
-    void LaunchProjectile()
+void LaunchProjectile()
+{
+    // Calcular la posición de spawn (ligeramente a la izquierda del jugador)
+    Vector3 spawnPosition = transform.position +
+                           (-transform.right * leftOffset) + // A la izquierda del jugador
+                           (Vector3.up * heightOffset);      // Ajuste de altura
+
+    // Calcular la dirección de lanzamiento (hacia la izquierda)
+    Vector3 launchDirection = -transform.right; // Dirección -X (izquierda relativa al jugador)
+    launchDirection += Vector3.up * (upwardForce / launchForce); // Componente hacia arriba
+    launchDirection += transform.forward * forwardTilt; // Componente hacia adelante (+Z)
+    launchDirection.Normalize();
+
+    // Calcular la rotación del proyectil para que mire en la dirección de lanzamiento
+    Quaternion projectileRotation = Quaternion.LookRotation(launchDirection);
+
+    // Invertir el eje X de la rotación
+    projectileRotation *= Quaternion.Euler(180, 0, 0);
+
+    // Crear el proyectil en el punto calculado con la rotación adecuada
+    GameObject projectile = Instantiate(projectilePrefab, spawnPosition, projectileRotation);
+
+    // Aplicar escala
+    projectile.transform.localScale *= projectileScale;
+
+    // Obtener o añadir un Rigidbody
+    Rigidbody rb = projectile.GetComponent<Rigidbody>();
+    if (rb == null)
     {
-        // Calcular la posición de spawn (ligeramente a la izquierda del jugador)
-        Vector3 spawnPosition = transform.position +
-                               (-transform.right * leftOffset) + // A la izquierda del jugador
-                               (Vector3.up * heightOffset);      // Ajuste de altura
-
-        // Crear el proyectil en el punto calculado
-        GameObject projectile = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
-
-        // Aplicar escala
-        projectile.transform.localScale *= projectileScale;
-
-        // Obtener o añadir un Rigidbody
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        if (rb == null)
-        {
-            rb = projectile.AddComponent<Rigidbody>();
-        }
-
-        // Configurar el Rigidbody
-        rb.useGravity = useGravity;
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-
-        // Calcular la dirección de lanzamiento (hacia la izquierda)
-        Vector3 launchDirection = -transform.right; // Dirección -X (izquierda relativa al jugador)
-        launchDirection += Vector3.up * (upwardForce / launchForce); // Componente hacia arriba
-        launchDirection += transform.forward * forwardTilt; // Componente hacia adelante (+Z)
-        launchDirection.Normalize();
-
-        // Aplicar la fuerza
-        rb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
-
-        // Reproducir efectos
-        if (launchEffect != null)
-        {
-            Instantiate(launchEffect, spawnPosition, Quaternion.identity);
-        }
-
-        if (audioSource != null)
-        {
-            audioSource.Play();
-        }
-
-        // Destruir el proyectil después de un tiempo
-        Destroy(projectile, projectileLifetime);
+        rb = projectile.AddComponent<Rigidbody>();
     }
 
+    // Configurar el Rigidbody
+    rb.useGravity = useGravity;
+    rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+    // Aplicar la fuerza
+    rb.AddForce(launchDirection * launchForce, ForceMode.Impulse);
+
+    // Reproducir efectos
+    if (launchEffect != null)
+    {
+        Instantiate(launchEffect, spawnPosition, Quaternion.identity);
+    }
+
+    if (audioSource != null)
+    {
+        audioSource.Play();
+    }
+
+    // Destruir el proyectil después de un tiempo
+    Destroy(projectile, projectileLifetime);
+}
     IEnumerator CooldownRoutine()
     {
         canFire = false;
