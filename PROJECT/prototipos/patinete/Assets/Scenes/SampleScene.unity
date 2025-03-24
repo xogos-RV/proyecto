@@ -2113,7 +2113,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6814867118442087549, guid: 2f15ead557976824cbd1dbf64909b955, type: 3}
   leftOffset: 1.5
   heightOffset: 3
-  launchForce: 10
+  launchForce: 100
   upwardForce: 0.6
   forwardTilt: 1
   cooldownTime: 0.2
