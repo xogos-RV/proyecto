@@ -6,6 +6,7 @@ TagManager:
   tags:
   - DynamicPrefab
   - FloorPrefab
+  - proyectil
   layers:
   - Default
   - TransparentFX

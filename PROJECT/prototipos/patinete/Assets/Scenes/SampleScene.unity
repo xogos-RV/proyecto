@@ -408,7 +408,7 @@ MonoBehaviour:
   xDistance: -10
   lookAtZOffset: 14.8
   lookAtHeightMultiplier: 0.5
-  smoothSpeed: 1
+  smoothSpeed: 5
   followLiebre: 1
 --- !u!114 &330585550
 MonoBehaviour:
@@ -2112,20 +2112,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 668171418510610749, guid: 408cdfe163004494f8c61f08bb0293ff, type: 3}
   aimIndicatorPrefab: {fileID: 3131547619770629753, guid: cbf4a0fcd07ca6d4abd3ed27b008b79a, type: 3}
-  leftOffset: 1.5
+  compensationFactor: 0
+  leftOffset: 0
   heightOffset: 3
   minLaunchForce: 10
   maxLaunchForce: 100
   chargeTime: 0.3
   upwardForce: 0.6
-  maxLaunchDistance: 50
+  maxLaunchDistance: 100
   cooldownTime: 0.2
   projectileLifetime: 10
-  useGravity: 0
+  useGravity: 1
   projectileScale: 2
   launchEffect: {fileID: 0}
   launchSound: {fileID: 0}
   chargeEffect: {fileID: 0}
+  initialHorizontalAngle: 0
+  initialVerticalAngle: 0
+  horizontalSensitivity: 2
+  verticalSensitivity: 2
+  maxHorizontalAngle: 60
+  maxVerticalAngle: 60
+  surfaceHitColor: {r: 0, g: 0.8396226, b: 0.036220666, a: 1}
+  noHitColor: {r: 1, g: 0.04705883, b: 0, a: 1}
+  chargeStartColor: {r: 0, g: 0.4234619, b: 1, a: 1}
+  chargeEndColor: {r: 0.8378353, g: 0, b: 1, a: 1}
 --- !u!114 &1993040464
 MonoBehaviour:
   m_ObjectHideFlags: 0

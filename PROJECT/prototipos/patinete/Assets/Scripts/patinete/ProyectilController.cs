@@ -9,6 +9,10 @@ public class ProyectilController : MonoBehaviour
     private PlayerInput playerInput;
     private GameObject aimIndicator;
 
+    [Header("Factor Compensación")]
+    [Range(-1f, 1f)]
+    public float compensationFactor = 0f;
+
     [Header("Spawn Position")]
     [Range(0f, 2f)]
     public float leftOffset = 1f;
@@ -20,7 +24,7 @@ public class ProyectilController : MonoBehaviour
     public float maxLaunchForce = 50f; // Fuerza máxima al cargar
     public float chargeTime = 2f; // Tiempo en segundos para alcanzar fuerza máxima
     public float upwardForce = 0.6f;
-    public float maxLaunchDistance = 50f;
+    public float maxLaunchDistance = 100f;
 
     [Header("Cooldown")]
     public float cooldownTime = 0.2f;
@@ -41,7 +45,23 @@ public class ProyectilController : MonoBehaviour
     private AudioSource audioSource;
     private float fire;
 
-    private Camera mainCamera;
+    [Header("Aim Direction Control")]
+    public float initialHorizontalAngle = 0f;  // Ángulo inicial horizontal (en grados)
+    public float initialVerticalAngle = 0f;    // Ángulo inicial vertical (en grados)
+    public float horizontalSensitivity = 2f;   // Sensibilidad del control horizontal
+    public float verticalSensitivity = 2f;     // Sensibilidad del control vertical
+    private float currentHorizontalAngle;      // Ángulo actual horizontal
+    private float currentVerticalAngle;        // Ángulo actual vertical
+    private Vector2 mouseLook;                 // Para almacenar el input del ratón
+    public float maxHorizontalAngle = 60f;     // Ángulo máximo horizontal (positivo y negativo)
+    public float maxVerticalAngle = 60f;       // Ángulo máximo vertical (positivo y negativo)
+
+
+    [Header("Indicator Colors")]
+    public Color surfaceHitColor = Color.green;
+    public Color noHitColor = Color.blue;
+    public Color chargeStartColor = Color.green;
+    public Color chargeEndColor = Color.red;
 
     void Start()
     {
@@ -56,18 +76,27 @@ public class ProyectilController : MonoBehaviour
         }
 
         playerInput = GetComponent<PlayerInput>();
-        mainCamera = Camera.main;
 
         if (aimIndicatorPrefab != null)
         {
             aimIndicator = Instantiate(aimIndicatorPrefab);
             aimIndicator.SetActive(false);
         }
+
+        // Inicializar los ángulos de apuntado
+        currentHorizontalAngle = initialHorizontalAngle;
+        currentVerticalAngle = initialVerticalAngle;
     }
+
 
     void Update()
     {
         fire = playerInput.fire;
+        mouseLook = playerInput.look;
+
+        Debug.Log("Mouse delta: " + mouseLook.ToString());
+
+        UpdateAimAngles(); // Actualizar el ángulo de apuntado basado en el scroll
 
         // Actualizar puntería
         UpdateAimIndicator();
@@ -91,6 +120,7 @@ public class ProyectilController : MonoBehaviour
         }
     }
 
+
     void StartCharging()
     {
         isCharging = true;
@@ -101,6 +131,7 @@ public class ProyectilController : MonoBehaviour
         if (chargeEffect != null)
             chargeEffect.Play();
     }
+
 
     void ContinueCharging()
     {
@@ -114,10 +145,11 @@ public class ProyectilController : MonoBehaviour
         // (Opcional) Cambiar color del indicador según carga)
         if (aimIndicator != null)
         {
-            Color chargeColor = Color.Lerp(Color.green, Color.red, chargeProgress);
+            Color chargeColor = Color.Lerp(chargeStartColor, chargeEndColor, chargeProgress);
             aimIndicator.GetComponent<Renderer>().material.color = chargeColor;
         }
     }
+
 
     void FireProjectile()
     {
@@ -130,9 +162,137 @@ public class ProyectilController : MonoBehaviour
         // Lanzar proyectil con la fuerza calculada
         LaunchProjectile(currentLaunchForce);
 
-        // Iniciar cooldown
+        // Iniciar cooldown       
         StartCoroutine(CooldownRoutine());
     }
+
+
+    void UpdateAimAngles()
+    {
+        // Ajustar el ángulo horizontal basado en el movimiento horizontal del ratón
+        currentHorizontalAngle += mouseLook.x * horizontalSensitivity * Time.deltaTime;
+
+        // Ajustar el ángulo vertical basado en el movimiento vertical del ratón
+        currentVerticalAngle -= mouseLook.y * verticalSensitivity * Time.deltaTime; // Invertido para que sea intuitivo
+
+        // Limitar los ángulos dentro de los rangos permitidos
+        currentHorizontalAngle = Mathf.Clamp(currentHorizontalAngle, -maxHorizontalAngle, maxHorizontalAngle);
+        currentVerticalAngle = Mathf.Clamp(currentVerticalAngle, -maxVerticalAngle, maxVerticalAngle);
+    }
+
+
+
+    void UpdateAimIndicator()
+    {
+        if (aimIndicator == null) return;
+
+        // Calcular la dirección de apuntado basada en los ángulos actuales
+        Vector3 aimDirection = CalculateAimDirection();
+
+        // Lanzar un rayo desde la posición de disparo en la dirección calculada
+        Vector3 spawnPosition = transform.position +
+                              (-transform.right * leftOffset) +
+                              (Vector3.up * heightOffset);
+
+        Ray aimRay = new Ray(spawnPosition, aimDirection);
+        RaycastHit hit;
+
+        // Obtener el renderer del indicador para cambiar su color
+        Renderer indicatorRenderer = aimIndicator.GetComponent<Renderer>();
+
+        // Configurar una máscara de capas para ignorar la capa de proyectiles
+        int layerMask = ~0; // Inicialmente incluye todas las capas
+
+        // Buscar un impacto válido (que no sea un proyectil)
+        bool validHit = false;
+
+        // Intentamos encontrar un impacto válido
+        if (Physics.Raycast(aimRay, out hit, maxLaunchDistance, layerMask))
+        {
+            // Verificar si el objeto impactado tiene la etiqueta "Proyectil"
+            if (hit.collider.CompareTag("Proyectil"))
+            {
+                // Es un proyectil, intentamos encontrar otro objeto detrás
+                RaycastHit[] hits = Physics.RaycastAll(aimRay, maxLaunchDistance, layerMask);
+
+                // Ordenar los hits por distancia
+                System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+                // Buscar el primer hit que no sea un proyectil
+                foreach (RaycastHit potentialHit in hits)
+                {
+                    if (!potentialHit.collider.CompareTag("Proyectil"))
+                    {
+                        hit = potentialHit;
+                        validHit = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                validHit = true;
+            }
+        }
+
+        if (validHit)
+        {
+            // El rayo impactó con una superficie válida
+            aimIndicator.SetActive(true);
+
+            // Colocar el indicador exactamente en el punto de impacto
+            aimIndicator.transform.position = hit.point;
+
+            // Orientar el indicador según la normal de la superficie
+            aimIndicator.transform.up = hit.normal;
+
+            // Restaurar el color original o usar un color para superficies
+            if (isCharging)
+            {
+                // Si está cargando, mantener el color según la carga
+                float chargeProgress = (Time.time - chargeStartTime) / chargeTime;
+                chargeProgress = Mathf.Clamp01(chargeProgress);
+                indicatorRenderer.material.color = Color.Lerp(chargeStartColor, chargeEndColor, chargeProgress);
+            }
+            else
+            {
+                // Color por defecto para cuando hay impacto pero no está cargando
+                indicatorRenderer.material.color = surfaceHitColor;
+            }
+        }
+        else
+        {
+            // El rayo no impactó con ninguna superficie válida
+            aimIndicator.SetActive(true);
+            Vector3 targetPoint = aimRay.GetPoint(maxLaunchDistance);
+            aimIndicator.transform.position = targetPoint;
+            aimIndicator.transform.up = Vector3.up; // Orientación por defecto
+            indicatorRenderer.material.color = noHitColor;
+        }
+    }
+
+
+
+    Vector3 CalculateAimDirection()
+    {
+        // Obtener la dirección base (hacia adelante desde la perspectiva del jugador)
+        Vector3 baseDirection = transform.forward;
+
+        // Crear una rotación que combine ambos ángulos
+        Quaternion horizontalRotation = Quaternion.Euler(0, currentHorizontalAngle, 0);
+        Quaternion verticalRotation = Quaternion.Euler(currentVerticalAngle, 0, 0);
+        Quaternion combinedRotation = horizontalRotation * verticalRotation;
+
+        // Aplicar la rotación combinada a la dirección base
+        Vector3 direction = combinedRotation * baseDirection;
+
+        // Ya no forzamos Y=0 para permitir apuntar hacia arriba/abajo
+        direction.Normalize();
+
+        return direction;
+    }
+
+
 
     void LaunchProjectile(float force)
     {
@@ -140,17 +300,10 @@ public class ProyectilController : MonoBehaviour
                               (-transform.right * leftOffset) +
                               (Vector3.up * heightOffset);
 
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        Vector3 targetPosition;
+        // Usar la dirección calculada para el lanzamiento
+        Vector3 launchDirection = CalculateAimDirection();
 
-        if (Physics.Raycast(ray, out hit, maxLaunchDistance))
-            targetPosition = hit.point;
-        else
-            targetPosition = ray.GetPoint(maxLaunchDistance);
-
-        Vector3 cameraOffsetCompensation = mainCamera.transform.right * (leftOffset * 0.5f);
-        Vector3 launchDirection = (targetPosition - spawnPosition + cameraOffsetCompensation).normalized;
+        // Añadir componente vertical para la trayectoria
         launchDirection += Vector3.up * (upwardForce / force);
         launchDirection.Normalize();
 
@@ -178,24 +331,6 @@ public class ProyectilController : MonoBehaviour
         Destroy(projectile, projectileLifetime);
     }
 
-    void UpdateAimIndicator()
-    {
-        if (aimIndicator == null) return;
-
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, maxLaunchDistance))
-        {
-            aimIndicator.SetActive(true);
-            aimIndicator.transform.position = hit.point;
-        }
-        else
-        {
-            aimIndicator.SetActive(true);
-            aimIndicator.transform.position = ray.GetPoint(maxLaunchDistance);
-        }
-    }
 
     IEnumerator CooldownRoutine()
     {
@@ -203,6 +338,7 @@ public class ProyectilController : MonoBehaviour
         yield return new WaitForSeconds(cooldownTime);
         canFire = true;
     }
+
 
     void OnDestroy()
     {

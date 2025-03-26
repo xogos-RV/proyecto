@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "scroll",
+                    "type": "Value",
+                    "id": "da839f99-c6a3-473b-960f-23f5852a4699",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -339,11 +348,22 @@
                 {
                     "name": "",
                     "id": "d073f971-df98-43ed-90cb-8ffdb828a8f9",
-                    "path": "<Mouse>/scroll",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9286378e-d835-4c24-bc09-e00812a62bb7",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "scroll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
