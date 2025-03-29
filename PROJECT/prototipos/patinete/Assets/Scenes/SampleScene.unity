@@ -1019,7 +1019,7 @@ MonoBehaviour:
   numeroPlanosEnEscena: 4
   umbralGeneracion: 0.255
   combinarMeshes: 0
-  usarUnSoloCollider: 0
+  usarUnSoloCollider: 1
   floorTag: Floor
 --- !u!1 &1011848736
 GameObject:

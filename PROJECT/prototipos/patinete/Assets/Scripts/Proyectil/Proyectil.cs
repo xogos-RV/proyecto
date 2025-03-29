@@ -3,44 +3,95 @@ using UnityEngine;
 public class Proyectil : MonoBehaviour
 {
     [Header("Configuración de Partículas")]
-    public ParticleSystem exposionParticles;
-    public ParticleSystem dustEffect;
+    public GameObject explosionParticlesPrefab;
+    public GameObject dustEffectPrefab;
     public AudioClip impactSound;
 
-    [Range(10, 50)] public int minStones = 15;
-    [Range(10, 50)] public int maxStones = 25;
-    [Range(0.05f, 0.3f)] public float minStoneSize = 0.1f;
-    [Range(0.05f, 0.3f)] public float maxStoneSize = 0.2f;
+    [Range(10, 500)] public int minParticles = 25;
+    [Range(10, 500)] public int maxParticles = 200;
+    [Range(0.1f, 10f)] public float minParticleSize = 0.5f;
+    [Range(0.1f, 10f)] public float maxParticleSize = 5f;
 
+    public bool isTrigger = false;
     private bool hasCollided = false;
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Floor") || hasCollided)
+        if (!isTrigger && !ShouldIgnoreCollision(collision.gameObject))
         {
-            return;
+            HandleImpact(collision.contacts[0].point, collision.contacts[0].normal);
         }
-        
-        hasCollided = true;
-        // Configurar sistema principal de piedras
-        var emission = exposionParticles.emission;
-        emission.SetBurst(0, new ParticleSystem.Burst(0, Random.Range(minStones, maxStones)));
+    }
 
-        var main = exposionParticles.main;
-        main.startSize = new ParticleSystem.MinMaxCurve(minStoneSize, maxStoneSize);
 
-        // Posicionar y activar efectos
-        Vector3 impactPoint = collision.contacts[0].point;
-        Quaternion impactRotation = Quaternion.LookRotation(collision.contacts[0].normal);
 
-        exposionParticles.transform.position = impactPoint;
-        exposionParticles.transform.rotation = impactRotation;
-        exposionParticles.Play();
-
-        if (dustEffect != null)
+    private void OnTriggerEnter(Collider other)
+    {
+        if (isTrigger && !ShouldIgnoreCollision(other.gameObject))
         {
-            dustEffect.transform.position = impactPoint;
-            dustEffect.Play();
+            Vector3 impactPoint = GetTriggerImpactPoint(other);
+            Vector3 impactNormal = (transform.position - other.transform.position).normalized;
+            HandleImpact(impactPoint, impactNormal);
+        }
+    }
+
+
+
+    private bool ShouldIgnoreCollision(GameObject otherObject)
+    {
+        return otherObject.CompareTag("Player") ||
+                otherObject.CompareTag("Floor") ||
+                otherObject.CompareTag("Proyectil") ||
+                hasCollided;
+    }
+
+
+
+    private Vector3 GetTriggerImpactPoint(Collider other)
+    {
+        // Opción 1: Usar el punto más cercano en el collider
+        Vector3 closestPoint = other.ClosestPoint(transform.position);
+
+        // Opción 2: Usar Raycast para mayor precisión
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 2f)) // TODO ajustar
+        {
+            return hit.point;
+        }
+
+        return closestPoint;
+    }
+
+
+
+    private void HandleImpact(Vector3 impactPoint, Vector3 impactNormal)
+    {
+        if (hasCollided) return;
+
+        hasCollided = true;
+
+        if (explosionParticlesPrefab != null)
+        {
+            GameObject explosionInstance = Instantiate(explosionParticlesPrefab, impactPoint, Quaternion.LookRotation(impactNormal));
+            ParticleSystem explosionParticles = explosionInstance.GetComponent<ParticleSystem>();
+
+            var emission = explosionParticles.emission;
+            emission.SetBurst(0, new ParticleSystem.Burst(0, Random.Range(minParticles, maxParticles)));
+
+            var main = explosionParticles.main;
+            main.startSize = new ParticleSystem.MinMaxCurve(minParticleSize, maxParticleSize);
+
+            explosionParticles.Play();
+            Destroy(explosionInstance, main.duration);
+        }
+
+        // Instanciar efecto de polvo
+        if (dustEffectPrefab != null)
+        {
+            GameObject dustInstance = Instantiate(dustEffectPrefab, impactPoint, Quaternion.LookRotation(impactNormal));
+            ParticleSystem dustParticles = dustInstance.GetComponent<ParticleSystem>();
+            dustParticles.Play();
+            Destroy(dustInstance, dustParticles.main.duration);
         }
 
         if (impactSound != null)
@@ -49,13 +100,15 @@ public class Proyectil : MonoBehaviour
         }
 
         // Ocultar el proyectil
-        GetComponent<MeshRenderer>().enabled = false;
-        GetComponent<Collider>().enabled = false;
-        GetComponent<Rigidbody>().isKinematic = true;
+        //GetComponent<MeshRenderer>().enabled = false;
+        //GetComponent<Collider>().enabled = false;
 
-        // Destruir después de que terminen los efectos
-        float destroyDelay = Mathf.Max(exposionParticles.main.duration, dustEffect != null ? dustEffect.main.duration : 0);
-        Destroy(gameObject, destroyDelay);
+        /* if (TryGetComponent<Rigidbody>(out var rb))
+        {
+            rb.isKinematic = true;
+        } */
+
+        // Destruir el proyectil después de un breve tiempo
+        // Destroy(gameObject, 0.1f);
     }
-
 }

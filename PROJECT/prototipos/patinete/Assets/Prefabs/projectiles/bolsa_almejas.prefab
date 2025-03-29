@@ -148,10 +148,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e63a8739f9a4c448d30691ed24be80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AlmejasParticles: {fileID: 4343613697967363927, guid: faace662c5fb86d458bda9e67783d1bf, type: 3}
-  dustEffect: {fileID: 0}
+  explosionParticlesPrefab: {fileID: 7105016034024104087, guid: 6cfaead51c7eaa649924f5f11e19a003, type: 3}
+  dustEffectPrefab: {fileID: 0}
   impactSound: {fileID: 0}
-  minStones: 25
-  maxStones: 50
-  minStoneSize: 0.05
-  maxStoneSize: 0.2
+  minParticles: 50
+  maxParticles: 300
+  minParticleSize: 0.2
+  maxParticleSize: 0.5
+  isTrigger: 0

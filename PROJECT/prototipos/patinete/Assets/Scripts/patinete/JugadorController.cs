@@ -374,7 +374,7 @@ public class JugadorController : MonoBehaviour
             }
 
             debugParameters["Velocity"] = $"Breaking: target={velocidadObjetivo:F2}, current={velocidadActualEnDireccion:F2}";
-            Debug.Log("VEL OBJETIVO " + velocidadObjetivo);
+            //Debug.Log("VEL OBJETIVO " + velocidadObjetivo);
 
             // Solo calcular fuerzas si no está en modo kinematic
             if (!shouldBeKinematic)
