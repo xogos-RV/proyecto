@@ -12,12 +12,10 @@ public class Proyectil : MonoBehaviour
     [Range(0.1f, 10f)] public float minParticleSize = 0.5f;
     [Range(0.1f, 10f)] public float maxParticleSize = 5f;
 
-    public bool isTrigger = false;
-    private bool hasCollided = false;
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!isTrigger && !ShouldIgnoreCollision(collision.gameObject))
+        if (!ShouldIgnoreCollision(collision.gameObject))
         {
             HandleImpact(collision.contacts[0].point, collision.contacts[0].normal);
         }
@@ -27,7 +25,7 @@ public class Proyectil : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isTrigger && !ShouldIgnoreCollision(other.gameObject))
+        if (!ShouldIgnoreCollision(other.gameObject))
         {
             Vector3 impactPoint = GetTriggerImpactPoint(other);
             Vector3 impactNormal = (transform.position - other.transform.position).normalized;
@@ -41,8 +39,7 @@ public class Proyectil : MonoBehaviour
     {
         return otherObject.CompareTag("Player") ||
                 otherObject.CompareTag("Floor") ||
-                otherObject.CompareTag("Proyectil") ||
-                hasCollided;
+                otherObject.CompareTag("Proyectil");
     }
 
 
@@ -66,9 +63,6 @@ public class Proyectil : MonoBehaviour
 
     private void HandleImpact(Vector3 impactPoint, Vector3 impactNormal)
     {
-        if (hasCollided) return;
-
-        hasCollided = true;
 
         if (explosionParticlesPrefab != null)
         {
