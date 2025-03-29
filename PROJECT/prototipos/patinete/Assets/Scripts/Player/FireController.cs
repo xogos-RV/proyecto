@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class ProyectilController : MonoBehaviour
+public class FireController : MonoBehaviour
 {
     [Header("Prefab Configuration")]
     public GameObject projectilePrefab;

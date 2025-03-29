@@ -1504,8 +1504,8 @@ MonoBehaviour:
   chargeEffect: {fileID: 0}
   initialHorizontalAngle: 0
   initialVerticalAngle: 0
-  horizontalSensitivity: 0.5
-  verticalSensitivity: 0.1
+  horizontalSensitivity: 1
+  verticalSensitivity: 0.5
   maxHorizontalAngle: 60
   maxVerticalAngle: 60
   invertY: 0
