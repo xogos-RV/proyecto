@@ -58,15 +58,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "scroll",
-                    "type": "Value",
-                    "id": "da839f99-c6a3-473b-960f-23f5852a4699",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -358,12 +349,12 @@
                 },
                 {
                     "name": "",
-                    "id": "9286378e-d835-4c24-bc09-e00812a62bb7",
-                    "path": "<Mouse>/position",
+                    "id": "83b1a4a1-ae67-4030-a95a-e7ba088b9779",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "scroll",
+                    "action": "look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

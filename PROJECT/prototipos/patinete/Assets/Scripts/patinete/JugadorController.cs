@@ -21,6 +21,8 @@ public class JugadorController : MonoBehaviour
     [Tooltip("Fuerza de aceleración aplicada para alcanzar la velocidad objetivo")]
     [Range(0f, 10f)]
     public float accelerationForce = 5f;
+    [Tooltip("Activar/desactivar velocidad constante")]
+    public bool fixVelocity = true;
 
     [Header("Configuración de Rozamiento")]
     [Tooltip("Coeficiente de rozamiento: 0 = sin rozamiento (desliza indefinidamente), 1 = rozamiento máximo (se detiene rápido)")]
@@ -76,7 +78,7 @@ public class JugadorController : MonoBehaviour
     public string collisionTab = "DynamicPrefab";
 
     [Tooltip("Tag del suelo para detectar cuando está en contacto con el terreno")]
-    public string floorTag = "FloorPrefab";
+    public string floorTag = "Floor";
 
     [Header("Detección de Suelo")]
     [Tooltip("Tag de los objetos con los que se puede colisionar")]
@@ -120,13 +122,11 @@ public class JugadorController : MonoBehaviour
 
     private float lastUIUpdateTime = 0f;
 
-
     private int framesWithoutGroundContact = 0;
 
     private bool isInContactWithGround = false;
 
     private bool isCollisionEffectActive = false;
-
 
     private Vector3 totalForce = Vector3.zero;
 
@@ -137,6 +137,8 @@ public class JugadorController : MonoBehaviour
     private RigidbodyConstraints targetConstraints = RigidbodyConstraints.None;
 
     private Vector3 newVelocity;
+
+    private float lastAchievedSpeed = 0f;
 
     private Vector3 newPosition;
 
@@ -150,6 +152,10 @@ public class JugadorController : MonoBehaviour
     void Start()
     {
         InitializeComponents();
+        // Oculta el cursor del ratón
+        Cursor.visible = false;
+        // Opcional: Bloquea el cursor en el centro de la pantalla
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
 
@@ -337,46 +343,90 @@ public class JugadorController : MonoBehaviour
     private void CalculateVelocityForces()
     {
         float processedAccelerate = joystickResponseCurve(accelerateInput);
+        float processedBreak = joystickResponseCurve(breakInput);
         Vector3 direccionActual = transform.forward;
         float velocidadActualEnDireccion = Vector3.Dot(rb.linearVelocity, direccionActual);
-        float velocidadObjetivo = velocidadActualEnDireccion;
 
-        // Calcular velocidad objetivo
-        if (processedAccelerate > 0.1f)
+        if (fixVelocity)
         {
-            velocidadObjetivo = processedAccelerate * maxVelocity;
-            debugParameters["Velocity"] = $"Accelerating: target={velocidadObjetivo:F2}, current={velocidadActualEnDireccion:F2}";
+            // Versión 2: Mantener última velocidad alcanzada
+            float velocidadObjetivo = lastAchievedSpeed;
+            float lastModifiedVelocity = 0f;
+            // Calcular velocidad objetivo basada en las entradas
+            if (processedAccelerate > 0.1f)
+            {
+
+                // Acelerar proporcionalmente al input
+                velocidadObjetivo = lastAchievedSpeed + (maxVelocity - lastAchievedSpeed) * processedAccelerate;
+                lastModifiedVelocity = velocidadActualEnDireccion;
+            }
+            else if (processedBreak > 0.1f)
+            {
+
+                // Frenar proporcionalmente al input
+                velocidadObjetivo = lastAchievedSpeed * (1f - processedBreak * breakFactor);
+                lastModifiedVelocity = velocidadActualEnDireccion;
+            }
+
+            if (lastModifiedVelocity > 0f)
+            {
+                lastAchievedSpeed = lastModifiedVelocity;
+            }
+
+            debugParameters["Velocity"] = $"Breaking: target={velocidadObjetivo:F2}, current={velocidadActualEnDireccion:F2}";
+            Debug.Log("VEL OBJETIVO " + velocidadObjetivo);
+
+            // Solo calcular fuerzas si no está en modo kinematic
+            if (!shouldBeKinematic)
+            {
+                // fuerza necesaria para alcanzar la velocidad objetivo
+                float diferenciaVelocidad = velocidadObjetivo - velocidadActualEnDireccion;
+                Vector3 accelForce = direccionActual * diferenciaVelocidad * rb.mass * accelerationForce;
+
+                totalForce += accelForce;
+                debugForces["Acceleration"] = accelForce;
+            }
         }
         else
         {
-            // Calcular fuerza de rozamiento
-            float frictionForce = rb.linearVelocity.z * frictionCoefficient * rb.mass;
-            Vector3 frictionDirection = -rb.linearVelocity.normalized;
-            Vector3 frictionVector = frictionDirection * frictionForce;
+            // Versión original
+            float velocidadObjetivo = velocidadActualEnDireccion;
+            // Calcular velocidad objetivo
+            if (processedAccelerate > 0.1f)
+            {
+                velocidadObjetivo = processedAccelerate * maxVelocity;
+                debugParameters["Velocity"] = $"Accelerating: target={velocidadObjetivo:F2}, current={velocidadActualEnDireccion:F2}";
+            }
+            else
+            {
+                // Calcular fuerza de rozamiento
+                float frictionForce = rb.linearVelocity.z * frictionCoefficient * rb.mass;
+                Vector3 frictionDirection = -rb.linearVelocity.normalized;
+                Vector3 frictionVector = frictionDirection * frictionForce;
 
-            totalForce += frictionVector;
-            debugForces["Friction"] = frictionVector;
-            debugParameters["Velocity"] = $"Friction: magnitude={frictionForce:F2}";
-        }
+                totalForce += frictionVector;
+                debugForces["Friction"] = frictionVector;
+                debugParameters["Velocity"] = $"Friction: magnitude={frictionForce:F2}";
+            }
+            // Si se está frenando, reducir la velocidad objetivo
+            if (processedBreak > 0.1f)
+            {
+                velocidadObjetivo = 0;
+                debugParameters["Velocity"] += ", Breaking active";
+            }
+            // Solo calcular fuerzas si no está en modo kinematic
+            if (!shouldBeKinematic)
+            {
+                // Calcular la fuerza necesaria para alcanzar la velocidad objetivo
+                float diferenciaVelocidad = velocidadObjetivo - velocidadActualEnDireccion;
+                Vector3 accelForce = direccionActual * diferenciaVelocidad * rb.mass * accelerationForce;
 
-        // Si se está frenando, reducir la velocidad objetivo
-        if (breakInput > 0.1f)
-        {
-            velocidadObjetivo = 0;
-            debugParameters["Velocity"] += ", Breaking active";
-        }
-
-        // Solo calcular fuerzas si no está en modo kinematic
-        if (!shouldBeKinematic)
-        {
-            // Calcular la fuerza necesaria para alcanzar la velocidad objetivo
-            float diferenciaVelocidad = velocidadObjetivo - velocidadActualEnDireccion;
-            Vector3 accelForce = direccionActual * diferenciaVelocidad * rb.mass * accelerationForce;
-
-            totalForce += accelForce;
-            debugForces["Acceleration"] = accelForce;
+                totalForce += accelForce;
+                debugForces["Acceleration"] = accelForce;
+            }
         }
     }
+
 
     private void CalculateXAxisDamping()
     {
@@ -498,7 +548,6 @@ public class JugadorController : MonoBehaviour
                            $"- IsKinematic: {rb.isKinematic}\n" +
                            $"- Constraints: {rb.constraints}\n";
 
-        //Debug.Log($"--- PHYSICS UPDATE ---\n{forceLog}\n{paramLog}\n{finalState}");
     }
 
 

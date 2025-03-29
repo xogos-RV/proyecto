@@ -55,6 +55,7 @@ public class ProyectilController : MonoBehaviour
     private Vector2 mouseLook;                 // Para almacenar el input del ratón
     public float maxHorizontalAngle = 60f;     // Ángulo máximo horizontal (positivo y negativo)
     public float maxVerticalAngle = 60f;       // Ángulo máximo vertical (positivo y negativo)
+    public bool invertY = true;
 
 
     [Header("Indicator Colors")]
@@ -93,8 +94,10 @@ public class ProyectilController : MonoBehaviour
     {
         fire = playerInput.fire;
         mouseLook = playerInput.look;
-
-        Debug.Log("Mouse delta: " + mouseLook.ToString());
+        if (invertY == true)
+        {
+            mouseLook.y *= -1;
+        }
 
         UpdateAimAngles(); // Actualizar el ángulo de apuntado basado en el scroll
 
@@ -151,22 +154,6 @@ public class ProyectilController : MonoBehaviour
     }
 
 
-    void FireProjectile()
-    {
-        isCharging = false;
-
-        // Desactivar efecto de carga
-        if (chargeEffect != null)
-            chargeEffect.Stop();
-
-        // Lanzar proyectil con la fuerza calculada
-        LaunchProjectile(currentLaunchForce);
-
-        // Iniciar cooldown       
-        StartCoroutine(CooldownRoutine());
-    }
-
-
     void UpdateAimAngles()
     {
         // Ajustar el ángulo horizontal basado en el movimiento horizontal del ratón
@@ -179,7 +166,6 @@ public class ProyectilController : MonoBehaviour
         currentHorizontalAngle = Mathf.Clamp(currentHorizontalAngle, -maxHorizontalAngle, maxHorizontalAngle);
         currentVerticalAngle = Mathf.Clamp(currentVerticalAngle, -maxVerticalAngle, maxVerticalAngle);
     }
-
 
 
     void UpdateAimIndicator()
@@ -272,7 +258,6 @@ public class ProyectilController : MonoBehaviour
     }
 
 
-
     Vector3 CalculateAimDirection()
     {
         // Obtener la dirección base (hacia adelante desde la perspectiva del jugador)
@@ -292,6 +277,29 @@ public class ProyectilController : MonoBehaviour
         return direction;
     }
 
+
+    IEnumerator CooldownRoutine()
+    {
+        canFire = false;
+        yield return new WaitForSeconds(cooldownTime);
+        canFire = true;
+    }
+
+
+    void FireProjectile()
+    {
+        isCharging = false;
+
+        // Desactivar efecto de carga
+        if (chargeEffect != null)
+            chargeEffect.Stop();
+
+        // Lanzar proyectil con la fuerza calculada
+        LaunchProjectile(currentLaunchForce);
+
+        // Iniciar cooldown       
+        StartCoroutine(CooldownRoutine());
+    }
 
 
     void LaunchProjectile(float force)
@@ -316,14 +324,9 @@ public class ProyectilController : MonoBehaviour
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         if (rb == null)
             rb = projectile.AddComponent<Rigidbody>();
-
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
         rb.useGravity = useGravity;
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rb.AddForce(launchDirection * force, ForceMode.Impulse);
-
-        // Efectos
-        if (launchEffect != null)
-            Instantiate(launchEffect, spawnPosition, Quaternion.identity);
 
         if (audioSource != null)
             audioSource.Play();
@@ -331,13 +334,6 @@ public class ProyectilController : MonoBehaviour
         Destroy(projectile, projectileLifetime);
     }
 
-
-    IEnumerator CooldownRoutine()
-    {
-        canFire = false;
-        yield return new WaitForSeconds(cooldownTime);
-        canFire = true;
-    }
 
 
     void OnDestroy()

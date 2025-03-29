@@ -20,7 +20,7 @@ public class MedirTamanos : MonoBehaviour
         {
             // Obtener el tamaño del objeto
             Vector3 tamaño = renderer.bounds.size;
-            Debug.Log("Nombre del objeto: " + obj.name + ", Tamaño: " + tamaño);
+            //Debug.Log("Nombre del objeto: " + obj.name + ", Tamaño: " + tamaño);
         }
 
         // Recorrer recursivamente los hijos del objeto

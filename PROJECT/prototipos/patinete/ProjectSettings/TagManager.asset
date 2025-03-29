@@ -5,8 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - DynamicPrefab
-  - FloorPrefab
-  - proyectil
+  - Floor
+  - Proyectil
   layers:
   - Default
   - TransparentFX

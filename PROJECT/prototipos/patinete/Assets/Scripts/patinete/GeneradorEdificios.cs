@@ -158,13 +158,13 @@ public class GeneradorEdificios : MonoBehaviour
 
             // Obtener el tamaño del prefab seleccionado
             Vector3 size = getSize(prefabSeleccionado);
-            Debug.Log("Prefab seleccionado: " + prefabSeleccionado.name + ", SIZE: " + size.ToString());
+            //Debug.Log("Prefab seleccionado: " + prefabSeleccionado.name + ", SIZE: " + size.ToString());
 
             // Calcular la posición para el nuevo objeto
             float posZ = ultimaPosicionZ;
             float posY = 0;
             Vector3 posicionObjeto = new Vector3(posicionX + (mirror * escala * size.x), posY, posZ);
-            Debug.Log("objetoooooo  " + prefabSeleccionado.name + ", SIZE: " + size.ToString() + ",  posicionObjeto" + posicionObjeto.ToString());
+            //Debug.Log("objetoooooo  " + prefabSeleccionado.name + ", SIZE: " + size.ToString() + ",  posicionObjeto" + posicionObjeto.ToString());
 
             // Obtener el objeto del pool
             GameObject nuevoObjeto = objectPool.GetObject(prefabSeleccionado);
@@ -198,7 +198,7 @@ public class GeneradorEdificios : MonoBehaviour
             // Si no generamos un edificio, solo actualizamos la posición
             ultimaPosicionZ += 5f; // Un espacio vacío estándar
             ultimoEspacioVacio = true;
-            Debug.Log("Espacio vacío generado en posición Z: " + ultimaPosicionZ);
+            //Debug.Log("Espacio vacío generado en posición Z: " + ultimaPosicionZ);
         }
     }
 
@@ -275,7 +275,7 @@ public class GeneradorEdificios : MonoBehaviour
         if (renderer != null)
         {
             Vector3 tamaño = renderer.bounds.size;
-            Debug.Log("Nombre del objeto: " + obj.name + ", Tamaño: " + tamaño);
+            //Debug.Log("Nombre del objeto: " + obj.name + ", Tamaño: " + tamaño);
             if (tamaño.magnitude > tamañoMasGrande.magnitude)
             {
                 tamañoMasGrande = tamaño;

@@ -23,7 +23,7 @@ public class GeneradorPlanos : MonoBehaviour
     private int planoActualIndex = 0; // Índice del plano en el que está el jugador
     private GameObject planoCompuesto; // Objeto que contendrá los meshes combinados
 
-    public string floorTag = "FloorPrefab"; // Usar un solo collider para todos los planos
+    public string floorTag = "Floor"; // Usar un solo collider para todos los planos
 
     void Start()
     {
@@ -207,17 +207,14 @@ public class GeneradorPlanos : MonoBehaviour
     {
         if (planosActivos.Count == 0)
             return;
-
         // Calcular la posición del nuevo plano
         Vector3 posicionUltimoPlano = planosActivos[planosActivos.Count - 1].transform.position;
         Vector3 posicionNuevoPlano = posicionUltimoPlano + Vector3.forward * longitudPlano;
-
         // Obtener el nuevo plano del pool
         GameObject nuevoPrefab = SeleccionarPrefabAleatorio();
         GameObject nuevoPlano = objectPool.GetObject(nuevoPrefab); // Obtener del pool
         nuevoPlano.transform.position = posicionNuevoPlano;
         nuevoPlano.transform.rotation = Quaternion.identity;
-
         if (combinarMeshes)
         {
             // Desactivar componentes físicos si vamos a combinar meshes
@@ -225,15 +222,12 @@ public class GeneradorPlanos : MonoBehaviour
             {
                 DesactivarComponentesFisicos(nuevoPlano);
             }
-
             // Hacer el plano hijo del plano compuesto
             nuevoPlano.transform.SetParent(planoCompuesto.transform);
         }
-
         // Añadir a la lista de planos activos
         planosActivos.Add(nuevoPlano);
-
-        Debug.Log($"Nuevo plano generado en Z: {posicionNuevoPlano.z}");
+        //Debug.Log($"Nuevo plano generado en Z: {posicionNuevoPlano.z}");
     }
 
     void EliminarPlanoAntiguo()
@@ -243,10 +237,8 @@ public class GeneradorPlanos : MonoBehaviour
         {
             GameObject planoAntiguo = planosActivos[0];
             planosActivos.RemoveAt(0);
-
-            Debug.Log($"Plano eliminado en Z: {planoAntiguo.transform.position.z}");
+            //Debug.Log($"Plano eliminado en Z: {planoAntiguo.transform.position.z}");
             objectPool.ReturnObject(planoAntiguo); // Devolver al pool en lugar de destruir
-
             // Actualizar el índice del plano actual
             planoActualIndex--;
             if (planoActualIndex < 0) planoActualIndex = 0;

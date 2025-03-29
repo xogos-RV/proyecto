@@ -80,15 +80,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""scroll"",
-                    ""type"": ""Value"",
-                    ""id"": ""da839f99-c6a3-473b-960f-23f5852a4699"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -380,12 +371,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""9286378e-d835-4c24-bc09-e00812a62bb7"",
-                    ""path"": ""<Mouse>/position"",
+                    ""id"": ""83b1a4a1-ae67-4030-a95a-e7ba088b9779"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""scroll"",
+                    ""action"": ""look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -402,7 +393,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_player_jump = m_player.FindAction("jump", throwIfNotFound: true);
         m_player_fire = m_player.FindAction("fire", throwIfNotFound: true);
         m_player_look = m_player.FindAction("look", throwIfNotFound: true);
-        m_player_scroll = m_player.FindAction("scroll", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -475,7 +465,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_jump;
     private readonly InputAction m_player_fire;
     private readonly InputAction m_player_look;
-    private readonly InputAction m_player_scroll;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -486,7 +475,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @jump => m_Wrapper.m_player_jump;
         public InputAction @fire => m_Wrapper.m_player_fire;
         public InputAction @look => m_Wrapper.m_player_look;
-        public InputAction @scroll => m_Wrapper.m_player_scroll;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -514,9 +502,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @look.started += instance.OnLook;
             @look.performed += instance.OnLook;
             @look.canceled += instance.OnLook;
-            @scroll.started += instance.OnScroll;
-            @scroll.performed += instance.OnScroll;
-            @scroll.canceled += instance.OnScroll;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -539,9 +524,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @look.started -= instance.OnLook;
             @look.performed -= instance.OnLook;
             @look.canceled -= instance.OnLook;
-            @scroll.started -= instance.OnScroll;
-            @scroll.performed -= instance.OnScroll;
-            @scroll.canceled -= instance.OnScroll;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -567,6 +549,5 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-        void OnScroll(InputAction.CallbackContext context);
     }
 }

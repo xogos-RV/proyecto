@@ -65,7 +65,7 @@ public class jugadorWheel : MonoBehaviour
 
     [Header("Configuración de Colisión")]
     public string collisionTab = "DynamicPrefab";
-    public string floorTag = "FloorPrefab";
+    public string floorTag = "Floor";
 
     [Header("Detección de Suelo")]
     [Range(1, 60)]
@@ -304,7 +304,7 @@ public class jugadorWheel : MonoBehaviour
     {
         float motorTorque = accelerateInput * accelerationForce;
         float brakeTorque = breakInput * breakFactor;
-        Debug.Log($"Motor Torque: {motorTorque:F2}, Brake Torque: {brakeTorque:F2}");
+        //Debug.Log($"Motor Torque: {motorTorque:F2}, Brake Torque: {brakeTorque:F2}");
         ruedaDelantera.motorTorque = motorTorque;
         ruedaTrasera.motorTorque = motorTorque;
         ruedaDelantera.brakeTorque = brakeTorque;
