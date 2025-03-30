@@ -80,6 +80,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""run"",
+                    ""type"": ""Button"",
+                    ""id"": ""161e7e9d-9f5b-48e3-9689-880ab305dc43"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -152,7 +161,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""up"",
                     ""id"": ""83a64260-abab-40c1-a9cc-3042530d0883"",
-                    ""path"": ""<Keyboard>/anyKey"",
+                    ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -163,7 +172,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""down"",
                     ""id"": ""7b789cc2-a33e-4c69-ad3e-fee01ec579d7"",
-                    ""path"": ""<Keyboard>/anyKey"",
+                    ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -379,6 +388,39 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e06394ae-5d07-49b7-8ad7-eef258a92ba7"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""39a1c564-03aa-411d-b764-5c409e3a19b3"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""77034fc8-ddf3-4acc-a2a3-615b35f31bf6"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -393,6 +435,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_player_jump = m_player.FindAction("jump", throwIfNotFound: true);
         m_player_fire = m_player.FindAction("fire", throwIfNotFound: true);
         m_player_look = m_player.FindAction("look", throwIfNotFound: true);
+        m_player_run = m_player.FindAction("run", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -465,6 +508,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_jump;
     private readonly InputAction m_player_fire;
     private readonly InputAction m_player_look;
+    private readonly InputAction m_player_run;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -475,6 +519,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @jump => m_Wrapper.m_player_jump;
         public InputAction @fire => m_Wrapper.m_player_fire;
         public InputAction @look => m_Wrapper.m_player_look;
+        public InputAction @run => m_Wrapper.m_player_run;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -502,6 +547,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @look.started += instance.OnLook;
             @look.performed += instance.OnLook;
             @look.canceled += instance.OnLook;
+            @run.started += instance.OnRun;
+            @run.performed += instance.OnRun;
+            @run.canceled += instance.OnRun;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -524,6 +572,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @look.started -= instance.OnLook;
             @look.performed -= instance.OnLook;
             @look.canceled -= instance.OnLook;
+            @run.started -= instance.OnRun;
+            @run.performed -= instance.OnRun;
+            @run.canceled -= instance.OnRun;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -549,5 +600,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
     }
 }

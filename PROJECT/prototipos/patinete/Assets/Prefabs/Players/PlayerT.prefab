@@ -1928,9 +1928,11 @@ GameObject:
   - component: {fileID: 8104224047837855598}
   - component: {fileID: 7858657777262082268}
   - component: {fileID: 5102556937141832967}
+  - component: {fileID: 3657325012661028746}
+  - component: {fileID: 6679775386390956296}
   m_Layer: 0
   m_Name: PlayerT
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1999,6 +2001,33 @@ CharacterController:
   m_SkinWidth: 0.03
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &3657325012661028746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8099806430757607473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ed7c421b32dca14c85df7ac3f474a11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6679775386390956296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8099806430757607473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2df3203acb648743b477cc69ea2b7e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  runningSpeed: 16
+  gravity: -9.81
 --- !u!1 &8161478049117319741
 GameObject:
   m_ObjectHideFlags: 0

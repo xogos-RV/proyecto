@@ -10,15 +10,21 @@ public class PlayerInput : MonoBehaviour
     public float jump { get; private set; }
     public float breakButton { get; private set; }
     public float fire { get; private set; }
+    public float run { get; private set; }
+
+    public bool isRunning { get; private set; }
 
     private void Awake()
     {
         playerControls = new PlayerControls();
+        playerControls.player.run.performed += _ => isRunning = true;
+        playerControls.player.run.canceled += _ => isRunning = false;
     }
 
     private void OnEnable()
     {
         playerControls.Enable();
+
     }
 
     private void OnDisable()
@@ -45,5 +51,6 @@ public class PlayerInput : MonoBehaviour
             look *= 20;
 
         }
+        run = playerControls.player.run.ReadValue<float>();
     }
 }
