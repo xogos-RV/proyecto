@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Proyectil : MonoBehaviour
+public class ProyectilController : MonoBehaviour
 {
     [Header("Configuración de Partículas")]
     public GameObject explosionParticlesPrefab;
@@ -15,7 +15,8 @@ public class Proyectil : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!ShouldIgnoreCollision(collision.gameObject))
+        float impactForce = collision.impulse.magnitude / Time.fixedDeltaTime;
+        if (!ShouldIgnoreCollision(collision.gameObject) && impactForce > 1.0f)
         {
             HandleImpact(collision.contacts[0].point, collision.contacts[0].normal);
         }
@@ -23,7 +24,7 @@ public class Proyectil : MonoBehaviour
 
 
 
-    private void OnTriggerEnter(Collider other)
+    /* TODO private void OnTriggerEnter(Collider other)
     {
         if (!ShouldIgnoreCollision(other.gameObject))
         {
@@ -31,7 +32,7 @@ public class Proyectil : MonoBehaviour
             Vector3 impactNormal = (transform.position - other.transform.position).normalized;
             HandleImpact(impactPoint, impactNormal);
         }
-    }
+    } */
 
 
 
@@ -69,8 +70,8 @@ public class Proyectil : MonoBehaviour
             GameObject explosionInstance = Instantiate(explosionParticlesPrefab, impactPoint, Quaternion.LookRotation(impactNormal));
             ParticleSystem explosionParticles = explosionInstance.GetComponent<ParticleSystem>();
 
-            var emission = explosionParticles.emission;
-            emission.SetBurst(0, new ParticleSystem.Burst(0, Random.Range(minParticles, maxParticles)));
+            /* var emission = explosionParticles.emission;
+            emission.SetBurst(0, new ParticleSystem.Burst(0, Random.Range(minParticles, maxParticles))); */
 
             var main = explosionParticles.main;
             main.startSize = new ParticleSystem.MinMaxCurve(minParticleSize, maxParticleSize);

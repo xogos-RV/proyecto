@@ -3,7 +3,27 @@ guid: cf3ad4392bbff3b4fa55a53a6a4e1891
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Goma
+    second: {fileID: 2100000, guid: 4f736dfeb1b136c498ee0f23c94afdb3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cuerpo
+    second: {fileID: 2100000, guid: 31a7f06ffffca9a40b1b2c3a737f3d26, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal
+    second: {fileID: 2100000, guid: 7d9f0a9b7cd565848a4974e89b2787ea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal-negro
+    second: {fileID: 2100000, guid: 9aef827e40673d240b1733c2904f09e0, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

@@ -26,7 +26,7 @@ public class CameraFollowZ : MonoBehaviour
 
     [Header("Configuración de Seguimiento")]
     [Tooltip("bloquear seguir al jugador en el eje X")]
-    public bool followLiebre = false;
+    public bool fixedX = false;
 
     private Vector3 initialLookAtOffset; // Offset inicial para el LookAt
 
@@ -40,7 +40,7 @@ public class CameraFollowZ : MonoBehaviour
         }
 
         // Posicionamos la cámara según los parámetros configurados
-        Transform target = followLiebre ? liebre : player;
+        Transform target = fixedX ? liebre : player;
         UpdateCameraPosition(true, target);
 
         // Calculamos el offset inicial para el LookAt
@@ -58,7 +58,7 @@ public class CameraFollowZ : MonoBehaviour
             liebre.position = nuevaPosicion;
         }
 
-        Transform target = followLiebre ? liebre : player;
+        Transform target = fixedX ? liebre : player;
 
         UpdateCameraPosition(false, target);
     }

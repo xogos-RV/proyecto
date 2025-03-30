@@ -155,4 +155,3 @@ MonoBehaviour:
   maxParticles: 300
   minParticleSize: 0.2
   maxParticleSize: 0.5
-  isTrigger: 0

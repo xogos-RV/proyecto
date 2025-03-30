@@ -409,7 +409,7 @@ MonoBehaviour:
   lookAtZOffset: 20
   lookAtHeightMultiplier: 0.5
   smoothSpeed: 5
-  followLiebre: 1
+  fixedX: 1
 --- !u!114 &330585550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1489,7 +1489,7 @@ MonoBehaviour:
   aimIndicatorPrefab: {fileID: 3131547619770629753, guid: cbf4a0fcd07ca6d4abd3ed27b008b79a, type: 3}
   compensationFactor: 0
   leftOffset: 0
-  heightOffset: 3
+  heightOffset: 4
   minLaunchForce: 5
   maxLaunchForce: 300
   chargeTime: 1
