@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PatineteController : MonoBehaviour
 {
     private Rigidbody rb;
     private PlayerInput playerInput;
