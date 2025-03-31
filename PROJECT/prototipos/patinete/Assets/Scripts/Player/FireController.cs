@@ -9,29 +9,26 @@ public class FireController : MonoBehaviour
     private PlayerInput playerInput;
     private GameObject aimIndicator;
 
-    [Header("Factor Compensación")]
-    [Range(-1f, 1f)]
-    public float compensationFactor = 0f;
-
     [Header("Spawn Position")]
-    [Range(0f, 2f)]
-    public float leftOffset = 1f;
-    public float heightOffset = 3f;
+    [Range(0f, 5f)]
+    public float forwardOffset = 3f;
+    [Range(0f, 5f)]
+    public float heightOffset = 3.5f;
 
     [Header("Launch Parameters")]
     [Range(1f, 100f)]
-    public float minLaunchForce = 10f; // Fuerza mínima al disparar rápido
-    public float maxLaunchForce = 50f; // Fuerza máxima al cargar
+    public float minLaunchForce = 20f; // Fuerza mínima al disparar rápido
+    public float maxLaunchForce = 300f; // Fuerza máxima al cargar
     public float chargeTime = 2f; // Tiempo en segundos para alcanzar fuerza máxima
     public float upwardForce = 0.6f;
-    public float maxLaunchDistance = 100f;
+    public float maxLaunchDistance = 200f;
 
     [Header("Cooldown")]
     public float cooldownTime = 0.2f;
-    private bool canFire = true;
-    private bool isCharging = false;
     private float chargeStartTime;
     private float currentLaunchForce;
+    private bool canFire = true;
+    private bool isCharging = false;
 
     [Header("Projectile Settings")]
     public float projectileLifetime = 10f;
@@ -48,20 +45,20 @@ public class FireController : MonoBehaviour
     [Header("Aim Direction Control")]
     public float initialHorizontalAngle = 0f;  // Ángulo inicial horizontal (en grados)
     public float initialVerticalAngle = 0f;    // Ángulo inicial vertical (en grados)
-    public float horizontalSensitivity = 2f;   // Sensibilidad del control horizontal
-    public float verticalSensitivity = 2f;     // Sensibilidad del control vertical
+    public float horizontalSensitivity = 1.5f;   // Sensibilidad del control horizontal
+    public float verticalSensitivity = 1f;     // Sensibilidad del control vertical
+    public float maxHorizontalAngle = 60f;     // Ángulo máximo horizontal (positivo y negativo)
+    public float maxVerticalAngle = 60f;       // Ángulo máximo vertical (positivo y negativo)
+    public bool invertY = false;
     private float currentHorizontalAngle;      // Ángulo actual horizontal
     private float currentVerticalAngle;        // Ángulo actual vertical
     private Vector2 mouseLook;                 // Para almacenar el input del ratón
-    public float maxHorizontalAngle = 60f;     // Ángulo máximo horizontal (positivo y negativo)
-    public float maxVerticalAngle = 60f;       // Ángulo máximo vertical (positivo y negativo)
-    public bool invertY = true;
 
 
     [Header("Indicator Colors")]
     public Color surfaceHitColor = Color.green;
     public Color noHitColor = Color.blue;
-    public Color chargeStartColor = Color.green;
+    public Color chargeStartColor = Color.yellow;
     public Color chargeEndColor = Color.red;
 
     void Start()
@@ -176,9 +173,7 @@ public class FireController : MonoBehaviour
         Vector3 aimDirection = CalculateAimDirection();
 
         // Lanzar un rayo desde la posición de disparo en la dirección calculada
-        Vector3 spawnPosition = transform.position +
-                              (-transform.right * leftOffset) +
-                              (Vector3.up * heightOffset);
+        Vector3 spawnPosition = transform.position + (transform.forward * forwardOffset) + (Vector3.up * heightOffset);
 
         Ray aimRay = new Ray(spawnPosition, aimDirection);
         RaycastHit hit;
@@ -304,9 +299,7 @@ public class FireController : MonoBehaviour
 
     void LaunchProjectile(float force)
     {
-        Vector3 spawnPosition = transform.position +
-                              (-transform.right * leftOffset) +
-                              (Vector3.up * heightOffset);
+        Vector3 spawnPosition = transform.position + (transform.forward * forwardOffset) + (Vector3.up * heightOffset);
 
         // Usar la dirección calculada para el lanzamiento
         Vector3 launchDirection = CalculateAimDirection();

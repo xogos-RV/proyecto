@@ -1927,10 +1927,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8104224047837855598}
   - component: {fileID: 7858657777262082268}
-  - component: {fileID: 5102556937141832967}
-  - component: {fileID: 3657325012661028746}
-  - component: {fileID: 6679775386390956296}
-  - component: {fileID: -3078580845517462815}
   m_Layer: 0
   m_Name: PlayerT
   m_TagString: Player
@@ -1946,7 +1942,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8099806430757607473}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.0024573803, y: -1.5029489, z: -8.415279}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 0
@@ -1977,98 +1973,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &5102556937141832967
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8099806430757607473}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.3
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.03
-  m_MinMoveDistance: 0
-  m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &3657325012661028746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8099806430757607473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ed7c421b32dca14c85df7ac3f474a11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6679775386390956296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8099806430757607473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df3203acb648743b477cc69ea2b7e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
-  runningSpeed: 16
-  gravity: -9.81
---- !u!114 &-3078580845517462815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8099806430757607473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cba66293bfe187a4fb6abcc0687c3066, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 668171418510610749, guid: 408cdfe163004494f8c61f08bb0293ff, type: 3}
-  aimIndicatorPrefab: {fileID: 3131547619770629753, guid: cbf4a0fcd07ca6d4abd3ed27b008b79a, type: 3}
-  compensationFactor: 0
-  leftOffset: 2
-  heightOffset: 3.5
-  minLaunchForce: 10
-  maxLaunchForce: 300
-  chargeTime: 2.5
-  upwardForce: 0.6
-  maxLaunchDistance: 100
-  cooldownTime: 0.2
-  projectileLifetime: 10
-  useGravity: 1
-  projectileScale: 3
-  launchEffect: {fileID: 0}
-  launchSound: {fileID: 0}
-  chargeEffect: {fileID: 0}
-  initialHorizontalAngle: 0
-  initialVerticalAngle: 0
-  horizontalSensitivity: 2
-  verticalSensitivity: 2
-  maxHorizontalAngle: 60
-  maxVerticalAngle: 60
-  invertY: 0
-  surfaceHitColor: {r: 0, g: 1, b: 0, a: 1}
-  noHitColor: {r: 0.6497936, g: 0, b: 1, a: 1}
-  chargeStartColor: {r: 1, g: 0.88550174, b: 0, a: 1}
-  chargeEndColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &8161478049117319741
 GameObject:
   m_ObjectHideFlags: 0

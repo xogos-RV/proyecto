@@ -89,6 +89,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""camL"",
+                    ""type"": ""Button"",
+                    ""id"": ""d1fbc379-7a16-4813-bad7-1da651917991"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""camR"",
+                    ""type"": ""Button"",
+                    ""id"": ""cd9f8248-d105-4008-8296-f1713ddceddd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -260,7 +278,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""7fa267c3-df15-4315-9fe7-ba7298f25fb7"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -326,7 +344,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""4ea49b5a-d4ba-43a4-a6c0-a76bc3955898"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -421,6 +439,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""06733448-b80a-4e4e-9e66-b028fbcc8e8d"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""camL"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e4cec0ca-f474-45c9-98e9-8ee6c459d541"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""camR"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -436,6 +476,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_player_fire = m_player.FindAction("fire", throwIfNotFound: true);
         m_player_look = m_player.FindAction("look", throwIfNotFound: true);
         m_player_run = m_player.FindAction("run", throwIfNotFound: true);
+        m_player_camL = m_player.FindAction("camL", throwIfNotFound: true);
+        m_player_camR = m_player.FindAction("camR", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -509,6 +551,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_fire;
     private readonly InputAction m_player_look;
     private readonly InputAction m_player_run;
+    private readonly InputAction m_player_camL;
+    private readonly InputAction m_player_camR;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -520,6 +564,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @fire => m_Wrapper.m_player_fire;
         public InputAction @look => m_Wrapper.m_player_look;
         public InputAction @run => m_Wrapper.m_player_run;
+        public InputAction @camL => m_Wrapper.m_player_camL;
+        public InputAction @camR => m_Wrapper.m_player_camR;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -550,6 +596,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @run.started += instance.OnRun;
             @run.performed += instance.OnRun;
             @run.canceled += instance.OnRun;
+            @camL.started += instance.OnCamL;
+            @camL.performed += instance.OnCamL;
+            @camL.canceled += instance.OnCamL;
+            @camR.started += instance.OnCamR;
+            @camR.performed += instance.OnCamR;
+            @camR.canceled += instance.OnCamR;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -575,6 +627,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @run.started -= instance.OnRun;
             @run.performed -= instance.OnRun;
             @run.canceled -= instance.OnRun;
+            @camL.started -= instance.OnCamL;
+            @camL.performed -= instance.OnCamL;
+            @camL.canceled -= instance.OnCamL;
+            @camR.started -= instance.OnCamR;
+            @camR.performed -= instance.OnCamR;
+            @camR.canceled -= instance.OnCamR;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -601,5 +659,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnCamL(InputAction.CallbackContext context);
+        void OnCamR(InputAction.CallbackContext context);
     }
 }

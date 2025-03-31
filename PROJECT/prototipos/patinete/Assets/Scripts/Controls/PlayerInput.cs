@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,8 +12,10 @@ public class PlayerInput : MonoBehaviour
     public float breakButton { get; private set; }
     public float fire { get; private set; }
     public float run { get; private set; }
-
     public bool isRunning { get; private set; }
+    public float camL { get; private set; }
+    public float camR { get; private set; }
+    public float JoisticSensitivity = 20f;
 
     private void Awake()
     {
@@ -46,11 +49,13 @@ public class PlayerInput : MonoBehaviour
         fire = playerControls.player.fire.ReadValue<float>();
         look = playerControls.player.look.ReadValue<Vector2>();
         InputDevice device = playerControls.player.look.activeControl?.device;
-        if (device != null && device is Gamepad && (look.x > 0.1 || look.y > 0.1))
+        if (device != null && device is Gamepad && (Math.Abs(look.x) > 0.1 || Math.Abs(look.y) > 0.1))
         {
-            look *= 20;
+            look *= JoisticSensitivity;
 
         }
         run = playerControls.player.run.ReadValue<float>();
+        camL = playerControls.player.camL.ReadValue<float>();
+        camR = playerControls.player.camR.ReadValue<float>();
     }
 }

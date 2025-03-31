@@ -67,6 +67,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "camL",
+                    "type": "Button",
+                    "id": "d1fbc379-7a16-4813-bad7-1da651917991",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "camR",
+                    "type": "Button",
+                    "id": "cd9f8248-d105-4008-8296-f1713ddceddd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -238,7 +256,7 @@
                 {
                     "name": "",
                     "id": "7fa267c3-df15-4315-9fe7-ba7298f25fb7",
-                    "path": "<Gamepad>/leftShoulder",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -304,7 +322,7 @@
                 {
                     "name": "",
                     "id": "4ea49b5a-d4ba-43a4-a6c0-a76bc3955898",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Gamepad>/leftStick/left",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -397,6 +415,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "06733448-b80a-4e4e-9e66-b028fbcc8e8d",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "camL",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e4cec0ca-f474-45c9-98e9-8ee6c459d541",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "camR",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

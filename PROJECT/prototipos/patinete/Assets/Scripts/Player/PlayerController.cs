@@ -1,20 +1,22 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed;
-    public float runningSpeed;
+    public Animator animator;
+
+    public Transform camtrans;
+    public float moveSpeed = 5f;
+    public float runningSpeed = 16f;
     public float gravity = -9.81f;
+    public float rotateDump = 5;
     PlayerInput playerInput;
     CharacterController characterController;
 
-    Animator animator;
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-
     }
 
     void Update()
@@ -34,7 +36,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveAndRotate()
     {
-        Vector3 movement = new Vector3(playerInput.movement.x, 0, playerInput.movement.y);
+        Vector3 movement = CalculateMovementoFromCam();
 
         float speed = playerInput.isRunning ? runningSpeed : moveSpeed;
 
@@ -47,7 +49,22 @@ public class PlayerController : MonoBehaviour
 
         if (movement != Vector3.zero)
         {
-            transform.rotation = Quaternion.LookRotation(movement);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * rotateDump);
         }
     }
+
+    private Vector3 CalculateMovementoFromCam()
+    {
+        Vector3 forward = camtrans.forward;
+        Vector3 right = camtrans.right;
+
+        forward.y = 0;
+        right.y = 0;
+
+        forward.Normalize();
+        right.Normalize();
+
+        return forward * playerInput.movement.y + right * playerInput.movement.x;
+    }
+
 }
