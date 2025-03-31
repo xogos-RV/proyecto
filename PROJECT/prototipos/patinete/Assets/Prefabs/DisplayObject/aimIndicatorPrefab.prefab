@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5662438922871734190}
   - component: {fileID: 8962187315793216365}
   m_Layer: 0
-  m_Name: 'aimIndicatorPrefab '
+  m_Name: aimIndicatorPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
