@@ -64,9 +64,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4967034361529646827}
   - {fileID: 2084524532587912522}
   - {fileID: 6303557266325822131}
-  - {fileID: 4967034361529646827}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1343353303865145367
@@ -95,11 +95,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6455347281854904665}
+  patinete: {fileID: 0}
   camtrans: {fileID: 2084524532587912522}
   moveSpeed: 5
   runningSpeed: 16
   gravity: -9.81
   rotateDump: 5
+  playerCamera: {fileID: 0}
 --- !u!114 &1468698697820452148
 MonoBehaviour:
   m_ObjectHideFlags: 0

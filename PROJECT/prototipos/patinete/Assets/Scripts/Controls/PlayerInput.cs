@@ -15,6 +15,7 @@ public class PlayerInput : MonoBehaviour
     public bool isRunning { get; private set; }
     public float camL { get; private set; }
     public float camR { get; private set; }
+    public float drive { get; private set; }
     public float JoisticSensitivity = 20f;
 
     private void Awake()
@@ -57,5 +58,6 @@ public class PlayerInput : MonoBehaviour
         run = playerControls.player.run.ReadValue<float>();
         camL = playerControls.player.camL.ReadValue<float>();
         camR = playerControls.player.camR.ReadValue<float>();
+        drive = playerControls.player.drive.ReadValue<float>();
     }
 }

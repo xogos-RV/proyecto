@@ -107,6 +107,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""drive"",
+                    ""type"": ""Button"",
+                    ""id"": ""de2ff928-5008-4b8a-a2ec-f1c684e8773b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -461,6 +470,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""camR"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""00171f0f-ebc3-4252-ac6c-f37488856818"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""drive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3cc68590-ab71-42b4-8c6b-2c797d03a487"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""drive"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -478,6 +509,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_player_run = m_player.FindAction("run", throwIfNotFound: true);
         m_player_camL = m_player.FindAction("camL", throwIfNotFound: true);
         m_player_camR = m_player.FindAction("camR", throwIfNotFound: true);
+        m_player_drive = m_player.FindAction("drive", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -553,6 +585,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_player_run;
     private readonly InputAction m_player_camL;
     private readonly InputAction m_player_camR;
+    private readonly InputAction m_player_drive;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -566,6 +599,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @run => m_Wrapper.m_player_run;
         public InputAction @camL => m_Wrapper.m_player_camL;
         public InputAction @camR => m_Wrapper.m_player_camR;
+        public InputAction @drive => m_Wrapper.m_player_drive;
         public InputActionMap Get() { return m_Wrapper.m_player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -602,6 +636,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @camR.started += instance.OnCamR;
             @camR.performed += instance.OnCamR;
             @camR.canceled += instance.OnCamR;
+            @drive.started += instance.OnDrive;
+            @drive.performed += instance.OnDrive;
+            @drive.canceled += instance.OnDrive;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -633,6 +670,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @camR.started -= instance.OnCamR;
             @camR.performed -= instance.OnCamR;
             @camR.canceled -= instance.OnCamR;
+            @drive.started -= instance.OnDrive;
+            @drive.performed -= instance.OnDrive;
+            @drive.canceled -= instance.OnDrive;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -661,5 +701,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnCamL(InputAction.CallbackContext context);
         void OnCamR(InputAction.CallbackContext context);
+        void OnDrive(InputAction.CallbackContext context);
     }
 }

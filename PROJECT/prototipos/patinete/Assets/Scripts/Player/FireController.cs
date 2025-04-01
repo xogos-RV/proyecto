@@ -309,7 +309,7 @@ public class FireController : MonoBehaviour
         launchDirection.Normalize();
 
         Quaternion projectileRotation = Quaternion.LookRotation(launchDirection);
-        projectileRotation *= Quaternion.Euler(180, 0, 0);
+        projectileRotation *= Quaternion.Euler(0, 0, 0);
 
         GameObject projectile = Instantiate(projectilePrefab, spawnPosition, projectileRotation);
         projectile.transform.localScale *= projectileScale;

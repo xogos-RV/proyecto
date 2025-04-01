@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "drive",
+                    "type": "Button",
+                    "id": "de2ff928-5008-4b8a-a2ec-f1c684e8773b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -437,6 +446,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "camR",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00171f0f-ebc3-4252-ac6c-f37488856818",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "drive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3cc68590-ab71-42b4-8c6b-2c797d03a487",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "drive",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

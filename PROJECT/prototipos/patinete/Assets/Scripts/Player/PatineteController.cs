@@ -120,6 +120,8 @@ public class PatineteController : MonoBehaviour
     [Range(0.1f, 1.0f)]
     public float uiUpdateInterval = 0.1f;
 
+    public bool isDriving = false;
+
     private float lastUIUpdateTime = 0f;
 
     private int framesWithoutGroundContact = 0;
@@ -248,6 +250,11 @@ public class PatineteController : MonoBehaviour
         }
     }
 
+
+    public void setDriving(bool driving)
+    {
+        isDriving = driving;
+    }
 
     private void InitializeComponents()
     {
