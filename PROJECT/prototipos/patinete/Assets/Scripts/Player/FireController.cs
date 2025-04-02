@@ -324,7 +324,7 @@ public class FireController : MonoBehaviour
         if (audioSource != null)
             audioSource.Play();
 
-        Destroy(projectile, projectileLifetime);
+        // Destroy(projectile, projectileLifetime);
     }
 
 

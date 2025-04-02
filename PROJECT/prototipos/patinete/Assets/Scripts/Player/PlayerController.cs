@@ -50,13 +50,13 @@ public class PlayerController : MonoBehaviour
             // animator.SetFloat("Movement", 0); TODO
 
             // Mantener al jugador en la posición relativa al patinete
-            transform.position = patinete.transform.TransformPoint(new Vector3(0.89f, 0.86f, -1.88f));
+            /* transform.position = patinete.transform.TransformPoint(new Vector3(0.89f, 0.86f, -1.88f));
 
             Quaternion rot = patinete.transform.rotation;
             rot *= Quaternion.Euler(new Vector3(19.6f, 311f, 0f)); // TODO coregir la postura en la animacion
             transform.GetChild(0).rotation = rot;
 
-            transform.localScale = new Vector3(-1f, 1f, 1f);
+            transform.localScale = new Vector3(-1f, 1f, 1f); */
         }
     }
 
@@ -65,7 +65,6 @@ public class PlayerController : MonoBehaviour
     private void SetAnimation()
     {
         float targetSpeed = (playerInput.movement != Vector2.zero) ? (playerInput.isRunning ? 1 : 0.5f) : 0;
-
         animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
     }
 
@@ -80,11 +79,14 @@ public class PlayerController : MonoBehaviour
             // Desactivar el CharacterController para evitar conflictos con el movimiento físico
             characterController.enabled = false;
             // Hacer que el jugador sea hijo del patinete para que siga su movimiento
-            /* transform.parent = patinete.transform;
+            transform.parent = patinete.transform;
             // Posicionar al jugador en la posición relativa al patinete
-            transform.localPosition = new Vector3(0, 0.54f, -1.82f);
+            transform.localPosition = new Vector3(0.8f, 0.8f, -2f);
             // Opcional: Rotar al jugador para que mire hacia adelante respecto al patinete
-            transform.localRotation = Quaternion.identity; */
+            transform.localRotation = Quaternion.Euler(new Vector3(19.5f, 310f, 0f));
+            // Voltear en X
+            transform.localScale = new Vector3(-1f, 1f, 1f);
+
             if (patinete != null)
                 patinete.GetComponent<PatineteController>().enabled = true;
 
@@ -101,8 +103,10 @@ public class PlayerController : MonoBehaviour
             // Reactivar el CharacterController
             characterController.enabled = true;
             transform.GetChild(0).rotation = transform.rotation;
+
+            transform.localScale = new Vector3(1f, 1f, 1f);
             // Separar al jugador del patinete
-            /* transform.parent = null; */
+            transform.parent = null;
         }
     }
 

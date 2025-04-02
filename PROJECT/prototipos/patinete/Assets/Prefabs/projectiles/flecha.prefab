@@ -157,3 +157,7 @@ MonoBehaviour:
   maxParticles: 200
   minParticleSize: 0.1
   maxParticleSize: 0.31
+  penetrationFactor: 1
+  minPenetrationDepth: 1
+  maxPenetrationDepth: 3
+  positionOffset: 0.02

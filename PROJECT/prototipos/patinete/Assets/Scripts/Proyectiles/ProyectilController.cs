@@ -12,29 +12,36 @@ public class ProyectilController : MonoBehaviour
     [Range(0.1f, 10f)] public float minParticleSize = 0.5f;
     [Range(0.1f, 10f)] public float maxParticleSize = 5f;
 
+    [Header("Configuración de Penetración")]
+    [Tooltip("Qué porcentaje de la velocidad se convierte en penetración")]
+    [Range(0f, 1f)] public float penetrationFactor = 0.3f;
+    [Tooltip("Profundidad mínima de penetración en metros")]
+    public float minPenetrationDepth = 0.05f;
+    [Tooltip("Profundidad máxima de penetración en metros")]
+    public float maxPenetrationDepth = 0.5f;
+    [Tooltip("Offset adicional para ajustar la posición clavada")]
+    public float positionOffset = 0.02f;
+
+    private bool hasCollided = false;
+    private Rigidbody rb;
+    private Collider projectileCollider;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        projectileCollider = GetComponent<Collider>();
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        float impactForce = collision.impulse.magnitude / Time.fixedDeltaTime;
-        if (!ShouldIgnoreCollision(collision.gameObject) && impactForce > 1.0f)
+        if (hasCollided) return;
+
+        if (!ShouldIgnoreCollision(collision.gameObject))
         {
-            HandleImpact(collision.contacts[0].point, collision.contacts[0].normal);
+            hasCollided = true;
+            HandleImpact(collision);
         }
     }
-
-
-
-    /* TODO private void OnTriggerEnter(Collider other)
-    {
-        if (!ShouldIgnoreCollision(other.gameObject))
-        {
-            Vector3 impactPoint = GetTriggerImpactPoint(other);
-            Vector3 impactNormal = (transform.position - other.transform.position).normalized;
-            HandleImpact(impactPoint, impactNormal);
-        }
-    } */
-
-
 
     private bool ShouldIgnoreCollision(GameObject otherObject)
     {
@@ -43,67 +50,127 @@ public class ProyectilController : MonoBehaviour
                 otherObject.CompareTag("Proyectil");
     }
 
-
-
-    private Vector3 GetTriggerImpactPoint(Collider other)
+    private void HandleImpact(Collision collision)
     {
-        // Opción 1: Usar el punto más cercano en el collider
-        Vector3 closestPoint = other.ClosestPoint(transform.position);
+        ContactPoint contact = collision.contacts[0];
+        Vector3 impactPoint = contact.point;
+        Vector3 impactNormal = contact.normal;
+        GameObject hitObject = collision.gameObject;
 
-        // Opción 2: Usar Raycast para mayor precisión
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, 2f)) // TODO ajustar
-        {
-            return hit.point;
-        }
+        // Calcular dirección de impacto (dirección de la velocidad)
+        Vector3 impactDirection = rb.linearVelocity.normalized;
 
-        return closestPoint;
+        // Calcular profundidad de penetración basada en la fuerza
+        float penetrationDepth = CalculatePenetrationDepth(rb.linearVelocity.magnitude);
+
+        // Desactivar física y collider antes de mover
+        DisablePhysics();
+
+        // Posicionar y rotar la flecha
+        PositionArrow(impactPoint, impactDirection, penetrationDepth);
+
+        // Hacer que la flecha sea hija del objeto impactado
+        AttachToHitObject(hitObject);
+
+        // Efectos de impacto
+        SpawnImpactEffects(impactPoint, impactNormal);
+
+        // Opcional: Desactivar script para mejorar rendimiento
+        enabled = false;
     }
 
-
-
-    private void HandleImpact(Vector3 impactPoint, Vector3 impactNormal)
+    private float CalculatePenetrationDepth(float impactSpeed)
     {
+        float calculatedDepth = impactSpeed * penetrationFactor;
+        return Mathf.Clamp(calculatedDepth, minPenetrationDepth, maxPenetrationDepth);
+    }
 
+    private void DisablePhysics()
+    {
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+           // rb.detectCollisions = false;
+        }
+
+        if (projectileCollider != null)
+        {
+            projectileCollider.enabled = false;
+        }
+    }
+
+    private void PositionArrow(Vector3 impactPoint, Vector3 impactDirection, float penetrationDepth)
+    {
+        // Mover la flecha hacia dentro del objeto
+        transform.position = impactPoint + impactDirection * (penetrationDepth - positionOffset);
+
+        // Rotar la flecha para que apunte en la dirección del impacto
+        if (impactDirection != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(impactDirection);
+        }
+    }
+
+    private void AttachToHitObject(GameObject hitObject)
+    {
+        // Crear un GameObject intermedio para evitar problemas de escala
+        GameObject attachmentParent = new GameObject("ProjectileAttachment");
+        attachmentParent.transform.position = transform.position;
+        attachmentParent.transform.rotation = transform.rotation;
+        attachmentParent.transform.SetParent(hitObject.transform, true);
+
+        // Hacer el proyectil hijo del objeto intermedio
+        transform.SetParent(attachmentParent.transform, true);
+    }
+
+    private void SpawnImpactEffects(Vector3 impactPoint, Vector3 impactNormal)
+    {
+        // Efecto de explosión
         if (explosionParticlesPrefab != null)
         {
-            GameObject explosionInstance = Instantiate(explosionParticlesPrefab, impactPoint, Quaternion.LookRotation(impactNormal));
-            ParticleSystem explosionParticles = explosionInstance.GetComponent<ParticleSystem>();
+            GameObject explosionInstance = Instantiate(
+                explosionParticlesPrefab,
+                impactPoint,
+                Quaternion.LookRotation(impactNormal)
+            );
 
-            /* var emission = explosionParticles.emission;
-            emission.SetBurst(0, new ParticleSystem.Burst(0, Random.Range(minParticles, maxParticles))); */
-
-            var main = explosionParticles.main;
-            main.startSize = new ParticleSystem.MinMaxCurve(minParticleSize, maxParticleSize);
-
-            explosionParticles.Play();
-            Destroy(explosionInstance, main.duration);
+            ConfigureParticleSystem(explosionInstance);
         }
 
-        // Instanciar efecto de polvo
+        // Efecto de polvo
         if (dustEffectPrefab != null)
         {
-            GameObject dustInstance = Instantiate(dustEffectPrefab, impactPoint, Quaternion.LookRotation(impactNormal));
-            ParticleSystem dustParticles = dustInstance.GetComponent<ParticleSystem>();
-            dustParticles.Play();
-            Destroy(dustInstance, dustParticles.main.duration);
+            GameObject dustInstance = Instantiate(
+                dustEffectPrefab,
+                impactPoint,
+                Quaternion.LookRotation(impactNormal)
+            );
+
+            ConfigureParticleSystem(dustInstance);
         }
 
+        // Sonido de impacto
         if (impactSound != null)
         {
             AudioSource.PlayClipAtPoint(impactSound, impactPoint);
         }
+    }
 
-        // Ocultar el proyectil
-        //GetComponent<MeshRenderer>().enabled = false;
-        //GetComponent<Collider>().enabled = false;
-
-        /* if (TryGetComponent<Rigidbody>(out var rb))
+    private void ConfigureParticleSystem(GameObject particleInstance)
+    {
+        ParticleSystem ps = particleInstance.GetComponent<ParticleSystem>();
+        if (ps != null)
         {
-            rb.isKinematic = true;
-        } */
+            var main = ps.main;
+            main.startSize = new ParticleSystem.MinMaxCurve(minParticleSize, maxParticleSize);
 
-        // Destruir el proyectil después de un breve tiempo
-        // Destroy(gameObject, 0.1f);
+            var emission = ps.emission;
+            emission.SetBurst(0, new ParticleSystem.Burst(0, Random.Range(minParticles, maxParticles)));
+
+            ps.Play();
+            Destroy(particleInstance, main.duration);
+        }
     }
 }
