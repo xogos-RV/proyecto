@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class PlayerControllerPlaya : MonoBehaviour
@@ -11,6 +10,8 @@ public class PlayerControllerPlaya : MonoBehaviour
     public float moveSpeed;
     public float gravity;
     public float rotateDump;
+    private bool push;
+    private bool escarbando;
 
     void Start()
     {
@@ -21,14 +22,31 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     void Update()
     {
+        if (PI.drive > 0.1f && !push)
+        {
+            SetEscarbar(!escarbando);
+            push = true;
+        }
+        else if (PI.drive < 0.1f)
+        {
+            push = false;
+        }
+
+
         MoveRotate();
         SetAnimation();
+    }
+
+    private void SetEscarbar(bool v)
+    {
+        escarbando = v;
+        animator.SetBool("Escarbando", v);
     }
 
     private void SetAnimation()
     {
         float targetSpeed = (PI.movement != Vector2.zero) ? (PI.isRunning ? 1 : 0.5f) : 0;
-        animator.SetFloat("Movement", targetSpeed, 0f, Time.deltaTime);
+        animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
     }
 
 
