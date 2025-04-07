@@ -87,9 +87,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 8617851223012107712}
   runningSpeed: 10
-  moveSpeed: 3
+  moveSpeed: 2.5
   gravity: 9.81
-  rotateDump: 1
+  rotateDump: 0.1
 --- !u!1001 &3406155742003322202
 PrefabInstance:
   m_ObjectHideFlags: 0

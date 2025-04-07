@@ -650,6 +650,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1723592381144994362, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: rotateDump
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2472707296294454866, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
       propertyPath: m_Name
       value: PlayerPlaya

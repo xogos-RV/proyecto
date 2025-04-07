@@ -42,9 +42,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.14968109
+  m_TransitionDuration: 0.24297929
   m_TransitionOffset: 0
-  m_ExitTime: 0.81964695
+  m_ExitTime: 0.819647
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -68,7 +68,7 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: c3534a3298d124e48b8dedcfca34c569, type: 2}
-    m_Threshold: 1
+    m_Threshold: 0.3
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -77,7 +77,7 @@ BlendTree:
   m_BlendParameter: Movement
   m_BlendParameterY: Movement
   m_MinThreshold: 0
-  m_MaxThreshold: 1
+  m_MaxThreshold: 0.3
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0
@@ -135,18 +135,6 @@ AnimatorController:
   - m_Name: Movement
     m_Type: 1
     m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: Driving
-    m_Type: 4
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: reposo
-    m_Type: 1
-    m_DefaultFloat: 0.3
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}

@@ -16,6 +16,7 @@ public class PlayerInput : MonoBehaviour
     public float camL { get; private set; }
     public float camR { get; private set; }
     public float drive { get; private set; }
+    public bool escarbando { get; private set; }
     public float JoisticSensitivity = 20f;
 
     private void Awake()
@@ -23,6 +24,9 @@ public class PlayerInput : MonoBehaviour
         playerControls = new PlayerControls();
         playerControls.player.run.performed += _ => isRunning = true;
         playerControls.player.run.canceled += _ => isRunning = false;
+
+        playerControls.player.drive.performed += _ => escarbando = true;
+        playerControls.player.drive.canceled += _ => escarbando = false;
     }
 
     private void OnEnable()

@@ -10,43 +10,38 @@ public class PlayerControllerPlaya : MonoBehaviour
     public float moveSpeed;
     public float gravity;
     public float rotateDump;
-    private bool push;
-    private bool escarbando;
+    private float normalHeight;
 
     void Start()
     {
         PI = gameObject.GetComponent<PlayerInput>();
         CC = gameObject.GetComponent<CharacterController>();
+        normalHeight = CC.height;
     }
 
 
     void Update()
     {
-        if (PI.drive > 0.1f && !push)
-        {
-            SetEscarbar(!escarbando);
-            push = true;
-        }
-        else if (PI.drive < 0.1f)
-        {
-            push = false;
-        }
-
-
         MoveRotate();
-        SetAnimation();
+        SetAnimations();
     }
 
-    private void SetEscarbar(bool v)
-    {
-        escarbando = v;
-        animator.SetBool("Escarbando", v);
-    }
 
-    private void SetAnimation()
+    private void SetAnimations()
     {
         float targetSpeed = (PI.movement != Vector2.zero) ? (PI.isRunning ? 1 : 0.5f) : 0;
         animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
+        animator.SetBool("Escarbando", PI.escarbando);
+
+        //TODO corregir altura de la animacion, personaje flotando
+        if (PI.escarbando)
+        {
+            CC.height = normalHeight / 2;
+        }
+        else
+        {
+            CC.height = normalHeight;
+        }
     }
 
 
@@ -54,6 +49,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         Vector3 movement = new Vector3(-PI.movement.x, 0, -PI.movement.y);
         float speed = PI.isRunning ? runningSpeed : moveSpeed;
+        speed = PI.escarbando ? moveSpeed * 0.5f : speed;
         CC.Move(movement * speed * Time.deltaTime);
 
         if (!CC.isGrounded)
@@ -64,6 +60,7 @@ public class PlayerControllerPlaya : MonoBehaviour
         if (movement != Vector3.zero)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * rotateDump);
+            // transform.rotation = Quaternion.LookRotation(movement);
         }
     }
 }
