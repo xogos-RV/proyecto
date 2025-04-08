@@ -55,7 +55,7 @@ public class CameraController : MonoBehaviour
         // Suavizar la rotación
         currentYRotation = Mathf.SmoothDampAngle(currentYRotation, targetYRotation, ref yRotationVelocity, smoothTime);
 
-        // FIX cinemachoine   Aplicar la rotación alrededor del eje Y (vertical) 
+        // FIX cinemachine   Aplicar la rotación alrededor del eje Y (vertical) 
         transform.localEulerAngles = new Vector3(
             transform.localEulerAngles.x,
             currentYRotation,

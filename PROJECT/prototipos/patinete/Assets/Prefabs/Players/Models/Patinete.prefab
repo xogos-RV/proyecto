@@ -226,6 +226,7 @@ MonoBehaviour:
   finalStateDebugText: {fileID: 0}
   showDebugUI: 1
   uiUpdateInterval: 0.5
+  isDriving: 0
 --- !u!114 &1402678461851275724
 MonoBehaviour:
   m_ObjectHideFlags: 0

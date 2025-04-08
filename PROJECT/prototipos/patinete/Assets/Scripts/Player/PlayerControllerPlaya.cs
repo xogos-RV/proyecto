@@ -47,7 +47,7 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     private void MoveRotate()
     {
-        Vector3 movement = new Vector3(-PI.movement.x, 0, -PI.movement.y);
+        Vector3 movement = CalculateMovementFromCamera();
         float speed = PI.isRunning ? runningSpeed : moveSpeed;
         speed = PI.escarbando ? moveSpeed * 0.5f : speed;
         CC.Move(movement * speed * Time.deltaTime);
@@ -62,5 +62,16 @@ public class PlayerControllerPlaya : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * rotateDump);
             // transform.rotation = Quaternion.LookRotation(movement);
         }
+    }
+
+    private Vector3 CalculateMovementFromCamera()
+    {
+        Vector3 forward = Camera.main.transform.forward;
+        Vector3 rigth = Camera.main.transform.right;
+        forward.y = -0;
+        rigth.y = 0;
+        forward.Normalize();
+        rigth.Normalize();
+        return forward * PI.movement.y + rigth * PI.movement.x;
     }
 }
