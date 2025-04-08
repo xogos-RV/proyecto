@@ -13,10 +13,10 @@ GameObject:
   - component: {fileID: 5735345990409221470}
   m_Layer: 0
   m_Name: Terreno_San_Antonio
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 127
   m_IsActive: 1
 --- !u!4 &7077304459588272653
 Transform:
@@ -80,7 +80,7 @@ TerrainCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1902463757981523802}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: ba5b35c674861cb459f2433e4c8f0561, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

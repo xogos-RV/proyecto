@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerControllerPlaya : MonoBehaviour
 {
-
     public Animator animator;
     CharacterController CC;
     PlayerInput PI;
@@ -11,21 +10,78 @@ public class PlayerControllerPlaya : MonoBehaviour
     public float gravity;
     public float rotateDump;
     private float normalHeight;
+    
+    // Variables para crear hoyos
+    public Terrain terrain; // Asigna el terreno en el Inspector
+    public float digRadius = 0.5f; // Radio del hoyo
+    public float digDepth = 0.1f; // Profundidad del hoyo
+    public float digRate = 0.5f; // Cada cuántos segundos se hace un hoyo nuevo
+    private float lastDigTime;
+    public GameObject holePrefab; // Prefab opcional para hoyo visual (Opcional)
 
     void Start()
     {
         PI = gameObject.GetComponent<PlayerInput>();
         CC = gameObject.GetComponent<CharacterController>();
         normalHeight = CC.height;
+        lastDigTime = -digRate; // Permite cavar inmediatamente
     }
-
 
     void Update()
     {
         MoveRotate();
         SetAnimations();
+        
+        // Lógica para cavar hoyos
+        if (PI.escarbando)
+        {
+            DigHoleAtPlayerPosition();
+            lastDigTime = Time.time;
+        }
     }
 
+    private void DigHoleAtPlayerPosition()
+    {
+        // Posición del jugador en el terreno
+        Vector3 playerPos = transform.position;
+        
+        // Opción 1: Modificar el terreno directamente
+        if (terrain != null)
+        {
+            Vector3 terrainPos = playerPos - terrain.transform.position;
+            Vector3 normalizedPos = new Vector3(
+                terrainPos.x / terrain.terrainData.size.x,
+                0,
+                terrainPos.z / terrain.terrainData.size.z);
+            
+            int x = (int)(normalizedPos.x * terrain.terrainData.heightmapResolution);
+            int z = (int)(normalizedPos.z * terrain.terrainData.heightmapResolution);
+            int radius = (int)(digRadius * terrain.terrainData.heightmapResolution / terrain.terrainData.size.x);
+            
+            float[,] heights = terrain.terrainData.GetHeights(x - radius, z - radius, radius * 2, radius * 2);
+            
+            for (int i = 0; i < radius * 2; i++)
+            {
+                for (int j = 0; j < radius * 2; j++)
+                {
+                    float distance = Vector2.Distance(new Vector2(i, j), new Vector2(radius, radius));
+                    if (distance <= radius)
+                    {
+                        float reduction = digDepth * (1 - distance / radius);
+                        heights[i, j] = Mathf.Max(0, heights[i, j] - reduction / terrain.terrainData.size.y);
+                    }
+                }
+            }
+            
+            terrain.terrainData.SetHeights(x - radius, z - radius, heights);
+        }
+        
+        // Opción 2: Instanciar un prefab de hoyo visual (opcional)
+        if (holePrefab != null)
+        {
+            Instantiate(holePrefab, playerPos, Quaternion.identity);
+        }
+    }
 
     private void SetAnimations()
     {
@@ -44,7 +100,6 @@ public class PlayerControllerPlaya : MonoBehaviour
         }
     }
 
-
     private void MoveRotate()
     {
         Vector3 movement = CalculateMovementFromCamera();
@@ -60,18 +115,17 @@ public class PlayerControllerPlaya : MonoBehaviour
         if (movement != Vector3.zero)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * rotateDump);
-            // transform.rotation = Quaternion.LookRotation(movement);
         }
     }
 
     private Vector3 CalculateMovementFromCamera()
     {
         Vector3 forward = Camera.main.transform.forward;
-        Vector3 rigth = Camera.main.transform.right;
-        forward.y = -0;
-        rigth.y = 0;
+        Vector3 right = Camera.main.transform.right;
+        forward.y = 0;
+        right.y = 0;
         forward.Normalize();
-        rigth.Normalize();
-        return forward * PI.movement.y + rigth * PI.movement.x;
+        right.Normalize();
+        return forward * PI.movement.y + right * PI.movement.x;
     }
 }

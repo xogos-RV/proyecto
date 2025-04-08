@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!218 &1100074636 stripped
+Terrain:
+  m_CorrespondingSourceObject: {fileID: 288921803884583628, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+  m_PrefabInstance: {fileID: 4531199591719609599}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1211445209
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,6 +138,7 @@ GameObject:
   - component: {fileID: 1211445214}
   - component: {fileID: 1211445215}
   - component: {fileID: 1211445216}
+  - component: {fileID: 1211445217}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -287,6 +293,21 @@ MonoBehaviour:
   followFactorZ: 0.3
   smoothTime: 0.3
   maintainInitialRotation: 1
+--- !u!114 &1211445217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211445209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6d486d01caf95347b4bc3baeb35e20f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 1100074636}
+  digRadius: 1
+  digDepth: 0.2
 --- !u!1 &1286979500
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,29 +473,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 288921803884583628, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
-      propertyPath: m_IgnoreQualitySettings
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
       propertyPath: m_Name
       value: Terreno_San_Antonio
-      objectReference: {fileID: 0}
-    - target: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
-      propertyPath: m_TagString
-      value: Floor
-      objectReference: {fileID: 0}
-    - target: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 127
-      objectReference: {fileID: 0}
-    - target: {fileID: 5735345990409221470, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 13400000, guid: ba5b35c674861cb459f2433e4c8f0561, type: 2}
-    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
       propertyPath: m_LocalPosition.x
@@ -569,6 +570,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1723592381144994362, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: terrain
+      value: 
+      objectReference: {fileID: 1100074636}
     - target: {fileID: 1723592381144994362, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
       propertyPath: rotateDump
       value: 5
