@@ -119,11 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!218 &1100074636 stripped
-Terrain:
-  m_CorrespondingSourceObject: {fileID: 288921803884583628, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
-  m_PrefabInstance: {fileID: 4531199591719609599}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1211445209
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,9 +131,7 @@ GameObject:
   - component: {fileID: 1211445212}
   - component: {fileID: 1211445211}
   - component: {fileID: 1211445214}
-  - component: {fileID: 1211445215}
   - component: {fileID: 1211445216}
-  - component: {fileID: 1211445217}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -213,8 +206,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1211445209}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.9396927, z: -0.3420201, w: 0}
-  m_LocalPosition: {x: 216.8221, y: 42.79814, z: 199.0851}
+  m_LocalRotation: {x: 0.008606564, y: 0.9831998, z: -0.17586716, w: 0.048114285}
+  m_LocalPosition: {x: 221.52687, y: 14.108907, z: 187.21153}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -264,18 +257,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &1211445215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211445209}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 427a00a4fd564d14ab5c5dbb91e883dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1211445216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,26 +269,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 390a2b9bc899ce54c9ea3e026622ae9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1688506003}
   followFactorX: 0.5
   followFactorZ: 0.3
-  smoothTime: 0.3
+  smoothTime: 0.5
   maintainInitialRotation: 1
---- !u!114 &1211445217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211445209}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6d486d01caf95347b4bc3baeb35e20f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  terrain: {fileID: 1100074636}
-  digRadius: 1
-  digDepth: 0.2
+  initialDistance: 40
+  initialAngle: 0
+  initialHeight: 15
+  initialPitch: 25
 --- !u!1 &1286979500
 GameObject:
   m_ObjectHideFlags: 0
@@ -438,6 +407,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1665955522}
+  - component: {fileID: 1665955523}
+  - component: {fileID: 1665955524}
   m_Layer: 0
   m_Name: 00
   m_TagString: Untagged
@@ -460,10 +431,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1688506003 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
-  m_PrefabInstance: {fileID: 7302349501977662389}
+--- !u!114 &1665955523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665955521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bf7450788db2fd488d3a1375bab004b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrainPrefab: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+  playerPrefab: {fileID: 2472707296294454866, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+  minSpawnDistanceFromEdges: 10
+  heightOffset: 1
+--- !u!114 &1665955524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665955521}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6d486d01caf95347b4bc3baeb35e20f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 4242525938164727347}
+  digRadius: 1
+  digDepth: 0.2
+--- !u!218 &4242525938164727347 stripped
+Terrain:
+  m_CorrespondingSourceObject: {fileID: 288921803884583628, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+  m_PrefabInstance: {fileID: 4531199591719609599}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4531199591719609599
 PrefabInstance:
@@ -476,6 +478,10 @@ PrefabInstance:
     - target: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
       propertyPath: m_Name
       value: Terreno_San_Antonio
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
       propertyPath: m_LocalPosition.x
@@ -532,7 +538,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 214.1446
+      value: 220.67
       objectReference: {fileID: 0}
     - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -570,17 +576,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1723592381144994362, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
-      propertyPath: terrain
-      value: 
-      objectReference: {fileID: 1100074636}
-    - target: {fileID: 1723592381144994362, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
-      propertyPath: rotateDump
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 2472707296294454866, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
       propertyPath: m_Name
       value: PlayerPlaya
+      objectReference: {fileID: 0}
+    - target: {fileID: 2472707296294454866, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

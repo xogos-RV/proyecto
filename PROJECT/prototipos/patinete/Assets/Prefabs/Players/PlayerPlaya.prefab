@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1723592381144994362}
   m_Layer: 0
   m_Name: PlayerPlaya
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -56,7 +56,7 @@ CharacterController:
   m_Height: 2
   m_Radius: 0.3
   m_SlopeLimit: 30
-  m_StepOffset: 0.5
+  m_StepOffset: 1
   m_SkinWidth: 0.03
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
@@ -86,10 +86,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8617851223012107712}
+  holePrefab: {fileID: 0}
   runningSpeed: 10
   moveSpeed: 2.5
   gravity: 9.81
-  rotateDump: 0.1
+  rotateDump: 5
+  digRadius: 1
+  digDepth: 0.5
+  digRate: 0.5
+  maxDeep: 0.5
 --- !u!1001 &3406155742003322202
 PrefabInstance:
   m_ObjectHideFlags: 0

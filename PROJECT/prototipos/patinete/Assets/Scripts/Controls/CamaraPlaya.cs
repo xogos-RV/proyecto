@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class AdvancedCameraFollow : MonoBehaviour
+public class CameraFollow : MonoBehaviour
 {
     [Header("Configuración de Seguimiento")]
     [Tooltip("Objeto que la cámara seguirá (normalmente el personaje)")]
-    public Transform target;
+    Transform target;
 
     [Header("Factores de Seguimiento")]
     [Tooltip("Factor de movimiento en el eje X (0 = estático, 1 = sigue completamente)")]
@@ -22,71 +22,116 @@ public class AdvancedCameraFollow : MonoBehaviour
     [Tooltip("Mantener rotación inicial constantemente")]
     public bool maintainInitialRotation = true;
 
-    private Vector3 initialPosition;
-    private Quaternion initialRotation;
-    private Vector3 initialOffset;
+    [Header("Posición relativa")]
+    [Tooltip("Distancia horizontal desde el objetivo")]
+    [Range(5f, 150f)]
+    public float initialDistance = 5f;
+    [Tooltip("Ángulo horizontal alrededor del objetivo (en grados)")]
+    [Range(0f, 360f)]
+    public float initialAngle = 45f;
+    [Tooltip("Altura de la cámara respecto al objetivo")]
+    [Range(2f, 50f)]
+    public float initialHeight = 2f;
+    [Tooltip("Ángulo vertical (picado) de la cámara")]
+    [Range(0f, 60f)]
+    public float initialPitch = 15f;
+
+    // Variables para detectar cambios en tiempo de ejecución
+    private float lastDistance;
+    private float lastAngle;
+    private float lastHeight;
+    private float lastPitch;
+    private Vector3 calculatedPosition;
+    private Quaternion calculatedRotation;
 
     void Start()
     {
-        initialPosition = transform.position;
-        initialRotation = transform.rotation;
-
-        if (target != null)
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
         {
-            initialOffset = transform.position - target.position;
+            target = player.transform;
         }
         else
         {
             Debug.LogWarning("No hay objetivo asignado para la cámara.");
         }
+
+        // Guardar valores iniciales para detectar cambios
+        lastDistance = initialDistance;
+        lastAngle = initialAngle;
+        lastHeight = initialHeight;
+        lastPitch = initialPitch;
+
+        // Calcular posición y rotación inicial
+        CalculateCameraPositionAndRotation();
+        transform.position = calculatedPosition;
+        transform.rotation = calculatedRotation;
     }
 
     void LateUpdate()
     {
         if (target == null) return;
 
+        // Verificar si los parámetros de posición han cambiado
+        if (HasCameraPositionChanged() || true)
+        {
+            CalculateCameraPositionAndRotation();
+        }
+
         // Calcular nueva posición con factores independientes para X y Z
-        float targetX = target.position.x + initialOffset.x;
+        float targetX = calculatedPosition.x;
         float newX = Mathf.SmoothDamp(transform.position.x, targetX, ref velocityXZ.x, smoothTime);
 
-        float targetZ = target.position.z + initialOffset.z;
+        float targetZ = calculatedPosition.z;
         float newZ = Mathf.SmoothDamp(transform.position.z, targetZ, ref velocityXZ.z, smoothTime);
 
-        // Mantener la posición inicial en Y (o podrías añadir otro factor si lo necesitas)
+        // Mantener la altura calculada en Y
         Vector3 newPosition = new Vector3(
             newX,
-            initialPosition.y,
+            calculatedPosition.y,
             newZ
         );
 
         // Aplicar la nueva posición
         transform.position = newPosition;
 
-        // Mantener rotación inicial si está activado
+        // Mantener rotación calculada si está activado
         if (maintainInitialRotation)
         {
-            transform.rotation = initialRotation;
+            transform.rotation = calculatedRotation;
         }
     }
 
-    //TODO Método para reiniciar la cámara
-    public void ResetCamera()
+    // Calcula la posición y rotación de la cámara basada en los parámetros actuales
+    private void CalculateCameraPositionAndRotation()
     {
-        transform.position = initialPosition;
-        transform.rotation = initialRotation;
+        // Convertir ángulo a radianes
+        float angleRad = initialAngle * Mathf.Deg2Rad;
 
-        if (target != null)
-        {
-            initialOffset = transform.position - target.position;
-        }
+        // Calcular posición relativa
+        float xOffset = initialDistance * Mathf.Sin(angleRad);
+        float zOffset = initialDistance * Mathf.Cos(angleRad);
+
+        calculatedPosition = target.position + new Vector3(xOffset, initialHeight, zOffset);
+
+        // Aplicar pitch adicional
+        calculatedRotation = Quaternion.Euler(initialPitch, initialAngle - 180, 0f); // TODO -180 corrige: el mapa esta al reves....
+
+        // Actualizar valores guardados
+        lastDistance = initialDistance;
+        lastAngle = initialAngle;
+        lastHeight = initialHeight;
+        lastPitch = initialPitch;
     }
 
-    //TODO Método para actualizar manualmente el offset (útil si cambias la posición inicial en tiempo de ejecución)
-    public void UpdateInitialOffset()
+
+    // Verifica si los parámetros de posición han cambiado
+    private bool HasCameraPositionChanged()
     {
-        if (target != null)
-        {
-            initialOffset = transform.position - target.position;
-        }
+        return !Mathf.Approximately(lastDistance, initialDistance) ||
+               !Mathf.Approximately(lastAngle, initialAngle) ||
+               !Mathf.Approximately(lastHeight, initialHeight) ||
+               !Mathf.Approximately(lastPitch, initialPitch);
     }
+
 }

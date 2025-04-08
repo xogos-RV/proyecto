@@ -5,61 +5,63 @@ public class PlayerControllerPlaya : MonoBehaviour
     public Animator animator;
     CharacterController CC;
     PlayerInput PI;
+    public GameObject holePrefab; // Prefab opcional para hoyo visual (Opcional)
     public float runningSpeed;
     public float moveSpeed;
     public float gravity;
     public float rotateDump;
     private float normalHeight;
-    
+
     // Variables para crear hoyos
-    public Terrain terrain; // Asigna el terreno en el Inspector
     public float digRadius = 0.5f; // Radio del hoyo
     public float digDepth = 0.1f; // Profundidad del hoyo
-    public float digRate = 0.5f; // Cada cuántos segundos se hace un hoyo nuevo
+    public float digRate = 0.1f; // Cada cuántos segundos se hace un hoyo nuevo
+    public float maxDeep = 0.5f; // TODO Profundidad máxima permitida para los hoyos 
+
     private float lastDigTime;
-    public GameObject holePrefab; // Prefab opcional para hoyo visual (Opcional)
+    private Terrain terrain;
 
     void Start()
     {
         PI = gameObject.GetComponent<PlayerInput>();
         CC = gameObject.GetComponent<CharacterController>();
         normalHeight = CC.height;
-        lastDigTime = -digRate; // Permite cavar inmediatamente
+        lastDigTime = -digRate;
+
+        terrain = Terrain.activeTerrain;
+        if (terrain == null)
+        {
+            Debug.LogWarning("No se encontró un terreno activo en la escena.");
+        }
     }
 
     void Update()
     {
         MoveRotate();
         SetAnimations();
-        
+
         // Lógica para cavar hoyos
         if (PI.escarbando)
         {
             DigHoleAtPlayerPosition();
-            lastDigTime = Time.time;
         }
     }
 
     private void DigHoleAtPlayerPosition()
     {
+        if (Time.time - lastDigTime < digRate) return;
         // Posición del jugador en el terreno
         Vector3 playerPos = transform.position;
-        
         // Opción 1: Modificar el terreno directamente
         if (terrain != null)
         {
+            lastDigTime = Time.time;
             Vector3 terrainPos = playerPos - terrain.transform.position;
-            Vector3 normalizedPos = new Vector3(
-                terrainPos.x / terrain.terrainData.size.x,
-                0,
-                terrainPos.z / terrain.terrainData.size.z);
-            
+            Vector3 normalizedPos = new Vector3(terrainPos.x / terrain.terrainData.size.x, 0, terrainPos.z / terrain.terrainData.size.z);
             int x = (int)(normalizedPos.x * terrain.terrainData.heightmapResolution);
             int z = (int)(normalizedPos.z * terrain.terrainData.heightmapResolution);
-            int radius = (int)(digRadius * terrain.terrainData.heightmapResolution / terrain.terrainData.size.x);
-            
+            int radius = (int)(digRadius * terrain.terrainData.heightmapResolution / terrain.terrainData.size.x) | 1; // 1: ancho minimo del hoyo
             float[,] heights = terrain.terrainData.GetHeights(x - radius, z - radius, radius * 2, radius * 2);
-            
             for (int i = 0; i < radius * 2; i++)
             {
                 for (int j = 0; j < radius * 2; j++)
@@ -72,10 +74,9 @@ public class PlayerControllerPlaya : MonoBehaviour
                     }
                 }
             }
-            
             terrain.terrainData.SetHeights(x - radius, z - radius, heights);
         }
-        
+
         // Opción 2: Instanciar un prefab de hoyo visual (opcional)
         if (holePrefab != null)
         {
@@ -88,15 +89,11 @@ public class PlayerControllerPlaya : MonoBehaviour
         float targetSpeed = (PI.movement != Vector2.zero) ? (PI.isRunning ? 1 : 0.5f) : 0;
         animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
         animator.SetBool("Escarbando", PI.escarbando);
-
-        //TODO corregir altura de la animacion, personaje flotando
+        // corregir altura de la animacion, personaje flotando
+        CC.height = normalHeight;
         if (PI.escarbando)
         {
             CC.height = normalHeight / 2;
-        }
-        else
-        {
-            CC.height = normalHeight;
         }
     }
 
@@ -106,12 +103,10 @@ public class PlayerControllerPlaya : MonoBehaviour
         float speed = PI.isRunning ? runningSpeed : moveSpeed;
         speed = PI.escarbando ? moveSpeed * 0.5f : speed;
         CC.Move(movement * speed * Time.deltaTime);
-
         if (!CC.isGrounded)
         {
             CC.Move(-Vector3.up * gravity * Time.deltaTime);
         }
-
         if (movement != Vector3.zero)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * rotateDump);
