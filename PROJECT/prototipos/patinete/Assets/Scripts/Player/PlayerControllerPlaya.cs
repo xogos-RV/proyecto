@@ -7,9 +7,14 @@ public class PlayerControllerPlaya : MonoBehaviour
     PlayerInput PI;
     public float runningSpeed;
     public float moveSpeed;
-    public float gravity;
+    public float gravity = 9.81f;
     public float rotateDump;
+    [Range(1, 5)] public float jumpHeight = 1f;
+    [Range(0, 2)] public float minAirDistance = 0.5f;
     private float normalHeight;
+    private float verticalVelocity;
+    private bool isJumping;
+    private bool isGrounded;
 
     void Start()
     {
@@ -20,8 +25,50 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     void Update()
     {
+        isGrounded = CC.isGrounded;
+
+        // Resetear estados al tocar el suelo
+        if (isGrounded && verticalVelocity < 0)
+        {
+            verticalVelocity = -0.5f; // Pequeña fuerza hacia abajo para asegurar contacto
+            if (isJumping)
+            {
+                animator.SetTrigger("Aterrizaje"); // Disparar animación de aterrizaje
+                isJumping = false;
+            }
+        }
+
         MoveRotate();
+        HandleJump();
         SetAnimations();
+    }
+
+    private void HandleJump()
+    {
+        if (isGrounded && PI.jump > 0 && !PI.escarbando)
+        {
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * -gravity); // Fórmula física para salto
+            animator.SetBool("Despegue", true);
+            isJumping = true;
+        }
+
+        // Aplicar gravedad
+        if (!isGrounded)
+        {
+            verticalVelocity -= gravity * Time.deltaTime;
+            animator.SetBool("Aire", true);
+            animator.SetBool("Despegue", false);
+        }
+        else
+        {
+            animator.SetBool("Aire", false);
+            /* Vector3 rayOrigin = transform.position + Vector3.up * 0.2f; // Offset para evitar el collider del jugador
+            bool isNearGround = Physics.Raycast(rayOrigin, Vector3.down, minAirDistance + 0.2f, ~0);            
+            Debug.DrawRay(rayOrigin, Vector3.down * (minAirDistance + 0.2f), Color.cyan); */
+        }
+
+        // Mover en Y
+        CC.Move(Vector3.up * verticalVelocity * Time.deltaTime);
     }
 
     private void SetAnimations()
@@ -29,8 +76,6 @@ public class PlayerControllerPlaya : MonoBehaviour
         float targetSpeed = (PI.movement != Vector2.zero) ? (PI.isRunning ? 1 : 0.5f) : 0;
         animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
         animator.SetBool("Escarbando", PI.escarbando);
-        
-        // Ajustar altura del character controller
         CC.height = PI.escarbando ? normalHeight / 2 : normalHeight;
     }
 
@@ -39,14 +84,9 @@ public class PlayerControllerPlaya : MonoBehaviour
         Vector3 movement = CalculateMovementFromCamera();
         float speed = PI.isRunning ? runningSpeed : moveSpeed;
         speed = PI.escarbando ? moveSpeed * 0.5f : speed;
-        
+
         CC.Move(movement * speed * Time.deltaTime);
-        
-        if (!CC.isGrounded)
-        {
-            CC.Move(-Vector3.up * gravity * Time.deltaTime);
-        }
-        
+
         if (movement != Vector3.zero)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * rotateDump);
