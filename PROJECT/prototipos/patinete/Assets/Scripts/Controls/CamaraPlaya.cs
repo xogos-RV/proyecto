@@ -9,11 +9,11 @@ public class CameraFollow : MonoBehaviour
     [Header("Factores de Seguimiento")]
     [Tooltip("Factor de movimiento en el eje X (0 = estático, 1 = sigue completamente)")]
     [Range(0f, 1f)]
-    public float followFactorX = 0.5f;
+    public float followFactorX = 0.5f;// TODO sin usar
 
     [Tooltip("Factor de movimiento en el eje Z (0 = estático, 1 = sigue completamente)")]
     [Range(0f, 1f)]
-    public float followFactorZ = 0.3f;
+    public float followFactorZ = 0.3f;// TODO sin usar
 
     private Vector3 velocityXZ = Vector3.zero;
     [SerializeField] private float smoothTime = 0.3f;
@@ -46,15 +46,7 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            target = player.transform;
-        }
-        else
-        {
-            Debug.LogWarning("No hay objetivo asignado para la cámara.");
-        }
+        GetPlayer();
 
         // Guardar valores iniciales para detectar cambios
         lastDistance = initialDistance;
@@ -63,37 +55,24 @@ public class CameraFollow : MonoBehaviour
         lastPitch = initialPitch;
 
         // Calcular posición y rotación inicial
-        CalculateCameraPositionAndRotation();
+        /* CalculateCameraPositionAndRotation();
         transform.position = calculatedPosition;
-        transform.rotation = calculatedRotation;
+        transform.rotation = calculatedRotation; */
     }
+
 
     void LateUpdate()
     {
-        if (target == null) return;
-
-        // Verificar si los parámetros de posición han cambiado
-        if (HasCameraPositionChanged() || true)
+        if (target == null)
         {
-            CalculateCameraPositionAndRotation();
+            GetPlayer();
         }
 
+        CalculateCameraPositionAndRotation();
+
         // Calcular nueva posición con factores independientes para X y Z
-        float targetX = calculatedPosition.x;
-        float newX = Mathf.SmoothDamp(transform.position.x, targetX, ref velocityXZ.x, smoothTime);
-
-        float targetZ = calculatedPosition.z;
-        float newZ = Mathf.SmoothDamp(transform.position.z, targetZ, ref velocityXZ.z, smoothTime);
-
-        // Mantener la altura calculada en Y
-        Vector3 newPosition = new Vector3(
-            newX,
-            calculatedPosition.y,
-            newZ
-        );
-
-        // Aplicar la nueva posición
-        transform.position = newPosition;
+        Vector3 targetPosition = calculatedPosition;
+        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocityXZ, smoothTime);
 
         // Mantener rotación calculada si está activado
         if (maintainInitialRotation)
@@ -124,6 +103,20 @@ public class CameraFollow : MonoBehaviour
         lastPitch = initialPitch;
     }
 
+    private void GetPlayer()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            target = player.transform;
+        }
+        else
+        {
+            Debug.LogWarning("No hay objetivo asignado para la cámara.");
+        }
+    }
+
+
 
     // Verifica si los parámetros de posición han cambiado
     private bool HasCameraPositionChanged()
@@ -133,5 +126,4 @@ public class CameraFollow : MonoBehaviour
                !Mathf.Approximately(lastHeight, initialHeight) ||
                !Mathf.Approximately(lastPitch, initialPitch);
     }
-
 }
