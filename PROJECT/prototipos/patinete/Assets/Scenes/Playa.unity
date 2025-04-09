@@ -463,8 +463,8 @@ MonoBehaviour:
   textureThreshold: 0.5
   prefabToSpawn: {fileID: 6280471560671988429, guid: 5d25f9c398a55364f84195517941687c, type: 3}
   spawnCount: 1000
-  minDepth: 0.2
-  maxDepth: 0.5
+  minDepth: 0.5
+  maxDepth: 1
   spawnDelay: 1
   edgePadding: 5
 --- !u!1001 &4531199591719609599
@@ -536,6 +536,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -3356496612050041673, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: digRate
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: -3356496612050041673, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: digRadius
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 220.67
