@@ -4,12 +4,12 @@ using UnityEngine;
 public class GameInitializer : MonoBehaviour
 {
     [Header("Prefabs")]
-    [SerializeField] private GameObject terrainPrefab;
-    [SerializeField] private GameObject playerPrefab;
+    public GameObject terrainPrefab;
+    public GameObject playerPrefab;
 
     [Header("Player Spawn Settings")]
-    [SerializeField] private float minSpawnDistanceFromEdges = 10f;
-    [SerializeField] private float heightOffset = 1f; // Para asegurar que el jugador no se spawnée dentro del terreno
+    public float minSpawnDistanceFromEdges = 100f;
+    public float heightOffset = 1f;
 
     private GameObject terrainInstance;
     private Terrain terrainComponent;

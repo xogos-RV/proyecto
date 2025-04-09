@@ -409,8 +409,9 @@ GameObject:
   - component: {fileID: 1665955522}
   - component: {fileID: 1665955523}
   - component: {fileID: 1665955524}
+  - component: {fileID: 1665955525}
   m_Layer: 0
-  m_Name: 00
+  m_Name: GameInitilizer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -445,7 +446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrainPrefab: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
   playerPrefab: {fileID: 2472707296294454866, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
-  minSpawnDistanceFromEdges: 10
+  minSpawnDistanceFromEdges: 100
   heightOffset: 1
 --- !u!114 &1665955524
 MonoBehaviour:
@@ -462,6 +463,24 @@ MonoBehaviour:
   terrain: {fileID: 4242525938164727347}
   digRadius: 1
   digDepth: 0.2
+--- !u!114 &1665955525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665955521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 030c87400afead04081f10361f3abcdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToSpawn: {fileID: 6280471560671988429, guid: 5d25f9c398a55364f84195517941687c, type: 3}
+  spawnCount: 100
+  minDepth: 0.5
+  maxDepth: 2
+  spawnDelay: 1
+  edgePadding: 5
 --- !u!218 &4242525938164727347 stripped
 Terrain:
   m_CorrespondingSourceObject: {fileID: 288921803884583628, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
