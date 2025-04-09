@@ -33,14 +33,24 @@ public class GameInitializer : MonoBehaviour
 
         terrainInstance = Instantiate(terrainPrefab, Vector3.zero, Quaternion.identity);
         terrainComponent = terrainInstance.GetComponent<Terrain>();
-        
-        TerrainData clonedTerrainData = Instantiate(terrainComponent.terrainData);
-        terrainComponent.terrainData = clonedTerrainData;
 
         if (terrainComponent == null)
         {
             Debug.LogError("El prefab del terreno no tiene un componente Terrain.");
         }
+
+        TerrainData clonedTerrainData = Instantiate(terrainComponent.terrainData);
+        terrainComponent.terrainData = clonedTerrainData;
+
+        TerrainCollider terrainCollider = terrainInstance.GetComponent<TerrainCollider>();
+        if (terrainCollider != null)
+        {
+            terrainCollider.terrainData = clonedTerrainData;
+            return;
+        }
+
+        Debug.LogWarning("No se encontró un componente TerrainCollider en el prefab del terreno.");
+
     }
 
     private void SpawnPlayer()
