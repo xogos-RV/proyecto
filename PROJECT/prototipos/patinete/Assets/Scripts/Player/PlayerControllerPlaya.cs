@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerControllerPlaya : MonoBehaviour
@@ -11,10 +12,12 @@ public class PlayerControllerPlaya : MonoBehaviour
     public float rotateDump;
     [Range(1, 5)] public float jumpHeight = 1f;
     [Range(0, 2)] public float minAirDistance = 0.5f;
+    [Range(0, 1f)] public float thresholdGrounded = 0.5f;
     private float normalHeight;
     private float verticalVelocity;
     private bool isJumping;
     private bool isGrounded;
+    private float groundedTimer = 0f;
 
     void Start()
     {
@@ -25,7 +28,7 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     void Update()
     {
-        isGrounded = CC.isGrounded;
+        CheckGrounded();
 
         // Resetear estados al tocar el suelo
         if (isGrounded && verticalVelocity < 0)
@@ -43,10 +46,25 @@ public class PlayerControllerPlaya : MonoBehaviour
         SetAnimations();
     }
 
+    private void CheckGrounded()
+    {
+        if (!CC.isGrounded)
+        {
+            groundedTimer += Time.deltaTime;
+        }
+        else
+        {
+            groundedTimer = 0f;
+        }
+
+        isGrounded = !(groundedTimer >= thresholdGrounded);
+    }
+
     private void HandleJump()
     {
-        if (isGrounded && PI.jump > 0 && !PI.escarbando)
+        if (PI.jump > 0 && !PI.escarbando)
         {
+            isGrounded = false;
             verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * -gravity); // Fórmula física para salto
             animator.SetBool("Despegue", true);
             isJumping = true;
