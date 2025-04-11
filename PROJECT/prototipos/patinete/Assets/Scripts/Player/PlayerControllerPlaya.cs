@@ -11,10 +11,15 @@ public class PlayerControllerPlaya : MonoBehaviour
     public float rotateDump;
     [Range(1, 5)] public float jumpHeight = 1f;
     [Range(0, 2)] public float minAirDistance = 0.5f;
+    [Range(0, 1f)] public float thresholdGrounded = 0.3f;
+
     private float normalHeight;
     private float verticalVelocity;
-    private bool isJumping;
-    private bool isGrounded;
+    private bool isGrounded = true;
+    private float groundedTimer = 0f;
+    private Vector3 totalMovement;
+    private bool isLanding = false;
+
 
     void Start()
     {
@@ -25,72 +30,104 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     void Update()
     {
-        isGrounded = CC.isGrounded;
-
-        // Resetear estados al tocar el suelo
-        if (isGrounded && verticalVelocity < 0)
+        totalMovement = Vector3.zero;
+        ApplyGravity();
+        Debug.Log("isLanding " + isLanding);
+        if (!isLanding || !isGrounded)
         {
-            verticalVelocity = -0.5f; // Pequeña fuerza hacia abajo para asegurar contacto
-            if (isJumping)
-            {
-                animator.SetTrigger("Aterrizaje"); // Disparar animación de aterrizaje
-                isJumping = false;
-            }
+            CalculateMovementRotate();
         }
-
-        MoveRotate();
         HandleJump();
+        ApplyFinalMovement();
         SetAnimations();
+        CheckGrounded();
+        //  CheckLandingAnimation();
     }
 
-    private void HandleJump()
-    {
-        if (isGrounded && PI.jump > 0 && !PI.escarbando)
-        {
-            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * -gravity); // Fórmula física para salto
-            animator.SetBool("Despegue", true);
-            isJumping = true;
-        }
+    /*void OnDrawGizmos()
+     {
+         Gizmos.color = Color.red;
+         Gizmos.DrawRay(transform.position, Vector3.down * 0.5f);
+     } */
 
-        // Aplicar gravedad
-        if (!isGrounded)
+    public void StartLanding()
+    {
+        isLanding = true;
+    }
+    public void EndLanding()
+    {
+        isLanding = false;
+    }
+
+    private void ApplyGravity()
+    {
+        if (!CC.isGrounded)
         {
             verticalVelocity -= gravity * Time.deltaTime;
-            animator.SetBool("Aire", true);
-            animator.SetBool("Despegue", false);
         }
         else
         {
-            animator.SetBool("Aire", false);
-            /* Vector3 rayOrigin = transform.position + Vector3.up * 0.2f; // Offset para evitar el collider del jugador
-            bool isNearGround = Physics.Raycast(rayOrigin, Vector3.down, minAirDistance + 0.2f, ~0);            
-            Debug.DrawRay(rayOrigin, Vector3.down * (minAirDistance + 0.2f), Color.cyan); */
+            verticalVelocity = -0.5f;
         }
-
-        // Mover en Y
-        CC.Move(Vector3.up * verticalVelocity * Time.deltaTime);
+        totalMovement += Vector3.up * verticalVelocity * Time.deltaTime;
     }
 
-    private void SetAnimations()
-    {
-        float targetSpeed = (PI.movement != Vector2.zero) ? (PI.isRunning ? 1 : 0.5f) : 0;
-        animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
-        animator.SetBool("Escarbando", PI.escarbando);
-        CC.height = PI.escarbando ? normalHeight / 2 : normalHeight;
-    }
-
-    private void MoveRotate()
+    private void CalculateMovementRotate()
     {
         Vector3 movement = CalculateMovementFromCamera();
         float speed = PI.isRunning ? runningSpeed : moveSpeed;
         speed = PI.escarbando ? moveSpeed * 0.5f : speed;
 
-        CC.Move(movement * speed * Time.deltaTime);
+        totalMovement += movement * speed * Time.deltaTime;
 
         if (movement != Vector3.zero)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * rotateDump);
         }
+    }
+
+    private void CheckGrounded()
+    {
+        if (!CC.isGrounded)
+        {
+            groundedTimer += Time.deltaTime;
+            if (groundedTimer >= thresholdGrounded)
+            {
+                isGrounded = false;
+            }
+        }
+        else
+        {
+            isGrounded = true;
+            groundedTimer = 0f;
+        }
+    }
+
+    private void HandleJump()
+    {
+        if (PI.jump > 0 && !PI.escarbando && isGrounded && !isLanding)
+        {
+            animator.SetTrigger("Jump");
+            isGrounded = false;
+            verticalVelocity = Mathf.Sqrt(jumpHeight * 2f * gravity);
+            totalMovement += Vector3.up * verticalVelocity * Time.deltaTime;
+        }
+    }
+
+    private void SetAnimations()
+    {
+        float targetSpeed = 0;
+
+        // Solo permitir movimiento si no está aterrizando o está en el aire
+        if (!isLanding || !isGrounded)
+        {
+            targetSpeed = (PI.movement != Vector2.zero) ? (PI.isRunning ? 1 : 0.5f) : 0;
+        }
+
+        animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
+        animator.SetBool("Escarbando", PI.escarbando);
+        CC.height = PI.escarbando ? normalHeight / 2 : normalHeight;
+        animator.SetBool("isGrounded", isGrounded);
     }
 
     private Vector3 CalculateMovementFromCamera()
@@ -102,5 +139,10 @@ public class PlayerControllerPlaya : MonoBehaviour
         forward.Normalize();
         right.Normalize();
         return forward * PI.movement.y + right * PI.movement.x;
+    }
+
+    private void ApplyFinalMovement()
+    {
+        CC.Move(totalMovement);
     }
 }
