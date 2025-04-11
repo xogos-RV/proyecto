@@ -462,7 +462,7 @@ MonoBehaviour:
   targetTextureName: Sand_TerrainLayer
   textureThreshold: 0.5
   prefabToSpawn: {fileID: 6280471560671988429, guid: 5d25f9c398a55364f84195517941687c, type: 3}
-  spawnCount: 1000
+  spawnCount: 10000
   minDepth: 0.5
   maxDepth: 1
   spawnDelay: 1
@@ -542,7 +542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -3356496612050041673, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
       propertyPath: digRadius
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
       propertyPath: m_LocalPosition.x

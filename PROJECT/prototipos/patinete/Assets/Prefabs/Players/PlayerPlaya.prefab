@@ -89,8 +89,11 @@ MonoBehaviour:
   animator: {fileID: 8617851223012107712}
   runningSpeed: 10
   moveSpeed: 2.5
-  gravity: 9.81
+  gravity: 9.8
   rotateDump: 5
+  jumpHeight: 1
+  minAirDistance: 0.5
+  thresholdGrounded: 0.261
 --- !u!114 &-3356496612050041673
 MonoBehaviour:
   m_ObjectHideFlags: 0
