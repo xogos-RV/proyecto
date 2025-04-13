@@ -8,10 +8,6 @@ public class TerrainObjectSpawner : MonoBehaviour
     public string targetTextureName = "Sand_TerrainLayer";
     [Range(0.1f, 1f)] public float textureThreshold = 0.5f;
 
-    private Terrain terrain;
-    private TerrainData terrainData;
-    private int targetTextureIndex = -1;
-
     [Header("Spawn Settings")]
     [Tooltip("Prefab to spawn on the terrain")]
     public GameObject prefabToSpawn;
@@ -37,6 +33,9 @@ public class TerrainObjectSpawner : MonoBehaviour
     [Tooltip("Minimum distance from terrain edges")]
     [Range(1f, 50f)]
     public float edgePadding = 5f;
+    private Terrain terrain;
+    private TerrainData terrainData;
+    private int targetTextureIndex = -1;
 
     private void Start()
     {

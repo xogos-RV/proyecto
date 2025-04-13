@@ -10,7 +10,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     public float gravity = 9.81f;
     public float rotateDump;
     [Range(1, 5)] public float jumpHeight = 1f;
-    [Range(0, 2)] public float minAirDistance = 0.5f;
+    //[Range(0, 2)] public float minAirDistance = 0.5f;
     [Range(0, 1f)] public float thresholdGrounded = 0.3f;
 
     private float normalHeight;
@@ -19,7 +19,8 @@ public class PlayerControllerPlaya : MonoBehaviour
     private float groundedTimer = 0f;
     private Vector3 totalMovement;
     private bool isLanding = false;
-
+    private Vector3 airMovementDirection; // Nueva variable para almacenar la dirección del movimiento en el aire
+    private bool keepAirMovement = false; // Controlar si debemos mantener el movimiento aéreo
 
     void Start()
     {
@@ -32,11 +33,12 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         totalMovement = Vector3.zero;
         ApplyGravity();
-        Debug.Log("isLanding " + isLanding);
+
         if (!isLanding || !isGrounded)
         {
             CalculateMovementRotate();
         }
+
         HandleJump();
         ApplyFinalMovement();
         SetAnimations();
@@ -52,11 +54,14 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     public void StartLanding()
     {
+        Debug.Log("StartLanding");
         isLanding = true;
     }
+
     public void EndLanding()
     {
         isLanding = false;
+        Debug.Log("EndLanding");
     }
 
     private void ApplyGravity()
@@ -74,7 +79,18 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     private void CalculateMovementRotate()
     {
-        Vector3 movement = CalculateMovementFromCamera();
+        Vector3 movement;
+
+        if (isGrounded || !keepAirMovement)
+        {
+            movement = CalculateMovementFromCamera();
+            airMovementDirection = movement.normalized;
+        }
+        else
+        {
+            movement = airMovementDirection * PI.movement.magnitude;
+        }
+
         float speed = PI.isRunning ? runningSpeed : moveSpeed;
         speed = PI.escarbando ? moveSpeed * 0.5f : speed;
 
@@ -93,13 +109,16 @@ public class PlayerControllerPlaya : MonoBehaviour
             groundedTimer += Time.deltaTime;
             if (groundedTimer >= thresholdGrounded)
             {
+                animator.SetBool("isGrounded", false);
                 isGrounded = false;
+                keepAirMovement = true;
             }
         }
         else
         {
             isGrounded = true;
             groundedTimer = 0f;
+            keepAirMovement = false;
         }
     }
 
@@ -108,7 +127,9 @@ public class PlayerControllerPlaya : MonoBehaviour
         if (PI.jump > 0 && !PI.escarbando && isGrounded && !isLanding)
         {
             animator.SetTrigger("Jump");
+            animator.SetBool("isGrounded", false);
             isGrounded = false;
+            keepAirMovement = true;
             verticalVelocity = Mathf.Sqrt(jumpHeight * 2f * gravity);
             totalMovement += Vector3.up * verticalVelocity * Time.deltaTime;
         }
@@ -118,7 +139,6 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         float targetSpeed = 0;
 
-        // Solo permitir movimiento si no está aterrizando o está en el aire
         if (!isLanding || !isGrounded)
         {
             targetSpeed = (PI.movement != Vector2.zero) ? (PI.isRunning ? 1 : 0.5f) : 0;
