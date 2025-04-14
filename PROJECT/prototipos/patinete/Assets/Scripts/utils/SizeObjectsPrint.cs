@@ -5,7 +5,7 @@ public class MedirTamanos : MonoBehaviour
     void Start()
     {
         // Obtener todos los objetos activos en la escena
-        GameObject[] todosLosObjetos = GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+        GameObject[] todosLosObjetos = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
         foreach (GameObject obj in todosLosObjetos)
         {
             MedirTamanio(obj);

@@ -29,7 +29,7 @@ public class TerrainObjectSpawner : MonoBehaviour
     [Tooltip("Delay before spawning to ensure terrain is ready")]
     [Range(0.1f, 5f)]
     public float spawnDelay = 1f;
-    
+
     [Tooltip("Minimum distance from terrain edges")]
     [Range(1f, 50f)]
     public float edgePadding = 5f;

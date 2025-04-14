@@ -2,13 +2,23 @@ using UnityEngine;
 
 public class SandDigger : MonoBehaviour
 {
-    public GameObject holePrefab; // TODO Prefab opcional para hoyo visual
+    public GameObject holePrefab; // Prefab opcional para hoyo visual
+    public GameObject digParticlesPrefab;  // Sistema de partículas para el efecto de arena
+
     [Header("Configuración de Escarbado")]
     [Range(1, 5)] public int digRadius = 1;       // Radio del hoyo
     [Range(0.01f, 0.2f)] public float digDepth = 0.05f;  // Profundidad del hoyo 
     [Range(0.01f, 1f)] public float digRate = 0.2f;       // Cadencia  
     [Range(0, 5)] public float digOffset = 1.0f; // Distancia hacia adelante donde se crea el hoyo
 
+    [Header("Configuración de Partículas")]
+    [Range(0.1f, 2f)] public float minParticleSize = 0.3f;
+    [Range(0.1f, 2f)] public float maxParticleSize = 0.6f;
+    [Range(10, 100)] public int minParticles = 20;
+    [Range(10, 100)] public int maxParticles = 40;
+    [Range(-180, 180)] public float particleYRotation = 180f; // Rotación en eje Y
+    [Range(0, 2)] public float backwardOffset = 0.5f;
+    [Range(0, 2)] public float yOffset = 0.5f;
     private float lastDigTime;
     private Terrain terrain;
     private PlayerInput PI;
@@ -28,7 +38,7 @@ public class SandDigger : MonoBehaviour
             DigHoleAtPlayerPosition(digPosition);
         }
 
-        if (Input.GetMouseButton(0)) // Botón izquierdo
+        if (Input.GetMouseButton(0))
         {
             DigWithMouse();
         }
@@ -42,7 +52,7 @@ public class SandDigger : MonoBehaviour
         int layerMask = ~0; // Inicialmente incluye todas las capas
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
-            DigHoleAtPlayerPosition(hit.point); // Reusa el mismo método
+            DigHoleAtPlayerPosition(hit.point);
         }
     }
 
@@ -53,6 +63,10 @@ public class SandDigger : MonoBehaviour
         if (terrain != null)
         {
             lastDigTime = Time.time;
+
+            // Efecto de partículas
+            SpawnDigParticles(position);
+
             // Convertir posición mundial a coordenadas del terreno
             Vector3 terrainPos = position - terrain.transform.position;
             Vector3 normalizedPos = new Vector3(terrainPos.x / terrain.terrainData.size.x, 0, terrainPos.z / terrain.terrainData.size.z);
@@ -80,10 +94,48 @@ public class SandDigger : MonoBehaviour
             terrain.terrainData.SetHeights(x - digRadius, z - digRadius, heights);
         }
 
-        // Instanciar prefab de hoyo visual (opcional)
+        // Instanciar prefab de hoyo visual
         if (holePrefab != null)
         {
             Instantiate(holePrefab, position, Quaternion.identity);
+        }
+    }
+
+    private void SpawnDigParticles(Vector3 position)
+    {
+        if (digParticlesPrefab != null)
+        {
+            float terrainHeightAtDigPoint = terrain.SampleHeight(position);
+            Vector3 spawnPosition = position + (-transform.forward * backwardOffset);
+            spawnPosition.y = terrainHeightAtDigPoint + yOffset;
+
+            // Crear rotación basada en la rotación del jugador con ajuste en Y
+            Quaternion yRotation = Quaternion.Euler(0, particleYRotation, 0);
+            Quaternion finalRotation = transform.rotation * yRotation;
+
+            GameObject particlesInstance = Instantiate(
+                digParticlesPrefab,
+                spawnPosition,
+                finalRotation
+            );
+
+            ConfigureParticleSystem(particlesInstance);
+        }
+    }
+
+    private void ConfigureParticleSystem(GameObject particleInstance)
+    {
+        ParticleSystem ps = particleInstance.GetComponent<ParticleSystem>();
+        if (ps != null)
+        {
+            var main = ps.main;
+            main.startSize = new ParticleSystem.MinMaxCurve(minParticleSize, maxParticleSize);
+
+            var emission = ps.emission;
+            emission.SetBurst(0, new ParticleSystem.Burst(0, Random.Range(minParticles, maxParticles)));
+
+            ps.Play();
+            Destroy(particleInstance, main.duration + 1f);
         }
     }
 }

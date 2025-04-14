@@ -14,12 +14,11 @@ public class GameInitializer : MonoBehaviour
     private GameObject terrainInstance;
     private Terrain terrainComponent;
 
-    void Start()
+    void Awake()
     {
-        // Instanciar el terreno en (0,0,0)
+
         SpawnTerrain();
 
-        // Instanciar al jugador en una posición aleatoria sobre el terreno
         SpawnPlayer();
     }
 
