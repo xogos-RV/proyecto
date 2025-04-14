@@ -19,15 +19,43 @@ public class SandDigger : MonoBehaviour
     [Range(-180, 180)] public float particleYRotation = 180f; // Rotación en eje Y
     [Range(0, 2)] public float backwardOffset = 0.5f;
     [Range(0, 2)] public float yOffset = 0.5f;
+
+    [Header("Configuración de Textura")]
+    public string targetTextureName = "Sand_TerrainLayer"; // Nombre de la textura donde se puede excavar
+
     private float lastDigTime;
     private Terrain terrain;
     private PlayerInput PI;
+    private TerrainData terrainData;
+    private int alphamapWidth;
+    private int alphamapHeight;
+    private float[,,] splatmapData;
+    private int textureIndex = -1;
 
     void Start()
     {
         PI = GetComponent<PlayerInput>();
         terrain = Terrain.activeTerrain;
+        terrainData = terrain.terrainData;
+        alphamapWidth = terrainData.alphamapWidth;
+        alphamapHeight = terrainData.alphamapHeight;
+        splatmapData = terrainData.GetAlphamaps(0, 0, alphamapWidth, alphamapHeight);
         lastDigTime = -digRate;
+
+        // Encontrar el índice de la textura objetivo
+        for (int i = 0; i < terrainData.terrainLayers.Length; i++)
+        {
+            if (terrainData.terrainLayers[i].name == targetTextureName)
+            {
+                textureIndex = i;
+                break;
+            }
+        }
+
+        if (textureIndex == -1)
+        {
+            Debug.LogWarning($"No se encontró la textura con nombre: {targetTextureName}");
+        }
     }
 
     void Update()
@@ -59,46 +87,73 @@ public class SandDigger : MonoBehaviour
     public void DigHoleAtPlayerPosition(Vector3 position)
     {
         if (Time.time - lastDigTime < digRate) return;
+        if (terrain == null || textureIndex == -1) return;
 
-        if (terrain != null)
+        // Verificar si estamos sobre la textura correcta
+        if (!IsPositionOnTargetTexture(position))
         {
-            lastDigTime = Time.time;
+            return;
+        }
 
-            // Efecto de partículas
-            SpawnDigParticles(position);
+        lastDigTime = Time.time;
 
-            // Convertir posición mundial a coordenadas del terreno
-            Vector3 terrainPos = position - terrain.transform.position;
-            Vector3 normalizedPos = new Vector3(terrainPos.x / terrain.terrainData.size.x, 0, terrainPos.z / terrain.terrainData.size.z);
-            // Obtener datos de altura
-            int x = (int)(normalizedPos.x * terrain.terrainData.heightmapResolution);
-            int z = (int)(normalizedPos.z * terrain.terrainData.heightmapResolution);
+        // Efecto de partículas
+        SpawnDigParticles(position);
 
-            // Obtener y modificar heights
-            float[,] heights = terrain.terrainData.GetHeights(x - digRadius, z - digRadius, digRadius * 2, digRadius * 2);
+        // Convertir posición mundial a coordenadas del terreno
+        Vector3 terrainPos = position - terrain.transform.position;
+        Vector3 normalizedPos = new Vector3(terrainPos.x / terrain.terrainData.size.x, 0, terrainPos.z / terrain.terrainData.size.z);
+        // Obtener datos de altura
+        int x = (int)(normalizedPos.x * terrain.terrainData.heightmapResolution);
+        int z = (int)(normalizedPos.z * terrain.terrainData.heightmapResolution);
 
-            for (int i = 0; i < digRadius * 2; i++)
+        // Obtener y modificar heights
+        float[,] heights = terrain.terrainData.GetHeights(x - digRadius, z - digRadius, digRadius * 2, digRadius * 2);
+
+        for (int i = 0; i < digRadius * 2; i++)
+        {
+            for (int j = 0; j < digRadius * 2; j++)
             {
-                for (int j = 0; j < digRadius * 2; j++)
+                float distance = Vector2.Distance(new Vector2(i, j), new Vector2(digRadius, digRadius));
+                if (distance <= digRadius)
                 {
-                    float distance = Vector2.Distance(new Vector2(i, j), new Vector2(digRadius, digRadius));
-                    if (distance <= digRadius)
-                    {
-                        // Reducir altura (suavizado con función de distancia)
-                        float reduction = digDepth * (1 - distance / digRadius);
-                        heights[i, j] = Mathf.Max(0, heights[i, j] - reduction / terrain.terrainData.size.y);
-                    }
+                    // Reducir altura (suavizado con función de distancia)
+                    float reduction = digDepth * (1 - distance / digRadius);
+                    heights[i, j] = Mathf.Max(0, heights[i, j] - reduction / terrain.terrainData.size.y);
                 }
             }
-
-            terrain.terrainData.SetHeights(x - digRadius, z - digRadius, heights);
         }
+
+        terrain.terrainData.SetHeights(x - digRadius, z - digRadius, heights);
 
         // Instanciar prefab de hoyo visual
         if (holePrefab != null)
         {
             Instantiate(holePrefab, position, Quaternion.identity);
         }
+    }
+
+    private bool IsPositionOnTargetTexture(Vector3 position)
+    {
+        // Convertir posición mundial a coordenadas del alphamap
+        Vector3 terrainPos = position - terrain.transform.position;
+        Vector2 normalizedPos = new Vector2(
+            terrainPos.x / terrain.terrainData.size.x,
+            terrainPos.z / terrain.terrainData.size.z
+        );
+
+        int x = (int)(normalizedPos.x * alphamapWidth);
+        int y = (int)(normalizedPos.y * alphamapHeight);
+
+        // Asegurarse de que las coordenadas estén dentro de los límites
+        x = Mathf.Clamp(x, 0, alphamapWidth - 1);
+        y = Mathf.Clamp(y, 0, alphamapHeight - 1);
+
+        // Obtener el valor de mezcla para la textura objetivo
+        float textureStrength = splatmapData[y, x, textureIndex];
+
+        // Considerar que está en la textura si su fuerza es mayor que 0.5 (ajustable)
+        return textureStrength > 0.5f;
     }
 
     private void SpawnDigParticles(Vector3 position)
