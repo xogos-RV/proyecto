@@ -12,15 +12,14 @@ public class PlayerControllerPlaya : MonoBehaviour
     [Range(1, 5)] public float jumpHeight = 1f;
     //[Range(0, 2)] public float minAirDistance = 0.5f;
     [Range(0, 1f)] public float thresholdGrounded = 0.3f;
-
     private float normalHeight;
     private float verticalVelocity;
-    private bool isGrounded = true;
     private float groundedTimer = 0f;
     private Vector3 totalMovement;
-    private bool isLanding = false;
     private Vector3 airMovementDirection; // Nueva variable para almacenar la dirección del movimiento en el aire
     private bool keepAirMovement = false; // Controlar si debemos mantener el movimiento aéreo
+    private bool isGrounded = true;
+    private bool isLanding = false;
 
     void Start()
     {
@@ -47,9 +46,9 @@ public class PlayerControllerPlaya : MonoBehaviour
     }
 
     /*void OnDrawGizmos()
-     {
-         Gizmos.color = Color.red;
-         Gizmos.DrawRay(transform.position, Vector3.down * 0.5f);
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position, Vector3.down * 0.5f);
      } */
 
     public void StartLanding()
@@ -109,13 +108,16 @@ public class PlayerControllerPlaya : MonoBehaviour
             groundedTimer += Time.deltaTime;
             if (groundedTimer >= thresholdGrounded)
             {
-                animator.SetBool("isGrounded", false);
                 isGrounded = false;
                 keepAirMovement = true;
             }
         }
         else
         {
+            if (groundedTimer >= thresholdGrounded)
+            {
+                isLanding = true; // TODO borrar isLanding pasado un tiempo / separar logica del animator
+            }
             isGrounded = true;
             groundedTimer = 0f;
             keepAirMovement = false;
@@ -127,7 +129,6 @@ public class PlayerControllerPlaya : MonoBehaviour
         if (PI.jump > 0 && !PI.escarbando && isGrounded && !isLanding)
         {
             animator.SetTrigger("Jump");
-            animator.SetBool("isGrounded", false);
             isGrounded = false;
             keepAirMovement = true;
             verticalVelocity = Mathf.Sqrt(jumpHeight * 2f * gravity);
