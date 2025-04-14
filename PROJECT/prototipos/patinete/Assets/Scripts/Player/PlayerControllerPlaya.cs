@@ -45,6 +45,12 @@ public class PlayerControllerPlaya : MonoBehaviour
         CheckGrounded();
     }
 
+
+    void OnControllerColliderHit()
+    {
+        
+    }
+
     /*void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
@@ -62,6 +68,7 @@ public class PlayerControllerPlaya : MonoBehaviour
         isLanding = false;
         Debug.Log("EndLanding");
     }
+
 
     private void ApplyGravity()
     {
