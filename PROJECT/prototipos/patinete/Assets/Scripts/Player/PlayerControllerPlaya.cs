@@ -20,6 +20,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     private bool keepAirMovement = false; // Controlar si debemos mantener el movimiento aéreo
     private bool isGrounded = true;
     private bool isLanding = false;
+    public bool escarbando = false;
 
     void Start()
     {
@@ -42,7 +43,6 @@ public class PlayerControllerPlaya : MonoBehaviour
         ApplyFinalMovement();
         SetAnimations();
         CheckGrounded();
-        //  CheckLandingAnimation();
     }
 
     /*void OnDrawGizmos()
@@ -149,6 +149,7 @@ public class PlayerControllerPlaya : MonoBehaviour
         animator.SetBool("Escarbando", PI.escarbando);
         CC.height = PI.escarbando ? normalHeight / 2 : normalHeight;
         animator.SetBool("isGrounded", isGrounded);
+        escarbando = PI.escarbando; // TODO mover a una funcion: añadir un tiempo que debemos matener el boton para empezar a escarbar y un tiempo de relajacion
     }
 
     private Vector3 CalculateMovementFromCamera()
