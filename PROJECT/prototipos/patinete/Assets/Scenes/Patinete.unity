@@ -374,15 +374,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdfe2506965c3174e955ce5deb324767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 894592184}
-  liebre: {fileID: 1635156668}
-  zOffset: -12
-  cameraHeight: 15
-  xDistance: -10
-  lookAtZOffset: 20
-  lookAtHeightMultiplier: 0.5
+  player: {fileID: 0}
+  liebre: {fileID: 0}
+  zOffset: -8
+  cameraHeight: 12
+  xDistance: 6
+  lookAtZOffset: 15
+  lookAtHeightMultiplier: 0.33
   smoothSpeed: 5
-  fixedX: 1
+  fixedX: 0
 --- !u!114 &330585551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1014,6 +1014,11 @@ MonoBehaviour:
   combinarMeshes: 0
   usarUnSoloCollider: 1
   floorTag: Floor
+--- !u!4 &880470262 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6303557266325822131, guid: c01b7d96a17f3454c914094f70c6bc61, type: 3}
+  m_PrefabInstance: {fileID: 3756630679291666519}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &894592183
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1071,11 +1076,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7526b470e92d2ba45b59b13226c956b0, type: 3}
---- !u!4 &894592184 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2816325582872018104, guid: 7526b470e92d2ba45b59b13226c956b0, type: 3}
-  m_PrefabInstance: {fileID: 894592183}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1011848736
 GameObject:
   m_ObjectHideFlags: 0
@@ -1402,7 +1402,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRig
       objectReference: {fileID: 0}
-    - target: {fileID: 7347536178177258615, guid: c01b7d96a17f3454c914094f70c6bc61, type: 3}
+    - target: {fileID: 6989473126846624211, guid: c01b7d96a17f3454c914094f70c6bc61, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6989473126846624211, guid: c01b7d96a17f3454c914094f70c6bc61, type: 3}
+      propertyPath: camtrans
+      value: 
+      objectReference: {fileID: 880470262}
+    - target: {fileID: 6989473126846624211, guid: c01b7d96a17f3454c914094f70c6bc61, type: 3}
       propertyPath: patinete
       value: 
       objectReference: {fileID: 1527686216}

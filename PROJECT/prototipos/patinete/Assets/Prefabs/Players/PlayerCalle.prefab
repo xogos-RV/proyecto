@@ -1858,9 +1858,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4289477918181869391}
   - component: {fileID: 1343353303865145367}
-  - component: {fileID: 7347536178177258615}
   - component: {fileID: 1468698697820452148}
   - component: {fileID: 9046806693382062219}
+  - component: {fileID: 6989473126846624211}
   m_Layer: 0
   m_Name: PlayerCalle
   m_TagString: Player
@@ -1899,26 +1899,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   JoisticSensitivity: 20
---- !u!114 &7347536178177258615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5345531477672920747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df3203acb648743b477cc69ea2b7e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 3794020767423291236}
-  patinete: {fileID: 0}
-  camtrans: {fileID: 2084524532587912522}
-  moveSpeed: 5
-  runningSpeed: 16
-  gravity: -9.81
-  rotateDump: 5
-  playerCamera: {fileID: 4032502691902247413}
 --- !u!114 &1468698697820452148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1983,6 +1963,26 @@ CharacterController:
   m_SkinWidth: 0.06
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 2.5, z: 0}
+--- !u!114 &6989473126846624211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5345531477672920747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2df3203acb648743b477cc69ea2b7e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  patinete: {fileID: 0}
+  camtrans: {fileID: 0}
+  moveSpeed: 5
+  runningSpeed: 16
+  gravity: -9.81
+  rotateDump: 5
+  playerCamera: {fileID: 0}
 --- !u!1 &5385646095886285897
 GameObject:
   m_ObjectHideFlags: 0
