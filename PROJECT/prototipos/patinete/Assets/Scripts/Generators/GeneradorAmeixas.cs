@@ -1,8 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class TerrainObjectSpawner : MonoBehaviour
+public class GeneradorAmeixas : MonoBehaviour
 {
+    private const string NameObject = "AmeixasColection";
+    private const string GeneratePath = "Generate";
+
     [Header("Texture Filter")]
     [Tooltip("Name of the terrain layer where objects should spawn")]
     public string targetTextureName = "Sand_TerrainLayer";
@@ -78,6 +81,19 @@ public class TerrainObjectSpawner : MonoBehaviour
 
     private void SpawnObjects()
     {
+        GameObject generateParent = GameObject.Find(GeneratePath);
+        if (generateParent == null)
+        {
+            generateParent = new GameObject(GeneratePath);
+        }
+
+        GameObject parentObject = GameObject.Find(NameObject);
+        if (parentObject == null)
+        {
+            parentObject = new GameObject(NameObject);
+            parentObject.transform.parent = generateParent.transform; // Asignar como hijo
+        }
+
         Vector3 terrainSize = terrainData.size;
         Vector3 terrainPos = terrain.transform.position;
         int spawnedCount = 0;
@@ -107,7 +123,8 @@ public class TerrainObjectSpawner : MonoBehaviour
                     surfaceHeight - randomDepth,
                     samplePos.z);
 
-                Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+                GameObject newObject = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+                newObject.transform.parent = parentObject.transform;
                 spawnedCount++;
             }
         }
@@ -117,7 +134,6 @@ public class TerrainObjectSpawner : MonoBehaviour
             Debug.LogWarning($"Only spawned {spawnedCount} objects (target: {spawnCount}). Not enough valid terrain area.");
         }
     }
-
     private bool IsPositionOnTargetTexture(Vector3 worldPos)
     {
         if (targetTextureIndex == -1) return true; // Si no se encontró la textura, spawnear igual

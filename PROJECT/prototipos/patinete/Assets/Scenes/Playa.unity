@@ -948,13 +948,75 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286979500}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.65028346, y: 0.24689782, z: -0.23668377, w: 0.67834634}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 100, y: 100, z: 100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 87.58, y: 40, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1001 &1587670562
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2063248835}
+    m_Modifications:
+    - target: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_Name
+      value: Terreno_San_Antonio
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+--- !u!4 &1587670563 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+  m_PrefabInstance: {fileID: 1587670562}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1665955521
 GameObject:
   m_ObjectHideFlags: 0
@@ -969,6 +1031,7 @@ GameObject:
   - component: {fileID: 1665955525}
   - component: {fileID: 1665955527}
   - component: {fileID: 1665955528}
+  - component: {fileID: 1665955529}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -1014,7 +1077,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1665955521}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 030c87400afead04081f10361f3abcdb, type: 3}
   m_Name: 
@@ -1066,15 +1129,67 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTime: 7
-  timeSpeed: 30
+  timeSpeed: 5
   rotationSmoothness: 1
   dawnTime: 7.5
   sunTime: 12
-  middayColor: {r: 0.9811321, g: 0.9811321, b: 0.9811321, a: 1}
-  sunsetColor: {r: 1, g: 0.7607843, b: 0, a: 1}
-  horizonColor: {r: 1, g: 0.043137256, b: 0, a: 1}
+  middayColor: {r: 1, g: 1, b: 1, a: 1}
+  sunsetColor: {r: 0.9971513, g: 1, b: 0.6367924, a: 1}
+  horizonColor: {r: 1, g: 0.3304916, b: 0.0990566, a: 1}
   sunLight: {fileID: 1286979502}
   timeDisplay: {fileID: 1119134855}
+--- !u!114 &1665955529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665955521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6181cf85c1b390641b6024420fc78223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  prefabToSpawn: {fileID: 6280471560671988429, guid: 5d25f9c398a55364f84195517941687c, type: 3}
+  spawnInterval: 5
+  minRadius: 10
+  maxRadius: 15
+  targetTextureName: Sand_TerrainLayer
+  textureThreshold: 0.5
+  spawnDepth: 0.05
+--- !u!1 &2063248834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2063248835}
+  m_Layer: 0
+  m_Name: Pre
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2063248835
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2063248834}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1587670563}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6228437191130082799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1090,6 +1205,10 @@ PrefabInstance:
     - target: {fileID: 4090343519432766918, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
       propertyPath: m_Name
       value: Vigilante
+      objectReference: {fileID: 0}
+    - target: {fileID: 4090343519432766918, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5552403015714396612, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1146,3 +1265,4 @@ SceneRoots:
   - {fileID: 893311547}
   - {fileID: 160292077}
   - {fileID: 6228437191130082799}
+  - {fileID: 2063248835}

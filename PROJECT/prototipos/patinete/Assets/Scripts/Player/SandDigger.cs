@@ -5,6 +5,11 @@ public class SandDigger : MonoBehaviour
     public GameObject holePrefab; // Prefab opcional para hoyo visual
     public GameObject digParticlesPrefab;  // Sistema de partículas para el efecto de arena
 
+    private const string ParentFolderName = "GeneratPath";
+    private const string HolesFolderName = "SandHoles";
+    private const string ParticlesFolderName = "DigParticles";
+
+
     [Header("Configuración de Escarbado")]
     [Range(1, 5)] public int digRadius = 1;       // Radio del hoyo
     [Range(0.01f, 0.2f)] public float digDepth = 0.05f;  // Profundidad del hoyo 
@@ -32,8 +37,12 @@ public class SandDigger : MonoBehaviour
     private float[,,] splatmapData;
     private int textureIndex = -1;
 
+    private GameObject holesParent;
+    private GameObject particlesParent;
+
     void Start()
     {
+        InitializeHierarchyFolders();
         PI = GetComponent<PlayerInput>();
         terrain = Terrain.activeTerrain;
         terrainData = terrain.terrainData;
@@ -72,6 +81,27 @@ public class SandDigger : MonoBehaviour
         }
     }
 
+    private void InitializeHierarchyFolders()
+    {
+        // Crear o encontrar el padre principal "Generate"
+        GameObject generateParent = GameObject.Find(ParentFolderName) ?? new GameObject(ParentFolderName);
+
+        // Crear carpeta para hoyos
+        holesParent = GameObject.Find(HolesFolderName);
+        if (holesParent == null)
+        {
+            holesParent = new GameObject(HolesFolderName);
+            holesParent.transform.parent = generateParent.transform;
+        }
+
+        // Crear carpeta para partículas
+        particlesParent = GameObject.Find(ParticlesFolderName);
+        if (particlesParent == null)
+        {
+            particlesParent = new GameObject(ParticlesFolderName);
+            particlesParent.transform.parent = generateParent.transform;
+        }
+    }
     private void DigWithMouse()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -129,7 +159,8 @@ public class SandDigger : MonoBehaviour
         // Instanciar prefab de hoyo visual
         if (holePrefab != null)
         {
-            Instantiate(holePrefab, position, Quaternion.identity);
+            GameObject hole = Instantiate(holePrefab, position, Quaternion.identity);
+            hole.transform.parent = holesParent.transform;
         }
     }
 
@@ -169,11 +200,12 @@ public class SandDigger : MonoBehaviour
             Quaternion finalRotation = transform.rotation * yRotation;
 
             GameObject particlesInstance = Instantiate(
-                digParticlesPrefab,
-                spawnPosition,
-                finalRotation
-            );
+                    digParticlesPrefab,
+                    spawnPosition,
+                    finalRotation
+                );
 
+            particlesInstance.transform.parent = particlesParent.transform;
             ConfigureParticleSystem(particlesInstance);
         }
     }

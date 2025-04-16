@@ -16,10 +16,22 @@ public class GameInitializer : MonoBehaviour
 
     void Awake()
     {
-
+        HidePreObject();
         SpawnTerrain();
-
         SpawnPlayer();
+    }
+
+    private void HidePreObject()
+    {
+        GameObject preObject = GameObject.Find("Pre");
+        if (preObject != null)
+        {
+            preObject.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("No se encontró un objeto llamado 'Pre' en la escena.");
+        }
     }
 
     private void SpawnTerrain()
