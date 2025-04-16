@@ -1066,7 +1066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTime: 7
-  timeSpeed: 5
+  timeSpeed: 30
   rotationSmoothness: 1
   dawnTime: 7.5
   sunTime: 12

@@ -63,23 +63,29 @@ public class SunSimulator : MonoBehaviour
 
     private void UpdateTargetRotation()
     {
-        if (currentTime >= dawnTime && currentTime <= dawnTime + sunTime)
+        float sunset = dawnTime + sunTime;
+        float nightTime = 24f - sunTime;
+
+        if (currentTime >= dawnTime && currentTime <= sunset)
         {
             // Durante el día: 180° a 0° (pasando por 90° al mediodía)
             float dayProgress = (currentTime - dawnTime) / sunTime;
             targetRotationX = 180f - (dayProgress * 180f);
         }
-        else if (currentTime > dawnTime + sunTime)
+        else
         {
-            // Después del atardecer: de 0° a -90° (270°)
-            float nightProgress = (currentTime - (dawnTime + sunTime)) / (24f - sunTime);
-            targetRotationX = 0f - (nightProgress * 90f);
-        }
-        else if (currentTime < dawnTime)
-        {
-            // Antes del amanecer: de 270° a 180°
-            float nightProgress = currentTime / dawnTime;
-            targetRotationX = 270 - (90f * nightProgress);
+            if (currentTime > sunset)
+            {
+                // Después del atardecer: de 0° a -180° (360°)
+                float nightProgress = (currentTime - sunset) / nightTime;
+                targetRotationX = 0f - (180f * nightProgress);
+            }
+            else if (currentTime < dawnTime)
+            {
+                // Antes del amanecer: de 360° a 180°
+                float nightProgress = (24f - sunset + currentTime) / nightTime;
+                targetRotationX = 360 - (180f * nightProgress);
+            }
         }
 
     }
@@ -153,7 +159,7 @@ public class SunSimulator : MonoBehaviour
             if (effectiveAngle > 180f && effectiveAngle < 195f)
             {
                 float transitionProgress = (effectiveAngle - 180f) / 15f;
-                sunLight.color = Color.Lerp( horizonColor, Color.black,transitionProgress);
+                sunLight.color = Color.Lerp(horizonColor, Color.black, transitionProgress);
             }
             else if (effectiveAngle < 0f && effectiveAngle > -15f)
             {
