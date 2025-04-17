@@ -5,7 +5,7 @@ public class SandDigger : MonoBehaviour
     public GameObject holePrefab; // Prefab opcional para hoyo visual
     public GameObject digParticlesPrefab;  // Sistema de partículas para el efecto de arena
 
-    private const string ParentFolderName = "GeneratPath";
+    private const string ParentFolderName = "GeneratePath";
     private const string HolesFolderName = "SandHoles";
     private const string ParticlesFolderName = "DigParticles";
 

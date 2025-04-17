@@ -1,13 +1,8 @@
-using TMPro;
 using UnityEngine;
 
 public class SunSimulator : MonoBehaviour
 {
     [Header("Configuración")]
-    [Range(0f, 23.99f)]
-    public float currentTime = 0f;
-    public float timeSpeed = 1f;
-
     [Range(0.1f, 5f)]
     public float rotationSmoothness = 1f;
 
@@ -29,16 +24,16 @@ public class SunSimulator : MonoBehaviour
 
     [Header("Referencias")]
     public Light sunLight;
-    public TextMeshProUGUI timeDisplay;
 
+    private TimeManager TimeManager;
     private float currentRotationX;
     private float targetRotationX;
 
     private void Start()
     {
+        TimeManager = GetComponent<TimeManager>();
         if (sunLight != null)
         {
-            // Inicializar con la rotación correcta basada en el tiempo actual
             UpdateTargetRotation();
             currentRotationX = targetRotationX;
             sunLight.transform.eulerAngles = new Vector3(currentRotationX, 0, 0);
@@ -48,24 +43,15 @@ public class SunSimulator : MonoBehaviour
 
     private void Update()
     {
-        UpdateTime();
         UpdateSunRotation();
         UpdateSunColor();
-        UpdateTimeDisplay();
-    }
-
-    private void UpdateTime()
-    {
-        currentTime += Time.deltaTime * timeSpeed / 60f;
-        if (currentTime >= 24f)
-            currentTime = 0f;
     }
 
     private void UpdateTargetRotation()
     {
         float sunset = dawnTime + sunTime;
         float nightTime = 24f - sunTime;
-
+        float currentTime = TimeManager.currentTime;
         if (currentTime >= dawnTime && currentTime <= sunset)
         {
             // Durante el día: 180° a 0° (pasando por 90° al mediodía)
@@ -92,34 +78,22 @@ public class SunSimulator : MonoBehaviour
 
     private void UpdateSunRotation()
     {
-        if (sunLight == null)
-            return;
+        if (sunLight == null) return;
 
         UpdateTargetRotation();
-
-        // Manejar la transición suave entre ángulos cercanos a 0°/360°
-        /*   float angleDifference = Mathf.DeltaAngle(currentRotationX, targetRotationX); */
-        currentRotationX = targetRotationX; /* * Time.deltaTime * rotationSmoothness; */
-
-        // Asegurarse de que la rotación esté en el rango -180° a 180°
-        /*      if (currentRotationX > 180f)
-                 currentRotationX -= 360f;
-
-             if (currentRotationX < -180f)
-                 currentRotationX += 360f; */
-
+        currentRotationX = targetRotationX;
         sunLight.transform.eulerAngles = new Vector3(currentRotationX, 0, 0);
     }
 
     private void UpdateSunColor()
     {
-        if (sunLight == null)
-            return;
+        if (sunLight == null) return;
 
-        // Usar el ángulo actual para determinar el color
         float effectiveAngle = currentRotationX;
         if (effectiveAngle < 0)
             effectiveAngle += 360f;
+
+        float currentTime = TimeManager.currentTime;
 
         // Durante el día
         if (currentTime >= dawnTime && currentTime < dawnTime + sunTime)
@@ -173,24 +147,4 @@ public class SunSimulator : MonoBehaviour
         }
     }
 
-    private void UpdateTimeDisplay()
-    {
-        if (timeDisplay != null)
-        {
-            timeDisplay.text = GetFormattedTime();
-        }
-    }
-
-    private string GetFormattedTime()
-    {
-        int hours = Mathf.FloorToInt(currentTime);
-        int minutes = Mathf.FloorToInt((currentTime - hours) * 60f);
-
-        int hora_dec = hours / 10;
-        int hora_uni = hours % 10;
-        int min_dec = minutes / 10;
-        int min_uni = minutes % 10;
-
-        return $"<mspace=0.6em>{hora_dec}{hora_uni}:{min_dec}{min_uni}</mspace>";
-    }
 }

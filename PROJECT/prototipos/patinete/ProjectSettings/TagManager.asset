@@ -9,6 +9,7 @@ TagManager:
   - Proyectil
   - Ameixas
   - Time
+  - Water
   layers:
   - Default
   - TransparentFX
