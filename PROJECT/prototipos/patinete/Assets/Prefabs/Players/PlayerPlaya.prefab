@@ -93,6 +93,8 @@ MonoBehaviour:
   rotateDump: 5
   jumpHeight: 1
   thresholdGrounded: 0.5
+  escarbando: 0
+  waterPushForce: 10
 --- !u!114 &-3356496612050041673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,7 +119,8 @@ MonoBehaviour:
   maxParticles: 40
   particleYRotation: 180
   backwardOffset: 0.5
-  baseDownOffset: 1
+  yOffset: 0.5
+  targetTextureName: Sand_TerrainLayer
 --- !u!1001 &3406155742003322202
 PrefabInstance:
   m_ObjectHideFlags: 0

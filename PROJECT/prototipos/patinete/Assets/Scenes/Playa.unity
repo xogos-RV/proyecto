@@ -407,9 +407,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 893311547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 75, y: -80}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 170, y: 10}
   m_SizeDelta: {x: 150, y: 60}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1119134854
@@ -1139,8 +1139,9 @@ MonoBehaviour:
   dawnTime: 7.5
   sunTime: 12
   middayColor: {r: 1, g: 1, b: 1, a: 1}
-  sunsetColor: {r: 0.9971513, g: 1, b: 0.6367924, a: 1}
+  sunsetColor: {r: 1, g: 0.8797633, b: 0.63529414, a: 1}
   horizonColor: {r: 1, g: 0.3304916, b: 0.0990566, a: 1}
+  raioVerde: {r: 0, g: 1, b: 0, a: 1}
   sunLight: {fileID: 1286979502}
 --- !u!114 &1665955529
 MonoBehaviour:
@@ -1175,7 +1176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTime: 7
-  timeSpeed: 1
+  timeSpeed: 5
   timeDisplay: {fileID: 1119134855}
 --- !u!114 &1665955532
 MonoBehaviour:
@@ -1273,25 +1274,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4174430946184490812, guid: 6d13437ff8529ea4b80a385550bc386a, type: 3}
-      propertyPath: m_CastShadows
-      value: 0
+    - target: {fileID: 6052487574218154452, guid: 6d13437ff8529ea4b80a385550bc386a, type: 3}
+      propertyPath: m_Size.y
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5744703296731957673, guid: 6d13437ff8529ea4b80a385550bc386a, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
+    - target: {fileID: 6052487574218154452, guid: 6d13437ff8529ea4b80a385550bc386a, type: 3}
+      propertyPath: m_Center.y
+      value: -0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052487574218154452, guid: 6d13437ff8529ea4b80a385550bc386a, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8137770273538208515, guid: 6d13437ff8529ea4b80a385550bc386a, type: 3}
       propertyPath: m_Name
       value: Water
-      objectReference: {fileID: 0}
-    - target: {fileID: 9069096762077791819, guid: 6d13437ff8529ea4b80a385550bc386a, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 9069096762077791819, guid: 6d13437ff8529ea4b80a385550bc386a, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

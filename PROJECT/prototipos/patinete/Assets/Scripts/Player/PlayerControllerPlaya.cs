@@ -22,6 +22,10 @@ public class PlayerControllerPlaya : MonoBehaviour
     private bool isLanding = false;
     public bool escarbando = false;
 
+    // variables para el efecto de agua
+    private bool isTouchingWater = false; // TODO estado nadando, animaciones 
+
+
     void Start()
     {
         PI = gameObject.GetComponent<PlayerInput>();
@@ -33,31 +37,42 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         totalMovement = Vector3.zero;
         ApplyGravity();
-
-        if (!isLanding || !isGrounded)
-        {
-            CalculateMovementRotate();
-        }
-
+        CalculateMovementRotate();
         HandleJump();
+        HandleWaterEffect();
         ApplyFinalMovement();
         SetAnimations();
         CheckGrounded();
     }
 
-
-    void OnControllerColliderHit()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Water"))
+        {
+            // StartWaterEffect(other);
+        }
     }
 
-    /*void OnDrawGizmos()
+    // Mientras siga en el agua
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Water"))
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(transform.position, Vector3.down * 0.5f);
-     } */
+            // Opcional: Recalcular dirección si el agua se mueve
+            // waterPushDirection = (transform.position - other.transform.position).normalized;
+        }
+    }
 
-    public void StartLanding()
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            //  isTouchingWater = false;
+            Debug.Log("¡Salió del agua!");
+        }
+    }
+
+    public void StartLanding() //TODO  Desacoplar de Landing.cs
     {
         Debug.Log("StartLanding");
         isLanding = true;
@@ -85,6 +100,8 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     private void CalculateMovementRotate()
     {
+        if (isLanding) return;
+
         Vector3 movement;
 
         if (isGrounded || !keepAirMovement)
@@ -133,7 +150,7 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     private void HandleJump()
     {
-        if (PI.jump > 0 && !PI.escarbando && isGrounded && !isLanding)
+        if (PI.jump > 0 && !PI.escarbando && CC.isGrounded && !isLanding)
         {
             animator.SetTrigger("Jump");
             isGrounded = false;
@@ -142,6 +159,22 @@ public class PlayerControllerPlaya : MonoBehaviour
             totalMovement += Vector3.up * verticalVelocity * Time.deltaTime;
         }
     }
+
+    // Nuevo método para iniciar el efecto de agua
+    private void StartWaterEffect(Collider other)
+    {
+        // TODO  isTouchingWater = true;
+
+        Debug.Log("¡-------------------------------- Entró en agua! ------------------------------------");
+    }
+
+    // Nuevo método para manejar el efecto de agua
+    private void HandleWaterEffect()
+    { // TODO
+        if (!isTouchingWater) return;
+
+    }
+
 
     private void SetAnimations()
     {
@@ -154,6 +187,7 @@ public class PlayerControllerPlaya : MonoBehaviour
 
         animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
         animator.SetBool("Escarbando", PI.escarbando);
+        CC.height = !isGrounded ? normalHeight / 2 : normalHeight;
         CC.height = PI.escarbando ? normalHeight / 2 : normalHeight;
         animator.SetBool("isGrounded", isGrounded);
         escarbando = PI.escarbando; // TODO mover a una funcion: añadir un tiempo que debemos matener el boton para empezar a escarbar y un tiempo de relajacion
@@ -174,4 +208,10 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         CC.Move(totalMovement);
     }
+
+    /*void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position, Vector3.down * 0.5f);
+        } */
 }

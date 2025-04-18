@@ -22,6 +22,9 @@ public class SunSimulator : MonoBehaviour
     [ColorUsage(false, true)]
     public Color horizonColor = new Color(1f, 0.3f, 0f);
 
+    [ColorUsage(false, true)]
+    public Color raioVerde = new Color(0f, 1f, 0f);
+
     [Header("Referencias")]
     public Light sunLight;
 
@@ -127,6 +130,8 @@ public class SunSimulator : MonoBehaviour
                 float transitionProgress = effectiveAngle / 15f;
                 sunLight.color = Color.Lerp(horizonColor, sunsetColor, transitionProgress);
             }
+
+            // TODO raioVerde
         }
         else // Noche
         {
