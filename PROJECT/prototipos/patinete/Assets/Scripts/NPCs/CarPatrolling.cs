@@ -6,6 +6,9 @@ public class CarPatrolling : MonoBehaviour
 {
     public enum AgentState { Chasing, Patrolling }
 
+
+    public AgentState currentState = AgentState.Patrolling;
+
     [Header("NavMesh Settings")]
     public float acceleration = 5f;
     public float deceleration = 10f;
@@ -21,7 +24,6 @@ public class CarPatrolling : MonoBehaviour
 
     [Header("Patrol Settings")]
     public List<Transform> patrolPoints;
-    public float patrolWaitTime = 2f;
 
     private Transform target;
     private NavMeshAgent agent;
@@ -30,14 +32,14 @@ public class CarPatrolling : MonoBehaviour
     private float lastPathUpdateTime;
     private Vector3 lastTargetPosition;
 
-    // Variables para control de retroceso
     private Vector3 reverseStartPosition;
     private float lastDirectionChangeTime;
     private bool forcedReverse = false;
 
-    public AgentState currentState = AgentState.Patrolling;
     private int currentPatrolIndex = 0;
-    private float patrolWaitTimer = 0f;
+    private bool angleCondition;
+    private bool distanceCondition;
+    private bool timeCondition;
 
     void Start()
     {
@@ -50,7 +52,7 @@ public class CarPatrolling : MonoBehaviour
         agent.stoppingDistance = 0.1f;
         agent.avoidancePriority = 50;
 
-        lastDirectionChangeTime = -minDirectionChangeTime; // Permitir cambio inmediato al inicio
+        lastDirectionChangeTime = -minDirectionChangeTime;
     }
 
     void Update()
@@ -100,11 +102,12 @@ public class CarPatrolling : MonoBehaviour
 
         float angleToNextPoint = Vector3.SignedAngle(transform.forward, directionToNextPoint, Vector3.up);
 
-        // Verificar si debemos comenzar un retroceso forzado
-        bool shouldStartReverse = Mathf.Abs(angleToNextPoint) > 90f &&
-                                    distanceToNextPoint < reverseDistanceThreshold &&
-                                    !forcedReverse &&
-                                    Time.time - lastDirectionChangeTime >= minDirectionChangeTime;
+        // Condiciones para iniciar el retroceso forzado
+        angleCondition = Mathf.Abs(angleToNextPoint) > 90f;
+        distanceCondition = distanceToNextPoint < reverseDistanceThreshold;
+        timeCondition = Time.time - lastDirectionChangeTime >= minDirectionChangeTime;
+
+        bool shouldStartReverse = angleCondition && distanceCondition && !forcedReverse && timeCondition;
 
         if (shouldStartReverse)
         {
@@ -208,16 +211,12 @@ public class CarPatrolling : MonoBehaviour
     {
         if (patrolPoints.Count == 0)
             return;
-
-        if (agent.remainingDistance < agent.stoppingDistance)
+        if (agent.pathPending) // Si el agente está calculando la ruta, no hacemos nada
+            return;
+        if (agent.remainingDistance < agent.stoppingDistance + 2)
         {
-            patrolWaitTimer += Time.deltaTime;
-            if (patrolWaitTimer >= patrolWaitTime)
-            {
-                currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
-                UpdatePath(patrolPoints[currentPatrolIndex].position);
-                patrolWaitTimer = 0f;
-            }
+            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
+            UpdatePath(patrolPoints[currentPatrolIndex].position);
         }
     }
 
@@ -245,12 +244,23 @@ public class CarPatrolling : MonoBehaviour
             }
         }
 
-        // Dibujar posición de inicio del retroceso forzado
         if (forcedReverse)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(reverseStartPosition, 0.5f);
             Gizmos.DrawLine(transform.position, reverseStartPosition);
         }
+
+        // Depuración de condiciones de retroceso
+        Vector3 debugPosition = transform.position + Vector3.up * 2f;
+
+        Gizmos.color = angleCondition ? Color.green : Color.red;
+        Gizmos.DrawSphere(debugPosition + Vector3.left, 0.2f);
+
+        Gizmos.color = distanceCondition ? Color.green : Color.red;
+        Gizmos.DrawSphere(debugPosition, 0.2f);
+
+        Gizmos.color = timeCondition ? Color.green : Color.red;
+        Gizmos.DrawSphere(debugPosition + Vector3.right, 0.2f);
     }
 }

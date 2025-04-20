@@ -215,15 +215,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48e8bf0bf8409d54085a77e0e7ef3ba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 1
   acceleration: 5
   deceleration: 10
   angularSpeed: 60
-  maxSteeringAngle: 45
+  maxSteeringAngle: 120
   brakingDistance: 5
-  reverseDistanceThreshold: 0.5
-  pathUpdateRate: 0.5
+  reverseDistanceThreshold: 1
+  pathUpdateRate: 1
   minReverseDistance: 2
   minDirectionChangeTime: 1
+  patrolPoints:
+  - {fileID: 1443839419}
+  - {fileID: 2044179600}
+  patrolWaitTime: 0.1
 --- !u!1 &656640578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1539,6 +1544,14 @@ PrefabInstance:
     - target: {fileID: 5552403015714396612, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756730496608450786, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756730496608450786, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_ImplicitTensor
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
