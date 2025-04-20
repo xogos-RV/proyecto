@@ -90,6 +90,20 @@ public class CarPatrolling : MonoBehaviour
         }
     }
 
+
+    public void SetState(AgentState newState)
+    {
+        currentState = newState;
+        if (currentState == AgentState.Patrolling && patrolPoints.Count > 0)
+        {
+            UpdatePath(patrolPoints[currentPatrolIndex].position);
+        }
+        else if (currentState == AgentState.Chasing && target != null)
+        {
+            UpdatePath(target.position);
+        }
+    }
+
     private void MoveTowardsTarget()
     {
         if (agent.pathPending || agent.pathStatus != NavMeshPathStatus.PathComplete)
@@ -150,8 +164,8 @@ public class CarPatrolling : MonoBehaviour
         {
             Vector3 moveDirection = directionToNextPoint * currentSpeed;
 
-            // Aplicar fuerza al Rigidbody
-            rb.linearVelocity = new Vector3(moveDirection.x, rb.linearVelocity.y, moveDirection.z); // Mantener la componente Y actual
+            // FIX no sirve  Aplicar fuerza al Rigidbody  navMeshAgent anula el comportamiento del rigidbody 
+            rb.AddForce(new Vector3(moveDirection.x, 0, moveDirection.z), ForceMode.Acceleration);
 
             float steeringAngle = Mathf.Clamp(angleToNextPoint, -maxSteeringAngle, maxSteeringAngle);
 
@@ -202,7 +216,6 @@ public class CarPatrolling : MonoBehaviour
         if (player != null)
         {
             target = player.transform;
-            UpdatePath(target.position);
         }
         else
         {
@@ -214,27 +227,23 @@ public class CarPatrolling : MonoBehaviour
     {
         if (patrolPoints.Count == 0)
             return;
-        if (agent.pathPending) // Si el agente está calculando la ruta, no hacemos nada
+        if (agent.pathPending)
             return;
-        if (agent.remainingDistance < agent.stoppingDistance + 2)
+
+        // Obtener el destino actual del NavMeshAgent
+        Vector3 destination = agent.pathEndPosition;
+
+        // Calcular la distancia entre el Rigidbody y el destino
+        float distanceToDestination = Vector3.Distance(rb.position, destination);
+
+        // Comprobar si el Rigidbody está cerca del destino
+        if (distanceToDestination < 1) // TODO parametrizar 
         {
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
             UpdatePath(patrolPoints[currentPatrolIndex].position);
         }
     }
 
-    public void SetState(AgentState newState)
-    {
-        currentState = newState;
-        if (currentState == AgentState.Patrolling && patrolPoints.Count > 0)
-        {
-            UpdatePath(patrolPoints[currentPatrolIndex].position);
-        }
-        else if (currentState == AgentState.Chasing && target != null)
-        {
-            UpdatePath(target.position);
-        }
-    }
 
     private void OnDrawGizmosSelected()
     {

@@ -216,18 +216,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 1
-  acceleration: 5
+  acceleration: 10
   deceleration: 10
   angularSpeed: 60
   maxSteeringAngle: 120
-  brakingDistance: 5
+  brakingDistance: 1
   reverseDistanceThreshold: 1
   pathUpdateRate: 1
   minReverseDistance: 2
-  minDirectionChangeTime: 1
+  minDirectionChangeTime: 0.1
   patrolPoints:
-  - {fileID: 1443839419}
   - {fileID: 2044179600}
+  - {fileID: 1443839419}
 --- !u!1 &656640578
 GameObject:
   m_ObjectHideFlags: 0
