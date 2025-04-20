@@ -6,7 +6,6 @@ public class CarPatrolling : MonoBehaviour
 {
     public enum AgentState { Chasing, Patrolling }
 
-
     public AgentState currentState = AgentState.Patrolling;
 
     [Header("NavMesh Settings")]
@@ -27,6 +26,7 @@ public class CarPatrolling : MonoBehaviour
 
     private Transform target;
     private NavMeshAgent agent;
+    private Rigidbody rb;
     private float currentSpeed = 0f;
     private bool isReversing = false;
     private float lastPathUpdateTime;
@@ -44,6 +44,7 @@ public class CarPatrolling : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
         GetPlayer();
 
         agent.acceleration = acceleration;
@@ -123,30 +124,35 @@ public class CarPatrolling : MonoBehaviour
             float reverseDistanceCovered = Vector3.Distance(transform.position, reverseStartPosition);
             if (reverseDistanceCovered < minReverseDistance)
             {
-                desiredSpeed = -agent.speed * 0.5f;
+                desiredSpeed = -acceleration; // Retroceso
             }
             else
             {
                 EndForcedReverse();
-                desiredSpeed = agent.speed;
+                desiredSpeed = acceleration; // Regresar a la velocidad normal
             }
         }
         else if (distanceToNextPoint > brakingDistance)
         {
-            desiredSpeed = agent.speed;
+            desiredSpeed = acceleration; // Velocidad normal
         }
         else
         {
-            desiredSpeed = Mathf.Lerp(0, agent.speed, distanceToNextPoint / brakingDistance);
+            desiredSpeed = Mathf.Lerp(0, acceleration, distanceToNextPoint / brakingDistance); // Frenar
         }
 
         // Suavizar cambios de velocidad
         currentSpeed = Mathf.MoveTowards(currentSpeed, desiredSpeed,
                                       (desiredSpeed > currentSpeed ? acceleration : deceleration) * Time.deltaTime);
 
-        // Movimiento y rotación
+        // Movimiento y rotación usando Rigidbody
         if (Mathf.Abs(currentSpeed) > 0.01f)
         {
+            Vector3 moveDirection = directionToNextPoint * currentSpeed;
+
+            // Aplicar fuerza al Rigidbody
+            rb.linearVelocity = new Vector3(moveDirection.x, rb.linearVelocity.y, moveDirection.z); // Mantener la componente Y actual
+
             float steeringAngle = Mathf.Clamp(angleToNextPoint, -maxSteeringAngle, maxSteeringAngle);
 
             // Invertir el ángulo de dirección cuando estamos en reversa
@@ -156,13 +162,10 @@ public class CarPatrolling : MonoBehaviour
             }
 
             transform.Rotate(Vector3.up, steeringAngle * Time.deltaTime * (currentSpeed < 0 ? 0.7f : 1f));
-
-            Vector3 moveDirection = transform.forward * currentSpeed;
-            agent.velocity = moveDirection;
         }
         else
         {
-            agent.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero; // Detener el Rigidbody si la velocidad es muy baja
         }
 
         // Actualizar estado de reversa

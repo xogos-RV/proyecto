@@ -228,7 +228,6 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 1443839419}
   - {fileID: 2044179600}
-  patrolWaitTime: 0.1
 --- !u!1 &656640578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1544,6 +1543,14 @@ PrefabInstance:
     - target: {fileID: 5552403015714396612, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7707196153771332642, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_Size.z
+      value: 6.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7707196153771332642, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_Center.z
+      value: -2.1
       objectReference: {fileID: 0}
     - target: {fileID: 8756730496608450786, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
       propertyPath: m_UseGravity
