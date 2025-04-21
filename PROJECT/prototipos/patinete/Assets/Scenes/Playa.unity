@@ -217,6 +217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentState: 1
   acceleration: 10
+  chaisingAcceleration: 30
   deceleration: 10
   angularSpeed: 60
   maxSteeringAngle: 120
@@ -811,10 +812,10 @@ MonoBehaviour:
   followFactorZ: 0.3
   smoothTime: 0.5
   maintainInitialRotation: 1
-  initialDistance: 40
+  initialDistance: 20
   initialAngle: 0
-  initialHeight: 15
-  initialPitch: 25
+  initialHeight: 12
+  initialPitch: 20
 --- !u!1 &1263165690
 GameObject:
   m_ObjectHideFlags: 0
@@ -966,6 +967,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   game: {fileID: 1665955526}
   statsText: {fileID: 1263165692}
+--- !u!1001 &1272069372
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2063248835}
+    m_Modifications:
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 214.1446
+      objectReference: {fileID: 0}
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 146.24887
+      objectReference: {fileID: 0}
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2472707296294454866, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+      propertyPath: m_Name
+      value: PlayerPlaya
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+--- !u!4 &1272069373 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 103445905224533155, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
+  m_PrefabInstance: {fileID: 1272069372}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1286979500
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,13 +1143,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1286979500}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.5, y: -0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: 100, y: 100, z: 100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: -90, z: 0}
 --- !u!1 &1443839418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,11 +1255,10 @@ GameObject:
   - component: {fileID: 1665955531}
   - component: {fileID: 1665955523}
   - component: {fileID: 1665955526}
-  - component: {fileID: 1665955525}
   - component: {fileID: 1665955527}
   - component: {fileID: 1665955528}
-  - component: {fileID: 1665955529}
   - component: {fileID: 1665955532}
+  - component: {fileID: 1665955533}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -1235,26 +1297,6 @@ MonoBehaviour:
   playerPrefab: {fileID: 2472707296294454866, guid: 6e1fafb671157254a819d88467e93f1a, type: 3}
   minSpawnDistanceFromEdges: 100
   heightOffset: 1
---- !u!114 &1665955525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1665955521}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 030c87400afead04081f10361f3abcdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetTextureName: Sand_TerrainLayer
-  textureThreshold: 0.5
-  prefabToSpawn: {fileID: 6280471560671988429, guid: 5d25f9c398a55364f84195517941687c, type: 3}
-  spawnCount: 10000
-  minDepth: 0.1
-  maxDepth: 0.5
-  spawnDelay: 1
-  edgePadding: 5
 --- !u!114 &1665955526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1296,31 +1338,12 @@ MonoBehaviour:
   rotationSmoothness: 1
   dawnTime: 7.5
   sunTime: 12
+  inclinacionLateral: -45
   middayColor: {r: 1, g: 1, b: 1, a: 1}
   sunsetColor: {r: 1, g: 0.8797633, b: 0.63529414, a: 1}
   horizonColor: {r: 1, g: 0.3304916, b: 0.0990566, a: 1}
   raioVerde: {r: 0, g: 1, b: 0, a: 1}
   sunLight: {fileID: 1286979502}
---- !u!114 &1665955529
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1665955521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6181cf85c1b390641b6024420fc78223, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTag: Player
-  prefabToSpawn: {fileID: 6280471560671988429, guid: 5d25f9c398a55364f84195517941687c, type: 3}
-  spawnInterval: 5
-  minRadius: 10
-  maxRadius: 15
-  targetTextureName: Sand_TerrainLayer
-  textureThreshold: 0.5
-  spawnDepth: 0.05
 --- !u!114 &1665955531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1352,6 +1375,26 @@ MonoBehaviour:
   minTideHeight: -6
   maxTideHeight: -2
   tideCycleDuration: 12.24
+--- !u!114 &1665955533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665955521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6181cf85c1b390641b6024420fc78223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  prefabToSpawn: {fileID: 6280471560671988429, guid: 5d25f9c398a55364f84195517941687c, type: 3}
+  spawnInterval: 5
+  minRadius: 5
+  maxRadius: 15
+  targetTextureName: AmeixasLayer
+  textureThreshold: 0.5
+  spawnDepth: 0.1
 --- !u!1 &2044179599
 GameObject:
   m_ObjectHideFlags: 0
@@ -1393,7 +1436,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2063248835}
   m_Layer: 0
-  m_Name: Pre
+  m_Name: ParaInstanciar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1413,6 +1456,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1587670563}
+  - {fileID: 1272069373}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5547346521289699953
@@ -1496,12 +1540,28 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3163693042107146627, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_Offset.z
+      value: 126
+      objectReference: {fileID: 0}
+    - target: {fileID: 3851321684790763536, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3851321684790763536, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_TagString
+      value: Decal
+      objectReference: {fileID: 0}
     - target: {fileID: 4090343519432766918, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
       propertyPath: m_Name
       value: Vigilante
       objectReference: {fileID: 0}
     - target: {fileID: 4090343519432766918, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382844726025924520, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5552403015714396612, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
@@ -1544,6 +1604,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6216102447708094527, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_Speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6216102447708094527, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: m_BaseOffset
+      value: -0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 7707196153771332642, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
       propertyPath: m_Size.z
       value: 6.2
@@ -1572,12 +1640,12 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 2063248835}
+  - {fileID: 1665955522}
   - {fileID: 1211445213}
   - {fileID: 1286979503}
-  - {fileID: 1665955522}
   - {fileID: 893311547}
   - {fileID: 160292077}
+  - {fileID: 2063248835}
   - {fileID: 6228437191130082799}
   - {fileID: 5547346521289699953}
   - {fileID: 929116379}

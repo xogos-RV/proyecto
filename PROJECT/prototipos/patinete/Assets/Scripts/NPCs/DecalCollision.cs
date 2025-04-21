@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 public class DecalCollision : MonoBehaviour
 {
@@ -6,17 +8,16 @@ public class DecalCollision : MonoBehaviour
     [Tooltip("Etiqueta del objeto jugador")]
     public string playerTag = "Player";
 
-    [Tooltip("Nombre de la propiedad booleana que indica si está escarbando")]
-    public string diggingPropertyName = "escarbando";
-
     private BoxCollider decalCollider;
     private GameObject currentPlayer;
     private bool playerIsDigging = false;
+    private CarPatrolling carPatrolling;
 
     private void Awake()
     {
         decalCollider = GetComponent<BoxCollider>();
         decalCollider.isTrigger = true;
+        carPatrolling = GetComponentInParent<CarPatrolling>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -65,8 +66,19 @@ public class DecalCollision : MonoBehaviour
     private void OnPlayerDiggingInDecal()
     {
         Debug.Log("¡Jugador está escarbando dentro del área del decal!");
-
+        if (carPatrolling != null)
+        {
+            carPatrolling.SetState(CarPatrolling.AgentState.Chasing);
+            HideVision(true);
+        }
     }
 
-
+    private void HideVision(bool hide)
+    {
+        GameObject vision = GameObject.FindGameObjectWithTag("Decal");
+        if (vision != null)
+        {
+            vision.SetActive(!hide);
+        }
+    }
 }

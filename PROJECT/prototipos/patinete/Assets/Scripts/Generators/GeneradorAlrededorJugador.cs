@@ -25,7 +25,7 @@ public class GeneradorAlrededorJugador : MonoBehaviour
 
     [Header("Configuración de Terreno")]
     [Tooltip("Nombre de la capa de terreno objetivo")]
-    public string targetTextureName = "Sand_TerrainLayer";
+    public string targetTextureName = "Sand_TerrainLayer"; // "AmeixasLayer";
 
     [Tooltip("Umbral de textura para generación")]
     [Range(0.1f, 1f)]

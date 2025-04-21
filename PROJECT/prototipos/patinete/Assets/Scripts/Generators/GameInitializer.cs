@@ -23,7 +23,7 @@ public class GameInitializer : MonoBehaviour
 
     private void HidePreObject()
     {
-        GameObject preObject = GameObject.Find("Pre");
+        GameObject preObject = GameObject.Find("ParaInstanciar");
         if (preObject != null)
         {
             preObject.SetActive(false);

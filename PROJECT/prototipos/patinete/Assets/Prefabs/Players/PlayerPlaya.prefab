@@ -55,10 +55,10 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.3
+  m_Radius: 0.2
   m_SlopeLimit: 40
   m_StepOffset: 0.7
-  m_SkinWidth: 0.03
+  m_SkinWidth: 0.02
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1796731747226651683
@@ -94,7 +94,7 @@ MonoBehaviour:
   jumpHeight: 1
   thresholdGrounded: 0.5
   escarbando: 0
-  waterPushForce: 10
+  maxSlopeAngle: 45
 --- !u!114 &-3356496612050041673
 MonoBehaviour:
   m_ObjectHideFlags: 0

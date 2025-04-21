@@ -8,7 +8,7 @@ public class GeneradorAmeixas : MonoBehaviour
 
     [Header("Texture Filter")]
     [Tooltip("Name of the terrain layer where objects should spawn")]
-    public string targetTextureName = "Sand_TerrainLayer";
+    public string targetTextureName =  "Sand_TerrainLayer"; // "AmeixasLayer";
     [Range(0.1f, 1f)] public float textureThreshold = 0.5f;
 
     [Header("Spawn Settings")]
@@ -20,12 +20,12 @@ public class GeneradorAmeixas : MonoBehaviour
     public int spawnCount = 100;
 
     [Header("Depth Settings")]
-    [Tooltip("Minimum depth below terrain surface")]
-    [Range(0.1f, 10f)]
-    public float minDepth = 0.5f;
+    [Tooltip("depth below terrain surface")]
+    [Range(0.1f, 2f)]
+    public float minDepth = 0.1f;
 
     [Tooltip("Maximum depth below terrain surface")]
-    [Range(0.1f, 10f)]
+    [Range(0.1f, 5f)]
     public float maxDepth = 2f;
 
     [Header("Terrain Settings")]

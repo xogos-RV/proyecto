@@ -12,6 +12,9 @@ public class SunSimulator : MonoBehaviour
     [Range(9f, 16f)]
     public float sunTime = 14f;
 
+    [Range(-90f, 90f)]
+    public float inclinacionLateral = 45f;
+
     [Header("Daylight Colors")]
     [ColorUsage(false, true)]
     public Color middayColor = Color.white;
@@ -39,7 +42,7 @@ public class SunSimulator : MonoBehaviour
         {
             UpdateTargetRotation();
             currentRotationX = targetRotationX;
-            sunLight.transform.eulerAngles = new Vector3(currentRotationX, 0, 0);
+            sunLight.transform.eulerAngles = new Vector3(currentRotationX, inclinacionLateral, 0);
             UpdateSunColor();
         }
     }
@@ -85,7 +88,7 @@ public class SunSimulator : MonoBehaviour
 
         UpdateTargetRotation();
         currentRotationX = targetRotationX;
-        sunLight.transform.eulerAngles = new Vector3(currentRotationX, 0, 0);
+        sunLight.transform.eulerAngles = new Vector3(currentRotationX, inclinacionLateral, 0);
     }
 
     private void UpdateSunColor()

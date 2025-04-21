@@ -9,7 +9,8 @@ public class CarPatrolling : MonoBehaviour
     public AgentState currentState = AgentState.Patrolling;
 
     [Header("NavMesh Settings")]
-    public float acceleration = 5f;
+    public float acceleration = 10f;
+    public float chaisingAcceleration = 30f;
     public float deceleration = 10f;
     public float angularSpeed = 120f;
     public float maxSteeringAngle = 45f;
@@ -131,40 +132,40 @@ public class CarPatrolling : MonoBehaviour
 
         // Calcular velocidad deseada
         float desiredSpeed;
-
+        float accel = currentState == AgentState.Patrolling ? acceleration : chaisingAcceleration;
         if (forcedReverse)
         {
             // Mantener retroceso hasta alcanzar la distancia mínima
             float reverseDistanceCovered = Vector3.Distance(transform.position, reverseStartPosition);
             if (reverseDistanceCovered < minReverseDistance)
             {
-                desiredSpeed = -acceleration; // Retroceso
+                desiredSpeed = accel * -1; // Retroceso
             }
             else
             {
                 EndForcedReverse();
-                desiredSpeed = acceleration; // Regresar a la velocidad normal
+                desiredSpeed = accel; // Regresar a la velocidad normal
             }
         }
         else if (distanceToNextPoint > brakingDistance)
         {
-            desiredSpeed = acceleration; // Velocidad normal
+            desiredSpeed = accel; // Velocidad normal
         }
         else
         {
-            desiredSpeed = Mathf.Lerp(0, acceleration, distanceToNextPoint / brakingDistance); // Frenar
+            desiredSpeed = Mathf.Lerp(0, accel, distanceToNextPoint / brakingDistance); // Frenar
         }
 
         // Suavizar cambios de velocidad
-        currentSpeed = Mathf.MoveTowards(currentSpeed, desiredSpeed,
-                                      (desiredSpeed > currentSpeed ? acceleration : deceleration) * Time.deltaTime);
+
+        currentSpeed = Mathf.MoveTowards(currentSpeed, desiredSpeed, (desiredSpeed > currentSpeed ? accel : deceleration) * Time.deltaTime);
 
         // Movimiento y rotación usando Rigidbody
         if (Mathf.Abs(currentSpeed) > 0.01f)
         {
             Vector3 moveDirection = directionToNextPoint * currentSpeed;
 
-            // FIX no sirve  Aplicar fuerza al Rigidbody  navMeshAgent anula el comportamiento del rigidbody 
+            // FIX no sirve Aplicar fuerza al Rigidbody  navMeshAgent anula el comportamiento del rigidbody 
             rb.AddForce(new Vector3(moveDirection.x, 0, moveDirection.z), ForceMode.Acceleration);
 
             float steeringAngle = Mathf.Clamp(angleToNextPoint, -maxSteeringAngle, maxSteeringAngle);

@@ -25,7 +25,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     // variables para el efecto de agua
     private bool isTouchingWater = false; // TODO estado nadando, animaciones 
 
-
+    public float maxSlopeAngle = 45f; // TODO Ángulo máximo permitido
     void Start()
     {
         PI = gameObject.GetComponent<PlayerInput>();

@@ -37,4 +37,10 @@ public class GameManager : MonoBehaviour
             Debug.Log("¡Todas las Ameixas recolectadas!");
         }
     }
+
+    public void DestroyAmeixa()
+    {
+        collectedAmeixas--;
+        Debug.Log($"Ameixa destruida: {collectedAmeixas}/{totalAmeixas}");
+    }
 }
