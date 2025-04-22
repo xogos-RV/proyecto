@@ -49,17 +49,21 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         if (other.CompareTag("Water"))
         {
-            // StartWaterEffect(other);
+            // TODO StartWaterEffect(other);
+        }
+
+        if (other.CompareTag("Enemy"))
+        {
+            Vector3 collisionPoint = other.ClosestPoint(transform.position);
+            EnemyCollision(collisionPoint);
         }
     }
 
-    // Mientras siga en el agua
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Water"))
         {
-            // Opcional: Recalcular dirección si el agua se mueve
-            // waterPushDirection = (transform.position - other.transform.position).normalized;
+            // TODO 
         }
     }
 
@@ -67,21 +71,18 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         if (other.CompareTag("Water"))
         {
-            //  isTouchingWater = false;
-            Debug.Log("¡Salió del agua!");
+            // TODO isTouchingWater = false;
         }
     }
 
     public void StartLanding() //TODO  Desacoplar de Landing.cs
     {
-        Debug.Log("StartLanding");
         isLanding = true;
     }
 
     public void EndLanding()
     {
         isLanding = false;
-        Debug.Log("EndLanding");
     }
 
 
@@ -191,6 +192,29 @@ public class PlayerControllerPlaya : MonoBehaviour
         CC.height = PI.escarbando ? normalHeight / 2 : normalHeight;
         animator.SetBool("isGrounded", isGrounded);
         escarbando = PI.escarbando; // TODO mover a una funcion: añadir un tiempo que debemos matener el boton para empezar a escarbar y un tiempo de relajacion
+    }
+
+    private void EnemyCollision(Vector3 collisionPoint)
+    {
+        animator.SetTrigger("Muerte");
+        // TODO lo siguiente esta sin probar:
+        Vector3 knockbackDirection = (transform.position - collisionPoint).normalized;
+        Vector3 lookDirection = collisionPoint - transform.position;
+        lookDirection.y = 0;
+        Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+        float distance = 0f;
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = startPosition + knockbackDirection * 10f;
+
+        // Mover suavemente al jugador
+        while (distance < 1f)
+        {
+            distance += Time.deltaTime * 2f; // Ajusta la velocidad del movimiento
+            transform.position = Vector3.Lerp(startPosition, targetPosition, distance);
+
+            // Rotar suavemente hacia el punto de impacto
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+        }
     }
 
     private Vector3 CalculateMovementFromCamera()

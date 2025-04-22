@@ -11,6 +11,7 @@ TagManager:
   - Time
   - Water
   - Decal
+  - Enemy
   layers:
   - Default
   - TransparentFX
