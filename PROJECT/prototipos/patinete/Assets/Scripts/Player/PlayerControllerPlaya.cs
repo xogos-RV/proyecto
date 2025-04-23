@@ -31,15 +31,14 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     // variables para el efecto de agua
     private bool isTouchingWater = false; // TODO estado nadando, animaciones 
-
     public float maxSlopeAngle = 45f; // TODO Ángulo máximo permitido
-
     private CarPatrolling carPatrolling;
 
-    void Start()
+    // AUDIO
+    private AudioPlayer Audio;
+
+    void Awake()
     {
-
-
         PI = gameObject.GetComponent<PlayerInput>();
         CC = gameObject.GetComponent<CharacterController>();
         normalHeight = CC.height;
@@ -48,6 +47,7 @@ public class PlayerControllerPlaya : MonoBehaviour
         {
             carPatrolling = car.GetComponent<CarPatrolling>();
         }
+        Audio = gameObject.GetComponent<AudioPlayer>();
     }
 
     void Update()
@@ -59,6 +59,7 @@ public class PlayerControllerPlaya : MonoBehaviour
         HandleWaterEffect();
         ApplyFinalMovement();
         SetAnimations();
+        PlayFX();
         CheckGrounded();
     }
 
@@ -206,10 +207,37 @@ public class PlayerControllerPlaya : MonoBehaviour
 
         animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
         animator.SetBool("Escarbando", PI.escarbando);
-        CC.height = !isGrounded ? normalHeight / 2 : normalHeight;
-        CC.height = PI.escarbando ? normalHeight / 2 : normalHeight;
+        CC.height = !isGrounded ? normalHeight / 1.9f : normalHeight;
+        CC.height = PI.escarbando ? normalHeight / 1.9f : normalHeight;
         animator.SetBool("isGrounded", isGrounded);
         escarbando = PI.escarbando; // TODO mover a una funcion: añadir un tiempo que debemos matener el boton para empezar a escarbar y un tiempo de relajacion
+    }
+
+    //AUDIO
+    private void PlayFX()
+    {
+
+        if (!PI.escarbando && PI.movement != Vector2.zero && PI.isRunning && isGrounded && !isLanding)
+        {
+            Audio.LoadClip("pasos_317ms");
+            Audio.Play();
+        }
+
+        if (!PI.escarbando && PI.movement != Vector2.zero && !PI.isRunning && isGrounded && !isLanding)
+        {
+            Audio.LoadClip("pasos_500ms");
+            Audio.Play();
+        }
+
+        if (PI.escarbando)
+        {
+
+        }
+        else if (PI.movement == Vector2.zero || !isGrounded || !PI.enabled)
+        {
+            Audio.Stop();
+        }
+
     }
 
     private void EnemyCollision(Vector3 collisionPoint)
