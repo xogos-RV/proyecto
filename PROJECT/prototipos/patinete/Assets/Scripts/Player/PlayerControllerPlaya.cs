@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerControllerPlaya : MonoBehaviour
@@ -21,6 +22,15 @@ public class PlayerControllerPlaya : MonoBehaviour
     private bool isGrounded = true;
     private bool isLanding = false;
     public bool escarbando = false;
+
+
+    [Header("Knockback Settings")]
+    [SerializeField] private float knockbackDistance = 10f;
+    [SerializeField] private float knockbackMaxHeight = 1.5f;
+    [SerializeField] private float knockbackDuration = 1.5f;
+    [SerializeField] private float knockbackRotationSpeed = 5f;
+    private bool isKnockbackActive = false;
+
 
     // variables para el efecto de agua
     private bool isTouchingWater = false; // TODO estado nadando, animaciones 
@@ -209,27 +219,58 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         animator.SetTrigger("Muerte");
         carPatrolling.SetState(CarPatrolling.AgentState.Patrolling);
+        StartCoroutine(PerformKnockback(collisionPoint));
+    }
 
-        // TODO 
-        // lo siguiente esta sin probar:
-        Vector3 knockbackDirection = Vector3.Normalize(new Vector3(
-            (transform.position - collisionPoint).x, 0, (transform.position - collisionPoint).z));
+    private IEnumerator PerformKnockback(Vector3 collisionPoint)
+    {
+        // Configurar estado inicial
+        isKnockbackActive = true;
+        PI.enabled = false;
+        CC.enabled = false;
+
+        // Calcular dirección del knockback (horizontal solamente)
+        Vector3 knockbackDirection = (transform.position - collisionPoint).normalized;
+        knockbackDirection.y = 0;
+        knockbackDirection.Normalize();
+
+        // Calcular rotación para mirar hacia el punto de impacto
         Vector3 lookDirection = collisionPoint - transform.position;
         lookDirection.y = 0;
         Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-        float distance = 0f;
+
+        // Posiciones iniciales
         Vector3 startPosition = transform.position;
-        Vector3 targetPosition = startPosition + knockbackDirection * 10f;
+        Vector3 targetPosition = startPosition + knockbackDirection * knockbackDistance;
+        float elapsedTime = 0f;
 
-        // Mover suavemente al jugador
-        while (distance < 1f)
+        // Efecto de knockback
+        while (elapsedTime < knockbackDuration)
         {
-            distance += Time.deltaTime * 2f; // Ajusta la velocidad del movimiento
-            transform.position = Vector3.Lerp(startPosition, targetPosition, distance);
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / knockbackDuration;
 
-            // Rotar suavemente hacia el punto de impacto
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+            // Movimiento horizontal (lineal)
+            Vector3 horizontalPos = Vector3.Lerp(startPosition, targetPosition, progress);
+
+            // Componente vertical (parábola)
+            float verticalPos = Mathf.Sin(progress * Mathf.PI) * knockbackMaxHeight;
+
+            // Aplicar movimiento combinado
+            transform.position = new Vector3(horizontalPos.x, startPosition.y + verticalPos, horizontalPos.z);
+
+            // Rotación progresiva
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, knockbackRotationSpeed * Time.deltaTime);
+
+            yield return null;
         }
+
+        // Asegurar posición final correcta
+        transform.position = new Vector3(targetPosition.x, startPosition.y, targetPosition.z);
+
+        // Reactivar componentes
+        CC.enabled = true;
+        PI.enabled = true;
     }
 
     private Vector3 CalculateMovementFromCamera()
@@ -245,7 +286,10 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     private void ApplyFinalMovement()
     {
-        CC.Move(totalMovement);
+        if (CC.enabled)
+        {
+            CC.Move(totalMovement);
+        }
     }
 
     /*void OnDrawGizmos()
