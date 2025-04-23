@@ -79,15 +79,7 @@ public class CarPatrolling : MonoBehaviour
             {
                 UpdatePath(target.position);
             }
-            // TODO  colision jugador
-            // Calcular la distancia entre el Rigidbody y el destino
-            float distanceToPlayer = Vector3.Distance(rb.position, target.position);
 
-            // Comprobar si el Rigidbody está cerca del destino
-            if (distanceToPlayer < 1) // TODO parametrizar 
-            {
-                SetState(AgentState.Patrolling);
-            }
         }
         else if (currentState == AgentState.Patrolling)
         {
@@ -113,12 +105,12 @@ public class CarPatrolling : MonoBehaviour
         currentState = newState;
         if (currentState == AgentState.Patrolling && patrolPoints.Count > 0)
         {
-            decal.EnableVision(false);
+            decal.EnableVision(true);
             UpdatePath(patrolPoints[currentPatrolIndex].position);
         }
         else if (currentState == AgentState.Chasing && target != null)
         {
-            decal.EnableVision(true);
+            decal.EnableVision(false);
             UpdatePath(target.position);
         }
     }

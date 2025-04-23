@@ -23,14 +23,11 @@ public class PlayerControllerPlaya : MonoBehaviour
     private bool isLanding = false;
     public bool escarbando = false;
 
-
     [Header("Knockback Settings")]
-    [SerializeField] private float knockbackDistance = 10f;
+    [SerializeField] private float knockbackDistance = 20f;
     [SerializeField] private float knockbackMaxHeight = 1.5f;
-    [SerializeField] private float knockbackDuration = 1.5f;
-    [SerializeField] private float knockbackRotationSpeed = 5f;
-    private bool isKnockbackActive = false;
-
+    [SerializeField] private float knockbackDuration = 1f;
+    [SerializeField] private float knockbackRotationSpeed = 10f;
 
     // variables para el efecto de agua
     private bool isTouchingWater = false; // TODO estado nadando, animaciones 
@@ -38,7 +35,6 @@ public class PlayerControllerPlaya : MonoBehaviour
     public float maxSlopeAngle = 45f; // TODO Ángulo máximo permitido
 
     private CarPatrolling carPatrolling;
-
 
     void Start()
     {
@@ -75,7 +71,8 @@ public class PlayerControllerPlaya : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
-            Vector3 collisionPoint = other.ClosestPoint(transform.position);
+            Vector3 closestPoint = other.transform.position;
+            Vector3 collisionPoint = new Vector3(closestPoint.x, transform.position.y, closestPoint.z);
             EnemyCollision(collisionPoint);
         }
     }
@@ -222,14 +219,14 @@ public class PlayerControllerPlaya : MonoBehaviour
         StartCoroutine(PerformKnockback(collisionPoint));
     }
 
+    //FIX el jugador se mueve en direccion contraria 
     private IEnumerator PerformKnockback(Vector3 collisionPoint)
     {
         // Configurar estado inicial
-        isKnockbackActive = true;
         PI.enabled = false;
         CC.enabled = false;
 
-        // Calcular dirección del knockback (horizontal solamente)
+        // Calcular dirección del knockback
         Vector3 knockbackDirection = (transform.position - collisionPoint).normalized;
         knockbackDirection.y = 0;
         knockbackDirection.Normalize();
@@ -243,6 +240,8 @@ public class PlayerControllerPlaya : MonoBehaviour
         Vector3 startPosition = transform.position;
         Vector3 targetPosition = startPosition + knockbackDirection * knockbackDistance;
         float elapsedTime = 0f;
+
+        // TODO calcular targetPosition.y del terreno en conde cae el jugador  
 
         // Efecto de knockback
         while (elapsedTime < knockbackDuration)
@@ -267,10 +266,7 @@ public class PlayerControllerPlaya : MonoBehaviour
 
         // Asegurar posición final correcta
         transform.position = new Vector3(targetPosition.x, startPosition.y, targetPosition.z);
-
-        // Reactivar componentes
-        CC.enabled = true;
-        PI.enabled = true;
+        // TODO game over
     }
 
     private Vector3 CalculateMovementFromCamera()

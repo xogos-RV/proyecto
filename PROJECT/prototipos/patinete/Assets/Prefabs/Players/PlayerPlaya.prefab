@@ -58,7 +58,7 @@ CharacterController:
   m_Radius: 0.2
   m_SlopeLimit: 40
   m_StepOffset: 0.7
-  m_SkinWidth: 0.05
+  m_SkinWidth: 0.03
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1796731747226651683
@@ -94,6 +94,10 @@ MonoBehaviour:
   jumpHeight: 1
   thresholdGrounded: 0.5
   escarbando: 0
+  knockbackDistance: 20
+  knockbackMaxHeight: 1.5
+  knockbackDuration: 1
+  knockbackRotationSpeed: 10
   maxSlopeAngle: 45
 --- !u!114 &-3356496612050041673
 MonoBehaviour:
