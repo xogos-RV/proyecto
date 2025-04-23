@@ -26,11 +26,22 @@ public class PlayerControllerPlaya : MonoBehaviour
     private bool isTouchingWater = false; // TODO estado nadando, animaciones 
 
     public float maxSlopeAngle = 45f; // TODO Ángulo máximo permitido
+
+    private CarPatrolling carPatrolling;
+
+
     void Start()
     {
+
+
         PI = gameObject.GetComponent<PlayerInput>();
         CC = gameObject.GetComponent<CharacterController>();
         normalHeight = CC.height;
+        GameObject car = GameObject.FindGameObjectWithTag("Enemy");
+        if (car != null)
+        {
+            carPatrolling = car.GetComponent<CarPatrolling>();
+        }
     }
 
     void Update()
@@ -197,8 +208,12 @@ public class PlayerControllerPlaya : MonoBehaviour
     private void EnemyCollision(Vector3 collisionPoint)
     {
         animator.SetTrigger("Muerte");
-        // TODO lo siguiente esta sin probar:
-        Vector3 knockbackDirection = (transform.position - collisionPoint).normalized;
+        carPatrolling.SetState(CarPatrolling.AgentState.Patrolling);
+
+        // TODO 
+        // lo siguiente esta sin probar:
+        Vector3 knockbackDirection = Vector3.Normalize(new Vector3(
+            (transform.position - collisionPoint).x, 0, (transform.position - collisionPoint).z));
         Vector3 lookDirection = collisionPoint - transform.position;
         lookDirection.y = 0;
         Quaternion targetRotation = Quaternion.LookRotation(lookDirection);

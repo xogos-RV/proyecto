@@ -41,6 +41,7 @@ public class CarPatrolling : MonoBehaviour
     private bool angleCondition;
     private bool distanceCondition;
     private bool timeCondition;
+    private DecalCollision decal;
 
     void Start()
     {
@@ -55,6 +56,12 @@ public class CarPatrolling : MonoBehaviour
         agent.avoidancePriority = 50;
 
         lastDirectionChangeTime = -minDirectionChangeTime;
+
+        GameObject dec = GameObject.FindGameObjectWithTag("Decal");
+        if (dec != null)
+        {
+            decal = dec.GetComponent<DecalCollision>();
+        }
     }
 
     void Update()
@@ -106,12 +113,12 @@ public class CarPatrolling : MonoBehaviour
         currentState = newState;
         if (currentState == AgentState.Patrolling && patrolPoints.Count > 0)
         {
-            //  activar / desactivar decal 
+            decal.EnableVision(false);
             UpdatePath(patrolPoints[currentPatrolIndex].position);
         }
         else if (currentState == AgentState.Chasing && target != null)
         {
-            //  activar / desactivar decal
+            decal.EnableVision(true);
             UpdatePath(target.position);
         }
     }

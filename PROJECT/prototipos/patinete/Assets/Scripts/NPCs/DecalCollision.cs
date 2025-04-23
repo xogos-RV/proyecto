@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 
 public class DecalCollision : MonoBehaviour
 {
@@ -69,16 +67,15 @@ public class DecalCollision : MonoBehaviour
         if (carPatrolling != null)
         {
             carPatrolling.SetState(CarPatrolling.AgentState.Chasing);
-            HideVision(true);
         }
     }
 
-    private void HideVision(bool hide)
+    public void EnableVision(bool value)
     {
         GameObject vision = GameObject.FindGameObjectWithTag("Decal");
         if (vision != null)
         {
-            vision.SetActive(!hide);
+            vision.SetActive(value);
         }
     }
 }
