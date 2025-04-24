@@ -217,7 +217,7 @@ public class PlayerControllerPlaya : MonoBehaviour
 
         if (!isLanding || !isGrounded)
         {
-            targetSpeed = (PI.movement != Vector2.zero) ? (PI.isRunning ? 1 : 0.5f) : 0;
+            targetSpeed = (PI.movement != Vector2.zero && CC.velocity.magnitude > 0.1f) ? (PI.isRunning ? 1 : 0.5f) : 0;
         }
 
         animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
@@ -231,23 +231,32 @@ public class PlayerControllerPlaya : MonoBehaviour
     private void PlayFX()
     {
 
-        if (!PI.escarbando && PI.movement != Vector2.zero && PI.isRunning && isGrounded && !isLanding)
+        bool movement = PI.movement != Vector2.zero && CC.velocity.magnitude > 0.1f;
+
+        if (!PI.escarbando && movement && PI.isRunning && isGrounded && !isLanding)
         {
             Audio.LoadClip("pasos_317ms");
-            Audio.Play();
+            Audio.Play(true);
         }
 
-        if (!PI.escarbando && PI.movement != Vector2.zero && !PI.isRunning && isGrounded && !isLanding)
+        if (!PI.escarbando && movement && !PI.isRunning && isGrounded && !isLanding)
         {
             Audio.LoadClip("pasos_500ms");
-            Audio.Play();
+            Audio.Play(true);
         }
 
         if (PI.escarbando)
         {
 
         }
-        else if (PI.movement == Vector2.zero || !isGrounded || !PI.enabled)
+
+        if (isLanding)
+        {
+            Audio.LoadClip("Landing");
+            Audio.Play(false);
+        }
+
+        if (!PI.escarbando && !movement && !isLanding || (!isGrounded && !isLanding) || !PI.enabled)
         {
             Audio.Stop();
         }

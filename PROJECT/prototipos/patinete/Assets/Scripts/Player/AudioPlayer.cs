@@ -9,10 +9,8 @@ public class AudioPlayer : MonoBehaviour
     void Awake()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.loop = true;
     }
 
-    // Carga un clip desde Resources/Audio/FX/
     public void LoadClip(string clipName)
     {
         // Si ya está cargado y es el mismo, no hacer nada
@@ -34,11 +32,11 @@ public class AudioPlayer : MonoBehaviour
         }
     }
 
-    // Reproduce el clip cargado
-    public void Play()
+    public void Play(bool loop)
     {
         if (loadedClip == null)
         {
+            audioSource.loop = loop;
             Debug.LogWarning("No hay clip cargado para reproducir");
             return;
         }
@@ -53,31 +51,12 @@ public class AudioPlayer : MonoBehaviour
         audioSource.Play();
     }
 
-    // Reproduce un clip específico directamente (carga y reproduce)
-    public void PlayOneShot(string clipName)
-    {
-        string path = "Audio/FX/" + clipName;
-        AudioClip clip = Resources.Load<AudioClip>(path);
-
-        if (clip != null)
-        {
-            // Para OneShot no verificamos duplicados porque es por diseño
-            audioSource.PlayOneShot(clip);
-        }
-        else
-        {
-            Debug.LogError($"Clip no encontrado: {path}");
-        }
-    }
-
-    // Detiene la reproducción
     public void Stop()
     {
         audioSource.Stop();
         currentlyPlayingClipName = null; // Resetear el track
     }
 
-    // Pausa/Continúa la reproducción
     public void TogglePause()
     {
         if (audioSource.isPlaying)
@@ -90,9 +69,4 @@ public class AudioPlayer : MonoBehaviour
         }
     }
 
-    // Método adicional para verificar si un clip específico se está reproduciendo
-    public bool IsPlayingClip(string clipName)
-    {
-        return audioSource.isPlaying && currentlyPlayingClipName == clipName;
-    }
 }
