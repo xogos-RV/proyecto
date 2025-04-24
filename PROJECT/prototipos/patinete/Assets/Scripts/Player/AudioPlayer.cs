@@ -8,7 +8,7 @@ public class AudioPlayer : MonoBehaviour
 
     void Awake()
     {
-        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     public void LoadClip(string clipName)

@@ -261,6 +261,8 @@ public class PlayerControllerPlaya : MonoBehaviour
             Audio.Stop();
         }
 
+        // TODO cada hora campanadas
+        // 
     }
 
     private void EnemyCollision(Vector3 collisionPoint)
