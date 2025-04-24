@@ -11,8 +11,16 @@ public class PlayerControllerPlaya : MonoBehaviour
     public float gravity = 9.81f;
     public float rotateDump;
     [Range(1, 5)] public float jumpHeight = 1f;
-    //[Range(0, 2)] public float minAirDistance = 0.5f;
     [Range(0, 1f)] public float thresholdGrounded = 0.3f;
+    public bool escarbando = false;
+
+    [Header("Knockback Settings")]
+    public float knockbackDistance = 20f;
+    public float knockbackMaxHeight = 1.5f;
+    public float knockbackDuration = 1f;
+    public float knockbackRotationSpeed = 10f;
+    //public float maxSlopeAngle = 45f;
+
     private float normalHeight;
     private float verticalVelocity;
     private float groundedTimer = 0f;
@@ -21,19 +29,9 @@ public class PlayerControllerPlaya : MonoBehaviour
     private bool keepAirMovement = false; // Controlar si debemos mantener el movimiento aéreo
     private bool isGrounded = true;
     private bool isLanding = false;
-    public bool escarbando = false;
-
-    [Header("Knockback Settings")]
-    [SerializeField] private float knockbackDistance = 20f;
-    [SerializeField] private float knockbackMaxHeight = 1.5f;
-    [SerializeField] private float knockbackDuration = 1f;
-    [SerializeField] private float knockbackRotationSpeed = 10f;
-
-    // variables para el efecto de agua
-    private bool isTouchingWater = false; // TODO estado nadando, animaciones 
-    public float maxSlopeAngle = 45f; // TODO Ángulo máximo permitido
+    private float landingDelay = 0f;
+    private bool isTouchingWater = false;
     private CarPatrolling carPatrolling;
-
     // AUDIO
     private AudioPlayer Audio;
 
@@ -67,7 +65,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         if (other.CompareTag("Water"))
         {
-            // TODO StartWaterEffect(other);
+            StartWaterEffect(other);
         }
 
         if (other.CompareTag("Enemy"))
@@ -90,18 +88,31 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         if (other.CompareTag("Water"))
         {
-            // TODO isTouchingWater = false;
+            isTouchingWater = false;
+            // TODO
         }
     }
 
-    public void StartLanding() //TODO  Desacoplar de Landing.cs
+    private void StartLanding()
     {
         isLanding = true;
+        animator.SetBool("Landing", isLanding);
+        StartCoroutine(LandingCoroutine());
     }
 
-    public void EndLanding()
+    private IEnumerator LandingCoroutine()
+    {
+
+        landingDelay = landingDelay > 1.5f ? 1.5f : landingDelay;
+        yield return new WaitForSeconds(landingDelay);
+        EndLanding();
+    }
+
+    private void EndLanding()
     {
         isLanding = false;
+        isGrounded = true;
+        animator.SetBool("Landing", isLanding);
     }
 
 
@@ -154,15 +165,19 @@ public class PlayerControllerPlaya : MonoBehaviour
             {
                 isGrounded = false;
                 keepAirMovement = true;
+                landingDelay = groundedTimer - thresholdGrounded;
             }
         }
         else
         {
             if (groundedTimer >= thresholdGrounded)
             {
-                isLanding = true; // TODO borrar isLanding pasado un tiempo / separar logica del animator
+                StartLanding();
             }
-            isGrounded = true;
+            else
+            {
+                isGrounded = true;
+            }
             groundedTimer = 0f;
             keepAirMovement = false;
         }
@@ -185,7 +200,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         // TODO  isTouchingWater = true;
 
-        Debug.Log("¡-------------------------------- Entró en agua! ------------------------------------");
+        Debug.Log("¡Entró en agua!");
     }
 
     // Nuevo método para manejar el efecto de agua
@@ -210,7 +225,6 @@ public class PlayerControllerPlaya : MonoBehaviour
         CC.height = !isGrounded ? normalHeight / 1.9f : normalHeight;
         CC.height = PI.escarbando ? normalHeight / 1.9f : normalHeight;
         animator.SetBool("isGrounded", isGrounded);
-        escarbando = PI.escarbando; // TODO mover a una funcion: añadir un tiempo que debemos matener el boton para empezar a escarbar y un tiempo de relajacion
     }
 
     //AUDIO
