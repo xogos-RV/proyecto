@@ -50,12 +50,10 @@ public class DecalCollision : MonoBehaviour
         if (playerController != null)
         {
             bool newDiggingStatus = playerController.escarbando;
-
             if (newDiggingStatus && !playerIsDigging)
             {
                 OnPlayerDiggingInDecal();
             }
-
             playerIsDigging = newDiggingStatus;
         }
     }

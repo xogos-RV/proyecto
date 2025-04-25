@@ -51,6 +51,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     void Update()
     {
         totalMovement = Vector3.zero;
+        escarbando = PI.escarbando;
         ApplyGravity();
         CalculateMovementRotate();
         HandleJump();
@@ -260,9 +261,6 @@ public class PlayerControllerPlaya : MonoBehaviour
         {
             Audio.Stop();
         }
-
-        // TODO cada hora campanadas
-        // 
     }
 
     private void EnemyCollision(Vector3 collisionPoint)

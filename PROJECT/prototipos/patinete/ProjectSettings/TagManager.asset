@@ -12,6 +12,7 @@ TagManager:
   - Water
   - Decal
   - Enemy
+  - Bell
   layers:
   - Default
   - TransparentFX
