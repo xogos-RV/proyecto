@@ -35,6 +35,8 @@ public class PlayerControllerPlaya : MonoBehaviour
     // AUDIO
     private AudioPlayer Audio;
 
+    private bool isCollision = false;
+
     void Awake()
     {
         PI = gameObject.GetComponent<PlayerInput>();
@@ -200,7 +202,6 @@ public class PlayerControllerPlaya : MonoBehaviour
     private void StartWaterEffect(Collider other)
     {
         // TODO  isTouchingWater = true;
-
         Debug.Log("¡Entró en agua!");
     }
 
@@ -208,9 +209,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     private void HandleWaterEffect()
     { // TODO
         if (!isTouchingWater) return;
-
     }
-
 
     private void SetAnimations()
     {
@@ -248,7 +247,8 @@ public class PlayerControllerPlaya : MonoBehaviour
 
         if (PI.escarbando)
         {
-
+            Audio.LoadClip("Dig");
+            Audio.Play(true);
         }
 
         if (isLanding)
@@ -257,7 +257,7 @@ public class PlayerControllerPlaya : MonoBehaviour
             Audio.Play(false);
         }
 
-        if (!PI.escarbando && !movement && !isLanding || (!isGrounded && !isLanding) || !PI.enabled)
+        if (!PI.escarbando && !movement && !isLanding && !isCollision || !isGrounded && !isLanding || !PI.enabled && !CC.enabled)
         {
             Audio.Stop();
         }
@@ -265,18 +265,18 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     private void EnemyCollision(Vector3 collisionPoint)
     {
+        isCollision = true;
         animator.SetTrigger("Muerte");
         carPatrolling.SetState(CarPatrolling.AgentState.Patrolling);
         StartCoroutine(PerformKnockback(collisionPoint));
+        Audio.LoadClip("CarCrash");
+        Audio.Play(false);
     }
 
     //FIX el jugador se mueve en direccion contraria 
     private IEnumerator PerformKnockback(Vector3 collisionPoint)
     {
-        // Configurar estado inicial
-        PI.enabled = false;
         CC.enabled = false;
-
         // Calcular dirección del knockback
         Vector3 knockbackDirection = (transform.position - collisionPoint).normalized;
         knockbackDirection.y = 0;
@@ -317,6 +317,15 @@ public class PlayerControllerPlaya : MonoBehaviour
 
         // Asegurar posición final correcta
         transform.position = new Vector3(targetPosition.x, startPosition.y, targetPosition.z);
+
+        PI.enabled = false;
+        CC.enabled = true;
+
+        isLanding = true;
+        isCollision = false;
+        Audio.LoadClip("Landing");
+        Audio.Play(false);
+        groundedTimer = 1;
         // TODO game over
     }
 

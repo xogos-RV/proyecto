@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 194914126}
   - component: {fileID: 194914127}
   m_Layer: 0
-  m_Name: Bell
+  m_Name: ChurchBell
   m_TagString: Bell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -883,7 +883,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1211445213}
   - component: {fileID: 1211445212}
-  - component: {fileID: 1211445211}
   - component: {fileID: 1211445214}
   - component: {fileID: 1211445216}
   m_Layer: 0
@@ -893,14 +892,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1211445211
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211445209}
-  m_Enabled: 1
 --- !u!20 &1211445212
 Camera:
   m_ObjectHideFlags: 0
@@ -1346,14 +1337,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Terreno_San_Antonio
       objectReference: {fileID: 0}
-    - target: {fileID: 5735345990409221470, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5735345990409221470, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
-      propertyPath: m_ProvidesContacts
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1566,7 +1549,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1674568636}
   m_Layer: 0
-  m_Name: Audio
+  m_Name: AudioObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1859,6 +1842,10 @@ PrefabInstance:
     - target: {fileID: 5552403015714396612, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6867774275674572222, guid: 97286c885f1db5141a91e0edb78e77db, type: 3}
+      propertyPath: MaxDistance
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
