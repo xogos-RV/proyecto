@@ -374,15 +374,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdfe2506965c3174e955ce5deb324767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  liebre: {fileID: 0}
-  zOffset: -8
-  cameraHeight: 12
-  xDistance: 6
+  player: {fileID: 1884199189}
+  liebre: {fileID: 1635156668}
+  zOffset: -10
+  cameraHeight: 22
+  xDistance: -15
   lookAtZOffset: 15
-  lookAtHeightMultiplier: 0.33
+  lookAtHeightMultiplier: 0
   smoothSpeed: 5
-  fixedX: 0
+  fixedX: 1
 --- !u!114 &330585551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,7 +390,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
@@ -1076,6 +1076,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7526b470e92d2ba45b59b13226c956b0, type: 3}
+--- !u!95 &901947585 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3794020767423291236, guid: c01b7d96a17f3454c914094f70c6bc61, type: 3}
+  m_PrefabInstance: {fileID: 3756630679291666519}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1011848736
 GameObject:
   m_ObjectHideFlags: 0
@@ -1290,6 +1295,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1884199189 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4289477918181869391, guid: c01b7d96a17f3454c914094f70c6bc61, type: 3}
+  m_PrefabInstance: {fileID: 3756630679291666519}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2132217709
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,7 +1415,7 @@ PrefabInstance:
     - target: {fileID: 6989473126846624211, guid: c01b7d96a17f3454c914094f70c6bc61, type: 3}
       propertyPath: animator
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 901947585}
     - target: {fileID: 6989473126846624211, guid: c01b7d96a17f3454c914094f70c6bc61, type: 3}
       propertyPath: camtrans
       value: 
