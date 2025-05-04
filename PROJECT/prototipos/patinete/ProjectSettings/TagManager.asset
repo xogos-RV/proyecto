@@ -13,6 +13,7 @@ TagManager:
   - Decal
   - Enemy
   - Bell
+  - Buttons
   layers:
   - Default
   - TransparentFX
