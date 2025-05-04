@@ -3,8 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    public void LoadGameScene()
+    public void LoadGameScene(string value)
     {
-        SceneManager.LoadScene("Playa");
+        SceneManager.LoadScene(value);
     }
 }

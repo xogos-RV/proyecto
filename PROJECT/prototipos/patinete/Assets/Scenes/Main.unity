@@ -265,6 +265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 473199963}
   - component: {fileID: 473199964}
+  - component: {fileID: 473199965}
   m_Layer: 0
   m_Name: Buttons
   m_TagString: Buttons
@@ -320,6 +321,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
+--- !u!114 &473199965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473199962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4069307a37fdfe7459dc5acc4055b5bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &513128098
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,20 +412,20 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 513128101}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1655626822}
         m_TargetAssemblyTypeName: SceneController, Assembly-CSharp
         m_MethodName: LoadGameScene
-        m_Mode: 1
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Playa
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &513128101

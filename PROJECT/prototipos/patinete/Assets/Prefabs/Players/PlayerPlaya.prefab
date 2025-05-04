@@ -126,7 +126,9 @@ MonoBehaviour:
   particleYRotation: 180
   backwardOffset: 0.5
   yOffset: 0.5
-  targetTextureName: Sand_TerrainLayer
+  targetTextureNames:
+  - AmeixasLayer
+  - Sand_TerrainLayer
 --- !u!114 &8114866185685683233
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -29,10 +29,6 @@ public class AmeixaController : MonoBehaviour
 
     private void DestroyAmeixa()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.DestroyAmeixa();
-        }
         Destroy(gameObject);
     }
 }

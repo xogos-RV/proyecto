@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SandDigger : MonoBehaviour
@@ -26,7 +28,7 @@ public class SandDigger : MonoBehaviour
     [Range(0, 2)] public float yOffset = 0.5f;
 
     [Header("Configuración de Textura")]
-    public string targetTextureName = "Sand_TerrainLayer"; // Nombre de la textura donde se puede excavar
+    public string[] targetTextureNames = { "Sand_TerrainLayer", "AmeixasLayer" }; // Array de nombres de texturas donde se puede excavar // Nombre de la textura donde se puede excavar
 
     private float lastDigTime;
     private Terrain terrain;
@@ -35,8 +37,7 @@ public class SandDigger : MonoBehaviour
     private int alphamapWidth;
     private int alphamapHeight;
     private float[,,] splatmapData;
-    private int textureIndex = -1;
-
+    private List<int> validTextureIndices = new List<int>();
     private GameObject holesParent;
     private GameObject particlesParent;
 
@@ -51,19 +52,18 @@ public class SandDigger : MonoBehaviour
         splatmapData = terrainData.GetAlphamaps(0, 0, alphamapWidth, alphamapHeight);
         lastDigTime = -digRate;
 
-        // Encontrar el índice de la textura objetivo
+        // Encontrar los índices de todas las texturas válidas
         for (int i = 0; i < terrainData.terrainLayers.Length; i++)
         {
-            if (terrainData.terrainLayers[i].name == targetTextureName)
+            if (targetTextureNames.Contains(terrainData.terrainLayers[i].name))
             {
-                textureIndex = i;
-                break;
+                validTextureIndices.Add(i);
             }
         }
 
-        if (textureIndex == -1)
+        if (validTextureIndices.Count == 0)
         {
-            Debug.LogWarning($"No se encontró la textura con nombre: {targetTextureName}");
+            Debug.LogWarning($"No se encontraron texturas con nombres: {string.Join(", ", targetTextureNames)}");
         }
     }
 
@@ -117,7 +117,7 @@ public class SandDigger : MonoBehaviour
     public void DigHoleAtPlayerPosition(Vector3 position)
     {
         if (Time.time - lastDigTime < digRate) return;
-        if (terrain == null || textureIndex == -1) return;
+        if (terrain == null || validTextureIndices.Count == 0) return;
 
         // Verificar si estamos sobre la textura correcta
         if (!IsPositionOnTargetTexture(position))
@@ -180,11 +180,16 @@ public class SandDigger : MonoBehaviour
         x = Mathf.Clamp(x, 0, alphamapWidth - 1);
         y = Mathf.Clamp(y, 0, alphamapHeight - 1);
 
-        // Obtener el valor de mezcla para la textura objetivo
-        float textureStrength = splatmapData[y, x, textureIndex];
+        // Verificar si alguna de las texturas válidas tiene suficiente fuerza
+        foreach (int index in validTextureIndices)
+        {
+            if (splatmapData[y, x, index] > 0.5f)
+            {
+                return true;
+            }
+        }
 
-        // Considerar que está en la textura si su fuerza es mayor que 0.5 (ajustable)
-        return textureStrength > 0.5f;
+        return false;
     }
 
     private void SpawnDigParticles(Vector3 position)
