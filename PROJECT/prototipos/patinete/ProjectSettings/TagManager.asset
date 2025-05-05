@@ -14,6 +14,7 @@ TagManager:
   - Enemy
   - Bell
   - Buttons
+  - Selector
   layers:
   - Default
   - TransparentFX
