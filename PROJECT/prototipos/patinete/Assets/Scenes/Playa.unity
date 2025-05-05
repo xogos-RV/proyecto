@@ -572,7 +572,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -728,7 +728,6 @@ GameObject:
   - component: {fileID: 1119134853}
   - component: {fileID: 1119134856}
   - component: {fileID: 1119134855}
-  - component: {fileID: 1119134854}
   m_Layer: 5
   m_Name: TMPTime
   m_TagString: Time
@@ -755,20 +754,6 @@ RectTransform:
   m_AnchoredPosition: {x: 170, y: 10}
   m_SizeDelta: {x: 150, y: 60}
   m_Pivot: {x: 1, y: 0}
---- !u!114 &1119134854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1119134852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb49c7a16e9e52746a2a1874f3f0ae97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  game: {fileID: 1665955526}
-  statsText: {fileID: 1263165692}
 --- !u!114 &1119134855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1033,7 +1018,6 @@ GameObject:
   - component: {fileID: 1263165691}
   - component: {fileID: 1263165693}
   - component: {fileID: 1263165692}
-  - component: {fileID: 1263165694}
   m_Layer: 5
   m_Name: TMPBabosa
   m_TagString: Untagged
@@ -1159,20 +1143,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1263165690}
   m_CullTransparentMesh: 1
---- !u!114 &1263165694
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1263165690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb49c7a16e9e52746a2a1874f3f0ae97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  game: {fileID: 1665955526}
-  statsText: {fileID: 1263165692}
 --- !u!1 &1286979500
 GameObject:
   m_ObjectHideFlags: 0
@@ -1396,6 +1366,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1665955522}
+  - component: {fileID: 1665955534}
   - component: {fileID: 1665955531}
   - component: {fileID: 1665955523}
   - component: {fileID: 1665955526}
@@ -1450,11 +1421,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1665955521}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d7b005abf9ec614b8b67fc3f56c99ab, type: 3}
+  m_Script: {fileID: 11500000, guid: bb49c7a16e9e52746a2a1874f3f0ae97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalAmeixas: 0
-  collectedAmeixas: 0
+  game: {fileID: 1665955534}
+  statsText: {fileID: 1263165692}
 --- !u!114 &1665955527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1539,6 +1510,22 @@ MonoBehaviour:
   targetTextureName: AmeixasLayer
   textureThreshold: 0.5
   spawnDepth: 0.1
+--- !u!114 &1665955534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665955521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d7b005abf9ec614b8b67fc3f56c99ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalAmeixas: 0
+  collectedAmeixas: 0
+  game: {fileID: 1665955534}
+  statsText: {fileID: 1263165692}
 --- !u!1 &1674568635
 GameObject:
   m_ObjectHideFlags: 0

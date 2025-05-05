@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     [Header("Game Stats")]
     public int totalAmeixas = 0;
     public int collectedAmeixas = 0;
+
+    public TMP_Text statsText;
 
     private void Awake()
     {
@@ -19,6 +21,11 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    void Update()
+    {
+        statsText.text = collectedAmeixas.ToString();
     }
 
     public void RegisterAmeixa()
