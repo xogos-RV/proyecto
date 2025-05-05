@@ -114,7 +114,7 @@ QualitySettings:
     - iPhone
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
-    Android: 0
+    Android: 1
     GameCoreScarlett: 0
     GameCoreXboxOne: 0
     Lumin: 0
@@ -123,8 +123,8 @@ QualitySettings:
     PS5: 0
     Server: 0
     Stadia: 0
-    Standalone: 0
-    WebGL: 0
+    Standalone: 1
+    WebGL: 1
     Windows Store Apps: 0
     XboxOne: 0
     iPhone: 0
