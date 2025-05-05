@@ -10,12 +10,15 @@ public class DecalCollision : MonoBehaviour
     private GameObject currentPlayer;
     private bool playerIsDigging = false;
     private CarPatrolling carPatrolling;
-
+    public AudioClip policeSound;
     private void Awake()
     {
         decalCollider = GetComponent<BoxCollider>();
         decalCollider.isTrigger = true;
         carPatrolling = GetComponentInParent<CarPatrolling>();
+        policeSound = Resources.Load<AudioClip>("Audio/FX/Police");
+        if (policeSound == null)
+            Debug.LogError("No se encontró Police.mp3 en Resources/Audio/FX");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -65,6 +68,13 @@ public class DecalCollision : MonoBehaviour
         if (carPatrolling != null)
         {
             carPatrolling.SetState(CarPatrolling.AgentState.Chasing);
+
+            // añadir AudioSource
+            AudioSource audioSource = carPatrolling.gameObject.AddComponent<AudioSource>();
+            audioSource.clip = policeSound;
+            audioSource.loop = true;
+            audioSource.Play();
+
         }
     }
 
