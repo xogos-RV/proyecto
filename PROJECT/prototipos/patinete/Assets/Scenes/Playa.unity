@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &160292075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1524,7 +1524,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalAmeixas: 0
   collectedAmeixas: 0
-  game: {fileID: 1665955534}
   statsText: {fileID: 1263165692}
 --- !u!1 &1674568635
 GameObject:

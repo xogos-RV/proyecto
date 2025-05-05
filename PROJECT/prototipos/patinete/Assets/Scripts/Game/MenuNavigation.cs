@@ -14,7 +14,6 @@ public class MenuNavigation : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
         selector = GameObject.FindGameObjectWithTag("Selector").GetComponent<RectTransform>();
         Transform buttonsParent = transform.Find("Buttons");
         menuOptions = new List<RectTransform>();
@@ -56,7 +55,7 @@ public class MenuNavigation : MonoBehaviour
         {
             currentIndex = (currentIndex + 1) % menuOptions.Count;
             UpdateSelectorPosition();
-            PlaySound(changeOptionSound); // Sonido al cambiar de opción
+            PlaySound(changeOptionSound);
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -66,8 +65,8 @@ public class MenuNavigation : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Return))
         {
-            OnSelectOption();
             PlaySound(selectSound);
+            OnSelectOption();
         }
     }
 
@@ -83,37 +82,19 @@ public class MenuNavigation : MonoBehaviour
 
     private void OnSelectOption()
     {
-        if (audioSource.isPlaying)
-        {
-            audioSource.Stop();
-        }
-
         string selectedButtonName = menuOptions[currentIndex].name;
 
         switch (selectedButtonName)
         {
             case "Play":
-                SceneController sceneController = Camera.main.GetComponent<SceneController>();
-                if (sceneController != null)
-                {
-                    sceneController.LoadGameScene("Playa");
-                }
-                else
-                {
-                    Debug.LogError("SceneController no encontrado en la cámara principal.");
-                }
+                FindAnyObjectByType<SceneController>().LoadGameScene("Playa");
                 break;
-
             case "Exit":
                 #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
+                UnityEditor.EditorApplication.isPlaying = false;
                 #else
-                    Application.Quit();
+                Application.Quit();
                 #endif
-                break;
-
-            default:
-                Debug.Log($"Opción no reconocida: {selectedButtonName}");
                 break;
         }
     }
