@@ -7,6 +7,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     public Animator animator;
     CharacterController CC;
     PlayerInput PI;
+    ClickToMove clickToMove;
     public float runningSpeed;
     public float moveSpeed;
     public float gravity = 9.81f;
@@ -43,6 +44,12 @@ public class PlayerControllerPlaya : MonoBehaviour
     {
         PI = gameObject.GetComponent<PlayerInput>();
         CC = gameObject.GetComponent<CharacterController>();
+        // Añadir ClickToMove automáticamente si no existe
+        clickToMove = gameObject.GetComponent<ClickToMove>();
+        if (clickToMove == null)
+        {
+            clickToMove = gameObject.AddComponent<ClickToMove>();
+        }
         normalHeight = CC.height;
         GameObject car = GameObject.FindGameObjectWithTag("Enemy");
         if (car != null)
@@ -67,6 +74,13 @@ public class PlayerControllerPlaya : MonoBehaviour
 
         totalMovement = Vector3.zero;
         escarbando = PI.escarbando;
+
+        // Si el jugador mueve el joystick/pulsa teclas, cancelar el destino click
+        if (clickToMove != null && clickToMove.isMovingToTarget && PI.movement.magnitude > 0.1f)
+        {
+            clickToMove.CancelMoveTarget();
+        }
+
         ApplyGravity();
         CalculateMovementRotate();
         HandleJump();
@@ -150,19 +164,48 @@ public class PlayerControllerPlaya : MonoBehaviour
         if (isLanding) return;
 
         Vector3 movement;
+        float speed;
 
-        if (isGrounded || !keepAirMovement)
+        // --- CLICK TO MOVE ---
+        // Si hay un destino activo de click-to-move y estamos en el suelo
+        if (clickToMove != null && clickToMove.isMovingToTarget && isGrounded)
         {
-            movement = CalculateMovementFromCamera();
-            airMovementDirection = movement.normalized;
+            // Calcular dirección hacia el destino (solo horizontal)
+            Vector3 targetFlat = new Vector3(clickToMove.moveTarget.Value.x, transform.position.y, clickToMove.moveTarget.Value.z);
+            Vector3 direction = (targetFlat - transform.position).normalized;
+
+            // Si ya llegamos, cancelar destino
+            if (clickToMove.HasArrivedAtTarget(transform.position))
+            {
+                clickToMove.CancelMoveTarget();
+                movement = Vector3.zero;
+                speed = 0;
+            }
+            else
+            {
+                // Si es doble clic, corre al destino (como si pulsaras run)
+                bool shouldRun = clickToMove.isDoubleClick;
+                speed = shouldRun ? runningSpeed : moveSpeed;
+                speed = PI.escarbando ? moveSpeed * 0.5f : speed;
+                movement = direction;
+            }
         }
         else
         {
-            movement = airMovementDirection * PI.movement.magnitude;
-        }
+            // --- CONTROL NORMAL (joystick / teclas) ---
+            if (isGrounded || !keepAirMovement)
+            {
+                movement = CalculateMovementFromCamera();
+                airMovementDirection = movement.normalized;
+            }
+            else
+            {
+                movement = airMovementDirection * PI.movement.magnitude;
+            }
 
-        float speed = PI.isRunning ? runningSpeed : moveSpeed;
-        speed = PI.escarbando ? moveSpeed * 0.5f : speed;
+            speed = PI.isRunning ? runningSpeed : moveSpeed;
+            speed = PI.escarbando ? moveSpeed * 0.5f : speed;
+        }
 
         totalMovement += movement * speed * Time.deltaTime;
 
@@ -224,13 +267,32 @@ public class PlayerControllerPlaya : MonoBehaviour
         if (!isTouchingWater) return;
     }
 
+    /// <summary>
+    /// Indica si el jugador se está moviendo (por joystick/teclas O por click-to-move).
+    /// </summary>
+    private bool IsMoving()
+    {
+        return (PI.movement != Vector2.zero || (clickToMove != null && clickToMove.isMovingToTarget))
+                && CC.velocity.magnitude > 0.1f;
+    }
+
+    /// <summary>
+    /// Determina si el jugador debería estar en modo correr (por joystick/teclas O por doble clic).
+    /// </summary>
+    private bool IsRunning()
+    {
+        if (PI.isRunning) return true;
+        if (clickToMove != null && clickToMove.isMovingToTarget && clickToMove.isDoubleClick) return true;
+        return false;
+    }
+
     private void SetAnimations()
     {
         float targetSpeed = 0;
 
         if (!isLanding || !isGrounded)
         {
-            targetSpeed = (PI.movement != Vector2.zero && CC.velocity.magnitude > 0.1f) ? (PI.isRunning ? 1 : 0.5f) : 0;
+            targetSpeed = IsMoving() ? (IsRunning() ? 1 : 0.5f) : 0;
         }
 
         animator.SetFloat("Movement", targetSpeed, 0.15f, Time.deltaTime);
@@ -244,15 +306,16 @@ public class PlayerControllerPlaya : MonoBehaviour
     private void PlayFX()
     {
 
-        bool movement = PI.movement != Vector2.zero && CC.velocity.magnitude > 0.1f;
+        bool moving = IsMoving();
+        bool running = IsRunning();
 
-        if (!PI.escarbando && movement && PI.isRunning && isGrounded && !isLanding)
+        if (!PI.escarbando && moving && running && isGrounded && !isLanding)
         {
             Audio.LoadClip("pasos_317ms");
             Audio.Play(true);
         }
 
-        if (!PI.escarbando && movement && !PI.isRunning && isGrounded && !isLanding)
+        if (!PI.escarbando && moving && !running && isGrounded && !isLanding)
         {
             Audio.LoadClip("pasos_500ms");
             Audio.Play(true);
@@ -270,7 +333,7 @@ public class PlayerControllerPlaya : MonoBehaviour
             Audio.Play(false);
         }
 
-        if (!PI.escarbando && !movement && !isLanding && !isCollision || !isGrounded && !isLanding || !PI.enabled && !CC.enabled)
+        if (!PI.escarbando && !moving && !isLanding && !isCollision || !isGrounded && !isLanding || !PI.enabled && !CC.enabled)
         {
             Audio.Stop();
         }
