@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControllerPlaya : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class PlayerControllerPlaya : MonoBehaviour
     private AudioPlayer Audio;
 
     private bool isCollision = false;
+    private bool isDead = false;
 
     void Awake()
     {
@@ -52,6 +54,17 @@ public class PlayerControllerPlaya : MonoBehaviour
 
     void Update()
     {
+        if (isDead)
+        {
+            // Esperar a que el jugador pulse cualquier botón del mando o tecla
+            if (Input.anyKeyDown)
+            {
+                Debug.Log("[Respawn] Tecla pulsada: " + Input.inputString);
+                Respawn();
+            }
+            return;
+        }
+
         totalMovement = Vector3.zero;
         escarbando = PI.escarbando;
         ApplyGravity();
@@ -323,10 +336,16 @@ public class PlayerControllerPlaya : MonoBehaviour
 
         isLanding = true;
         isCollision = false;
+        isDead = true;
         Audio.LoadClip("Landing");
         Audio.Play(false);
         groundedTimer = 1;
-        // TODO game over
+    }
+
+    private void Respawn()
+    {
+        Debug.Log("[Respawn] Recargando escena...");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private Vector3 CalculateMovementFromCamera()

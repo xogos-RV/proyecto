@@ -749,9 +749,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 893311547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 170, y: 10}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 75, y: -60}
   m_SizeDelta: {x: 150, y: 60}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1119134855
@@ -783,8 +783,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 3707764735
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.8627451}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1082,8 +1082,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 3707764735
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.8627451}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1312,9 +1312,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2063248835}
     m_Modifications:
+    - target: {fileID: 288921803884583628, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_MaterialTemplate
+      value: 
+      objectReference: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
       propertyPath: m_Name
       value: Terreno_San_Antonio
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902463757981523802, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
       objectReference: {fileID: 0}
     - target: {fileID: 7077304459588272653, guid: 0ce6f7e2f07c4ec46983b32f8c9e7c06, type: 3}
       propertyPath: m_LocalPosition.x

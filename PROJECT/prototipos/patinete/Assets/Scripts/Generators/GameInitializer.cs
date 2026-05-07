@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GameInitializer : MonoBehaviour
 {
+    public static GameInitializer Instance { get; private set; }
+
     [Header("Prefabs")]
     public GameObject terrainPrefab;
     public GameObject playerPrefab;
@@ -16,6 +18,16 @@ public class GameInitializer : MonoBehaviour
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         HidePreObject();
         SpawnTerrain();
         SpawnPlayer();
@@ -66,16 +78,21 @@ public class GameInitializer : MonoBehaviour
 
     private void SpawnPlayer()
     {
+        SpawnPlayerAtRandomPosition();
+    }
+
+    public GameObject SpawnPlayerAtRandomPosition()
+    {
         if (playerPrefab == null)
         {
             Debug.LogError("No se ha asignado el prefab del jugador en el inspector.");
-            return;
+            return null;
         }
 
         if (terrainComponent == null)
         {
             Debug.LogError("No hay terreno para spawnear al jugador.");
-            return;
+            return null;
         }
 
         // Obtener las dimensiones del terreno
@@ -97,7 +114,7 @@ public class GameInitializer : MonoBehaviour
             randomZ
         );
 
-        // Instanciar al jugador
-        Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        // Instanciar al jugador y devolverlo
+        return Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
     }
 }
