@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: -3356496612050041673}
   - component: {fileID: 8114866185685683233}
   - component: {fileID: -2847758478074284142}
-  - component: {fileID: 8042604340911782821}
   m_Layer: 0
   m_Name: PlayerPlaya
   m_TagString: Player
@@ -59,8 +58,8 @@ CharacterController:
   serializedVersion: 3
   m_Height: 2
   m_Radius: 0.25
-  m_SlopeLimit: 40
-  m_StepOffset: 0.7
+  m_SlopeLimit: 35
+  m_StepOffset: 0.4
   m_SkinWidth: 0.03
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
@@ -90,7 +89,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8617851223012107712}
-  runningSpeed: 10
+  runningSpeed: 7
   moveSpeed: 2.5
   gravity: 9.8
   rotateDump: 5
@@ -238,14 +237,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!81 &8042604340911782821
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2472707296294454866}
-  m_Enabled: 1
 --- !u!1001 &3406155742003322202
 PrefabInstance:
   m_ObjectHideFlags: 0
