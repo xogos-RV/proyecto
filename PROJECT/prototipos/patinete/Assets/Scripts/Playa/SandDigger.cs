@@ -74,11 +74,6 @@ public class SandDigger : MonoBehaviour
             Vector3 digPosition = transform.position + transform.forward * digOffset;
             DigHoleAtPlayerPosition(digPosition);
         }
-
-        if (Input.GetMouseButton(0))
-        {
-            DigWithMouse();
-        }
     }
 
     private void InitializeHierarchyFolders()

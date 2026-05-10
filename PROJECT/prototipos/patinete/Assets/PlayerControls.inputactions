@@ -451,17 +451,6 @@
                 },
                 {
                     "name": "",
-                    "id": "39a1c564-03aa-411d-b764-5c409e3a19b3",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "run",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "77034fc8-ddf3-4acc-a2a3-615b35f31bf6",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
@@ -508,6 +497,17 @@
                     "name": "",
                     "id": "3cc68590-ab71-42b4-8c6b-2c797d03a487",
                     "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "drive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "39a1c564-03aa-411d-b764-5c409e3a19b3",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
