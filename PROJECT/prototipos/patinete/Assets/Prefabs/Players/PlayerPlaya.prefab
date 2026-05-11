@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1723592381144994362}
   - component: {fileID: -3356496612050041673}
   - component: {fileID: 8114866185685683233}
+  - component: {fileID: -4418991490024300107}
   - component: {fileID: -2847758478074284142}
   m_Layer: 0
   m_Name: PlayerPlaya
@@ -140,6 +141,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a05eea7029a9f54dbb8ff13a7eb2383, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-4418991490024300107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2472707296294454866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c0696127aae8a64c90057eeb818279d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cursorObject: {fileID: 0}
+  color1: {r: 0, g: 1, b: 1, a: 0.5}
+  color2: {r: 1, g: 0, b: 1, a: 0.5}
+  animSpeed: 2
+  hologramMaterial: {fileID: 0}
 --- !u!82 &-2847758478074284142
 AudioSource:
   m_ObjectHideFlags: 0
